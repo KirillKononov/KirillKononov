@@ -1,2 +1,7 @@
 # .NET Training Home Works
-Module 1
+
+# Module 2
+  Work with classes and dictoinary
+  
+# Module 3
+  Work with strings
