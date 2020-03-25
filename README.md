@@ -24,6 +24,6 @@
 # Module 20
   ASP.NET Core application (not finished):
   
-  -Data access to DataBase with Students, Professors, Subjects, Attendance
-  -CRUD operations with instances of mentioned models
-  -The Probability to make an Attendance report for any of Subjects or Students
+  -Data access to DataBase with Students, Professors, Subjects, Attendance;
+  -CRUD operations with instances of mentioned models;
+  -The Probability to make an Attendance report for any of Subjects or Students.
