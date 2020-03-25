@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Computer game", "Computer game\Computer game.csproj", "{FE36C5E0-34F3-4E0C-A0A7-CD352FB498D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorGraphicEditor", "VectorGraphicEditor\VectorGraphicEditor.csproj", "{0CF7BF9A-76B6-46BA-B5BF-47BAFC18A750}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE36C5E0-34F3-4E0C-A0A7-CD352FB498D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE36C5E0-34F3-4E0C-A0A7-CD352FB498D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE36C5E0-34F3-4E0C-A0A7-CD352FB498D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE36C5E0-34F3-4E0C-A0A7-CD352FB498D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CF7BF9A-76B6-46BA-B5BF-47BAFC18A750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CF7BF9A-76B6-46BA-B5BF-47BAFC18A750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CF7BF9A-76B6-46BA-B5BF-47BAFC18A750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CF7BF9A-76B6-46BA-B5BF-47BAFC18A750}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E595654E-6078-4099-BB78-AEF10591EDDB}
+	EndGlobalSection
+EndGlobal

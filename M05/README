@@ -1,0 +1,15 @@
+1. Create a console application (UI).
+
+2. Create a class library that allows to convert a string to an integer number.
+   Do not use Parse, TryParse, Convert etc.
+
+3. Console application should only bring the input to that library and print output.
+
+4. All of the exceptions should be handled properly in the library and 
+   should be retrown to console application.
+
+5. Try to provide the user with details (what's happened, why they're getting an error).
+
+6. Log every step of the application usage 
+   (application started, user made a request, responce was returned,
+    application catched an error, application was shut down, etc).

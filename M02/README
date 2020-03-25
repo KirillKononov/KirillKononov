@@ -1,0 +1,47 @@
+Task1:
+
+Create a console application called "Students".
+Create a class "Student" which includes string Name and string Email (name is like Name Surname, email is like name.surname@epam.com).
+Create a constructor for this class, which takes 2 parameters - Name and Email. Make sure that email matches the name.
+Create a constuctor for this class, which takes only Email. This constructor should refer to previous one
+(you can get the name from the email).
+In the main method create a string array "subjects" which contains 4 different shcool subjects ("Maths, "PE", etc..).
+In the main method create 3 students with different names using first constructor
+
+
+(like student1c1 = new Student { "Vasya Pupkin", "vasya.pupkin@epam.com" }, ...)
+
+
+In the main method create 3 students with the same names names using second constructor
+
+
+(like student1c2 = new Student { "vasya.pupkin@epam.com" }, ...)
+
+
+Overall you should have 3 unique students (but there are 2 instances of each student)
+Create a new empty dictionary of <Student, HashSet> called "studentSubjectDict".
+For each student (remebmer that we got 6 variables despite there are only 3 unique students) fill in the dictionary like
+
+
+studentSubjectDict[student1c1] = %3 random values from the subject array%
+studentSubjectDict[student2c1] = %3 random values from the subject array%
+studentSubjectDict[student3c1] = %3 random values from the subject array%
+studentSubjectDict[student1c2] = %3 random values from the subject array%
+studentSubjectDict[student2c2] = %3 random values from the subject array%
+studentSubjectDict[student3c2] = %3 random values from the subject array%
+
+
+Make sure that after that there are only three records in the "studentSubjectDict" dictionary
+(for that purpose you should override Equals() and GetHashCode() for students class).
+
+Task2:
+Goal of the task is to get acquainted with Array.Sort, Stopwatch and System.Diagnostics.Process.
+
+Create a console application called "Performance".
+Create a class "C" with just one int field called "i".
+Create a struct "S" with just one int field called "i".
+In the main method create an array of 100000 "C" called "classes" and intialize it with random numbers.
+In the main method create an array of 100000 "S" called "structs" and intialize it with random numbers.
+Calculate PrivateMemorySize64 delta before and after arrays initialization (for each array separately). Print the results to console.
+Compare the difference between these deltas and print it to the console.
+Execute Array.Sort< С >(classes) и Array.Sort< S >(structs). Print the execution time of each sort to the console.
