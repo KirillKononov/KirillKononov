@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookListRazor.Model
+namespace AnseremTest.Models
 {
-    public class Book
+    public class City
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Display(Name = "Client city")]
         public string Name { get; set; }
-
-        public string Author { get; set; }
     }
 }

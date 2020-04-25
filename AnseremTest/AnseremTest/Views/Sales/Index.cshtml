@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Sale>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<br />
+<div>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Sales List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="Create" class="btn btn-info">Create New Sale</a>
+        </div>
+    </div>
+    <br />
+
+    @if (Model.Count() > 0)
+    {
+        <div class="col-12">
+            <table id="DT_load" class="table table-striped table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Sale's name</th>
+                    <th>Client organization</th>
+                    <th>Organization contact person</th>
+                    <th>Responsible for the sale</th>
+                    <th>Client city</th>
+                    <th></th>
+                </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                    <td>
+                        @Html.DisplayFor(m => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Сounterparty.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Contact.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Contact.ResponsibleForSale)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Сounterparty.City.Name)
+                    </td>
+                    <td>
+                        <form method="post">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-primary form-control" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <input type="submit" class="btn btn-danger form-control" asp-action="Delete" asp-route-id="@item.Id" value="Delete" />
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Sales don't exist...</p>
+    }
+
+</div>

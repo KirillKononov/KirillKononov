@@ -1,0 +1,67 @@
+﻿@model Sale
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<h2 class="text-info">Edit Sale</h2>
+<br />
+
+<form method="post" asp-action="Edit">
+    <div class="border" style="padding: 30px">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Name" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <span asp-validation-for="Name" class="text-danger">The Sale's name field is required</span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Сounterparty.Name" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Сounterparty.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Contact.Name" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Contact.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Contact.ResponsibleForSale" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Contact.ResponsibleForSale" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Сounterparty.City.Name" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Сounterparty.City.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-5 offset-2">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="btn btn-info form-control" asp-route-id="@Model.Id" value="Update" />
+                    </div>
+                    <div class="col-6">
+                        <a asp-action="Index" class="btn btn-success form-control">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
