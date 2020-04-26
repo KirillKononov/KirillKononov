@@ -6,7 +6,7 @@ namespace AnseremTest.Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         public DbSet<Sale> Sales { get; set; }
