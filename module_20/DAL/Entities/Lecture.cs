@@ -16,6 +16,6 @@ namespace DAL.Entities
         [Required]
         public virtual Professor Professor { get; set; }
 
-        public virtual List<HomeWork> LectureHomeWorks { get; set; }
+        //public virtual List<HomeWork> LectureHomeWorks { get; set; }
     }
 }

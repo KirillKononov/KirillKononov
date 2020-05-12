@@ -15,6 +15,6 @@ namespace DAL.Entities
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        public virtual List<Lecture> Lectures { get; set; }
+        //public virtual List<Lecture> Lectures { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly DataBaseContext _db;
         private StudentRepository _studentRepository;

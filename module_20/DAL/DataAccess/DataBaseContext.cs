@@ -6,14 +6,21 @@ namespace DAL.DataAccess
 {
     public class DataBaseContext : DbContext
     {
-        public DataBaseContext() { }
 
-        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<Student> Students { get; set; }
         public DbSet<HomeWork> HomeWorks { get; set; }
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<Professor> Professors { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

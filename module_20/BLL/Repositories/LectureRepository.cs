@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.DataAccess;
@@ -62,7 +63,6 @@ namespace BLL.Repositories
         public IEnumerable<Lecture> Find(Func<Lecture, bool> predicate)
         {
             return _db.Lectures
-                .Include(l => l.Professor)
                 .Where(predicate)
                 .ToList();
         }

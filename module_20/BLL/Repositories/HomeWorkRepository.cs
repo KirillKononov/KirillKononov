@@ -62,8 +62,6 @@ namespace BLL.Repositories
         public IEnumerable<HomeWork> Find(Func<HomeWork, bool> predicate)
         {
             return _db.HomeWorks
-                .Include(a => a.Student)
-                .Include(a => a.Lecture)
                 .Where(predicate)
                 .ToList();
         }
