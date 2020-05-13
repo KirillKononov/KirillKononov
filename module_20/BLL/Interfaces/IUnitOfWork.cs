@@ -1,4 +1,5 @@
 ﻿using System;
+using BLL.DTO;
 using DAL.Entities;
 
 namespace BLL.Interfaces
@@ -7,7 +8,7 @@ namespace BLL.Interfaces
     {
         IRepository<Student> Students { get; }
         IRepository<Professor> Professors { get; }
-        IRepository<Lecture> Lectures { get; }
+        IRepository<LectureDTO> Lectures { get; }
         IRepository<HomeWork> HomeWorks { get; }
         void Save();
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using BLL.DTO;
 using BLL.Interfaces;
 using DAL.DataAccess;
 using DAL.Entities;
@@ -28,7 +29,7 @@ namespace BLL.Repositories
         public IRepository<Professor> Professors => _professorRepository ?? 
                                                     (_professorRepository = new ProfessorRepository(_db, _logger));
 
-        public IRepository<Lecture> Lectures => _lectureRepository ?? 
+        public IRepository<LectureDTO> Lectures => _lectureRepository ?? 
                                                 (_lectureRepository = new LectureRepository(_db, _logger));
 
         public IRepository<HomeWork> HomeWorks => _homeWorkRepository ??

@@ -15,7 +15,7 @@ namespace DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -199,7 +199,7 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("ProfessorId")
+                    b.Property<int?>("ProfessorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -213,19 +213,19 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             Name = "Robotics",
-                            ProfessorId = 3
+                            ProfessorId = 1
                         },
                         new
                         {
                             Id = 2,
                             Name = "Mechatronics",
-                            ProfessorId = 2
+                            ProfessorId = 1
                         },
                         new
                         {
                             Id = 3,
                             Name = "Physics",
-                            ProfessorId = 1
+                            ProfessorId = 3
                         });
                 });
 
@@ -344,13 +344,13 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.HomeWork", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
-                        .WithMany("LectureHomeWorks")
+                        .WithMany()
                         .HasForeignKey("LectureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DAL.Entities.Student", "Student")
-                        .WithMany("StudentHomeWorks")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -360,9 +360,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Entities.Professor", "Professor")
                         .WithMany("Lectures")
-                        .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfessorId");
                 });
 #pragma warning restore 612, 618
         }

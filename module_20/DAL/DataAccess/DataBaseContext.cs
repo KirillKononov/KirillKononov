@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +17,6 @@ namespace DAL.DataAccess
         public DbSet<HomeWork> HomeWorks { get; set; }
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<Professor> Professors { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLazyLoadingProxies();
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,17 +42,17 @@ namespace DAL.DataAccess
             modelBuilder.Entity<Professor>().HasData(
                 new Professor[]
                 {
-                    new Professor { Id = 1, FirstName = "Mihail", LastName = "Sulimov"},
-                    new Professor { Id = 2, FirstName = "Ludmila", LastName = "Kozlova"},
-                    new Professor { Id = 3, FirstName = "Denis", LastName = "Filatov"}
+                    new Professor { Id = 1, FirstName = "Mihail", LastName = "Sulimov" },
+                    new Professor { Id = 2, FirstName = "Ludmila", LastName = "Kozlova" },
+                    new Professor { Id = 3, FirstName = "Denis", LastName = "Filatov" }
                 });
 
             modelBuilder.Entity<Lecture>().HasData(
                 new Lecture[]
                 {
-                    new Lecture { Id = 1, Name = "Robotics", ProfessorId = 3},
-                    new Lecture { Id = 2, Name = "Mechatronics", ProfessorId = 2},
-                    new Lecture { Id = 3, Name = "Physics", ProfessorId = 1}
+                    new Lecture { Id = 1, Name = "Robotics", ProfessorId = 1},
+                    new Lecture { Id = 2, Name = "Mechatronics", ProfessorId = 1},
+                    new Lecture { Id = 3, Name = "Physics", ProfessorId = 3}
                 });
 
             modelBuilder.Entity<HomeWork>().HasData(

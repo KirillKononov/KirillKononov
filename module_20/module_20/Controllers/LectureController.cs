@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.DTO;
 using BLL.Interfaces;
 using DAL.DataAccess;
 using DAL.Entities;
@@ -23,14 +24,14 @@ namespace module_20.Controllers
 
         // GET: Lecture
         [HttpGet]
-        public ActionResult<IEnumerable<Lecture>> Get()
+        public IEnumerable<LectureDTO> Get()
         {
-            return _db.Lectures.GetAll().ToList();
+            return _db.Lectures.GetAll();
         }
 
         // GET: Lecture/5
         [HttpGet("{id}")]
-        public ActionResult<Lecture> Get(int id)
+        public ActionResult<LectureDTO> Get(int id)
         {
             var lecture = _db.Lectures.Get(id);
             return new ObjectResult(lecture);
@@ -38,7 +39,7 @@ namespace module_20.Controllers
 
         // POST: Lecture
         [HttpPost]
-        public ActionResult<Lecture> Post(Lecture lecture)
+        public ActionResult<Lecture> Post(LectureDTO lecture)
         {
             if (lecture == null)
                 BadRequest();
@@ -49,15 +50,15 @@ namespace module_20.Controllers
             return Ok(lecture);
         }
 
-        // PUT: Lecture/5
-        [HttpPut("{id}")]
-        public ActionResult<Lecture> Put(Lecture lecture)
+        // PUT: Lecture
+        [HttpPut]
+        public ActionResult<LectureDTO> Put(LectureDTO lecture)
         {
             if (lecture == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecture.Id).Any())
-                return NotFound();
+            //if (!_db.Lectures.Find(l => l.Id == lecture.Id).Any())
+            //    return NotFound();
 
             _db.Lectures.Update(lecture);
             _db.Save();
@@ -69,9 +70,10 @@ namespace module_20.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Lecture> Delete(int id)
         {
+            var lecture = _db.Lectures.Get(id);
             _db.Lectures.Delete(id);
             _db.Save();
-            return Ok();
+            return Ok(lecture);
         }
     }
 }
