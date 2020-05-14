@@ -10,10 +10,10 @@ namespace BLL.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataBaseContext _db;
-        private StudentRepository _studentRepository;
+        //private StudentRepository _studentRepository;
         private ProfessorRepository _professorRepository;
         private LectureRepository _lectureRepository;
-        private HomeWorkRepository _homeWorkRepository;
+        //private HomeWorkRepository _homeWorkRepository;
 
         private readonly ILogger _logger;
 
@@ -23,17 +23,17 @@ namespace BLL.Repositories
             _logger = logger;
         }
 
-        public IRepository<Student> Students => _studentRepository ?? 
-                                                (_studentRepository = new StudentRepository(_db, _logger));
+        //public IRepository<Student> Students => _studentRepository ?? 
+                                               // (_studentRepository = new StudentRepository(_db, _logger));
 
-        public IRepository<Professor> Professors => _professorRepository ?? 
+        public IRepository<ProfessorDTO, Professor> Professors => _professorRepository ?? 
                                                     (_professorRepository = new ProfessorRepository(_db, _logger));
 
-        public IRepository<LectureDTO> Lectures => _lectureRepository ?? 
+        public IRepository<LectureDTO, Lecture> Lectures => _lectureRepository ?? 
                                                 (_lectureRepository = new LectureRepository(_db, _logger));
 
-        public IRepository<HomeWork> HomeWorks => _homeWorkRepository ??
-                                                      (_homeWorkRepository = new HomeWorkRepository(_db, _logger));
+        //public IRepository<HomeWork> HomeWorks => _homeWorkRepository ??
+                                                  //    (_homeWorkRepository = new HomeWorkRepository(_db, _logger));
 
         public void Save()
         {

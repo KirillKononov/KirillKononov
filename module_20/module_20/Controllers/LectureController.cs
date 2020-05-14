@@ -24,15 +24,18 @@ namespace module_20.Controllers
 
         // GET: Lecture
         [HttpGet]
-        public IEnumerable<LectureDTO> Get()
+        public ActionResult<IEnumerable<LectureDTO>> Get()
         {
-            return _db.Lectures.GetAll();
+            return _db.Lectures.GetAll().ToList();
         }
 
         // GET: Lecture/5
         [HttpGet("{id}")]
-        public ActionResult<LectureDTO> Get(int id)
+        public ActionResult<LectureDTO> Get(int? id)
         {
+            if (id == null)
+                BadRequest();
+
             var lecture = _db.Lectures.Get(id);
             return new ObjectResult(lecture);
         }
@@ -57,8 +60,8 @@ namespace module_20.Controllers
             if (lecture == null)
                 BadRequest();
 
-            //if (!_db.Lectures.Find(l => l.Id == lecture.Id).Any())
-            //    return NotFound();
+            if (!_db.Lectures.Find(l => l.Id == lecture.Id).Any())
+                return NotFound();
 
             _db.Lectures.Update(lecture);
             _db.Save();
@@ -68,8 +71,11 @@ namespace module_20.Controllers
 
         // DELETE: Lecture/5
         [HttpDelete("{id}")]
-        public ActionResult<Lecture> Delete(int id)
+        public ActionResult<Lecture> Delete(int? id)
         {
+            if (id == null)
+                BadRequest();
+
             var lecture = _db.Lectures.Get(id);
             _db.Lectures.Delete(id);
             _db.Save();

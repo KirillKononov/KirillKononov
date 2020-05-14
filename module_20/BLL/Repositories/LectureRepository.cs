@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    class LectureRepository : IRepository<LectureDTO>
+    class LectureRepository : IRepository<LectureDTO, Lecture>
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
@@ -79,7 +79,7 @@ namespace BLL.Repositories
             _db.Entry(lecture).State = EntityState.Modified;
         }
 
-        public IEnumerable<LectureDTO> Find(Func<LectureDTO, bool> predicate)
+        public IEnumerable<LectureDTO> Find(Func<Lecture, bool> predicate)
         {
             var lectures = _db.Lectures
                 .Where(predicate)
