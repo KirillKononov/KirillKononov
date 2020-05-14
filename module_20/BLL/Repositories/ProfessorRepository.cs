@@ -18,6 +18,19 @@ namespace BLL.Repositories
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
+
+        private ProfessorDTO CreateProfessorDto(Professor professor)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
+            return new ProfessorDTO()
+            {
+                Id = professor.Id,
+                FirstName = professor.FirstName,
+                LastName = professor.LastName,
+                Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(professor.Lectures)
+            };
+        }
         public ProfessorRepository(DataBaseContext context, ILogger logger)
         {
             _db = context;
@@ -34,46 +47,19 @@ namespace BLL.Repositories
                 throw new ValidationException("There is no professors in data base");
             }
 
-            var mapper = new MapperConfiguration(cfg => 
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
             return professors
-                .Select(prof => 
-                    new ProfessorDTO()
-                    {
-                        Id = prof.Id, 
-                        FirstName = prof.FirstName, 
-                        LastName = prof.LastName, 
-                        Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(prof.Lectures)
-                    })
-                .ToList();
+                .Select(CreateProfessorDto);
         }
 
         public ProfessorDTO Get(int? id)
         {
-            if (id == null)
-            {
-                _logger.LogError("Professor's id hasn't entered");
-                throw new ValidationException("Professor's id hasn't entered");
-            }
+            Validator.IdValidation(id, _logger);
 
-            var prof = _db.Professors.Find(id);
+            var professor = _db.Professors.Find(id);
 
-            if (prof == null)
-            {
-                _logger.LogError("There is no professor in data base with this id");
-                throw new ValidationException("There is no professor in data base with this id");
-            }
+            Validator.EntityValidation(professor, _logger, nameof(professor));
 
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
-            return new ProfessorDTO()
-            {
-                Id = prof.Id,
-                FirstName = prof.FirstName, 
-                LastName = prof.LastName,
-                Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(_db.Lectures
-                    .Where(l => l.ProfessorId == prof.Id).ToList())
-            };
+            return CreateProfessorDto(professor);
         }
 
         public void Create(ProfessorDTO item)
@@ -84,53 +70,32 @@ namespace BLL.Repositories
 
         public void Update(ProfessorDTO item)
         {
-            var prof = _db.Professors.Find(item.Id);
+            var professor = _db.Professors.Find(item.Id);
 
-            if (prof == null)
-            {
-                _logger.LogError("There is no professor in data base with this id");
-                throw new ValidationException("There is no professor in data base with this id");
-            }
+            Validator.EntityValidation(professor, _logger, nameof(professor));
 
-            prof.FirstName = item.FirstName;
-            prof.LastName = item.LastName;
-            _db.Entry(prof).State = EntityState.Modified;
+            professor.FirstName = item.FirstName;
+            professor.LastName = item.LastName;
+            _db.Entry(professor).State = EntityState.Modified;
         }
 
         public IEnumerable<ProfessorDTO> Find(Func<Professor, bool> predicate)
         {
             var professors = _db.Professors.Where(predicate).ToList();
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
+
             return professors
-                .Select(prof =>
-                    new ProfessorDTO()
-                    {
-                        Id = prof.Id,
-                        FirstName = prof.FirstName,
-                        LastName = prof.LastName,
-                        Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(prof.Lectures)
-                    })
-                .ToList();
+                .Select(CreateProfessorDto);
         }
 
         public void Delete(int? id)
         {
-            if (id == null)
-            {
-                _logger.LogError("Professor's id hasn't entered");
-                throw new ValidationException("Professor's id hasn't entered");
-            }
+            Validator.IdValidation(id, _logger);
 
-            var prof = _db.Professors.Find(id);
+            var professor = _db.Professors.Find(id);
 
-            if (prof == null)
-            {
-                _logger.LogError("There is no professor in data base with this id");
-                throw new ValidationException("There is no professor in data base with this id");
-            }
+            Validator.EntityValidation(professor, _logger, nameof(professor));
 
-            _db.Professors.Remove(prof);
+            _db.Professors.Remove(professor);
         }
     }
 }

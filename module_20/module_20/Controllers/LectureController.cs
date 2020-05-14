@@ -60,7 +60,7 @@ namespace module_20.Controllers
             if (lecture == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecture.Id).Any())
+            if (!_db.Lectures.Find(l => l.Id == lecture.Id).ToList().Any())
                 return NotFound();
 
             _db.Lectures.Update(lecture);

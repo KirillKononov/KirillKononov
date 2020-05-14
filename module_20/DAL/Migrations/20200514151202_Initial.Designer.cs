@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20200513130053_Initial")]
+    [Migration("20200514151202_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace DAL.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LectureId")
+                    b.Property<int?>("LectureId")
                         .HasColumnType("int");
 
                     b.Property<int>("Mark")
@@ -40,7 +40,7 @@ namespace DAL.Migrations
                     b.Property<bool>("Presence")
                         .HasColumnType("bit");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int?>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -346,16 +346,12 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.HomeWork", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
-                        .WithMany()
-                        .HasForeignKey("LectureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("LectureHomeWorks")
+                        .HasForeignKey("LectureId");
 
                     b.HasOne("DAL.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("StudentHomeWorks")
+                        .HasForeignKey("StudentId");
                 });
 
             modelBuilder.Entity("DAL.Entities.Lecture", b =>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.DataAccess;
@@ -10,72 +12,94 @@ using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    //class StudentRepository : IRepository<Student>
-    //{
-    //    private readonly DataBaseContext _db;
-    //    private readonly ILogger _logger;
+    class StudentRepository : IRepository<StudentDTO, Student>
+    {
+        private readonly DataBaseContext _db;
+        private readonly ILogger _logger;
 
-    //    public StudentRepository(DataBaseContext context, ILogger logger)
-    //    {
-    //        _db = context;
-    //        _logger = logger;
-    //    }
+        private StudentDTO CreateStudentDto(Student student)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+            return new StudentDTO()
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                AverageMark = student.AverageMark,
+                MissedLectures = student.MissedLectures,
+                StudentHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(student.StudentHomeWorks)
+            };
+        }
 
-    //    public IEnumerable<Student> GetAll()
-    //    {
-    //        if (!_db.Students.Any())
-    //        {
-    //            _logger.LogError("There is no students in data base");
-    //            throw new ValidationException("There is no students in data base");
-    //        }
+        public StudentRepository(DataBaseContext context, ILogger logger)
+        {
+            _db = context;
+            _logger = logger;
+        }
 
-    //        return _db.Students;
-    //    }
+        public IEnumerable<StudentDTO> GetAll()
+        {
+            var students = _db.Students.ToList();
+            if (!students.Any())
+            {
+                _logger.LogError("There is no students in data base");
+                throw new ValidationException("There is no students in data base");
+            }
 
-    //    public Student Get(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            _logger.LogError("Student's id hasn't entered");
-    //            throw new ValidationException("Student's id hasn't entered");
-    //        }
+            return students
+                .Select(CreateStudentDto);
+        }
 
-    //        if (_db.Students.Find(id) == null)
-    //        {
-    //            _logger.LogError("There is no student in data base with this id");
-    //            throw new ValidationException("There is no student in data base with this id");
-    //        }
+        public StudentDTO Get(int? id)
+        {
+            Validator.IdValidation(id, _logger);
 
-    //        return _db.Students.Find(id);
-    //    }
+            var student = _db.Students.Find(id);
 
-    //    public void Create(Student item)
-    //    {
-    //        _db.Students.Add(item);
-    //    }
+            Validator.EntityValidation(student, _logger, nameof(student));
 
-    //    public void Update(Student item)
-    //    {
-    //        _db.Entry(item).State = EntityState.Modified;
-    //    }
+            return CreateStudentDto(student);
+        }
 
-    //    public IEnumerable<Student> Find(Func<Student, bool> predicate)
-    //    {
-    //        return _db.Students.Where(predicate).ToList();
-    //    }
+        public void Create(StudentDTO item)
+        {
+            var student = new Student()
+            {
+                FirstName = item.FirstName,
+                LastName = item.LastName,
+                AverageMark = item.AverageMark,
+                MissedLectures = item.MissedLectures
+            };
+            _db.Students.Add(student);
+        }
 
-    //    public void Delete(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            _logger.LogError("Student's id hasn't entered");
-    //            throw new ValidationException("Student's id hasn't entered");
-    //        }
+        public void Update(StudentDTO item)
+        {
+            var student = _db.Students.Find(item.Id);
+            student.FirstName = item.FirstName;
+            student.LastName = item.LastName;
+            student.AverageMark = item.AverageMark;
+            student.MissedLectures = item.MissedLectures;
+            _db.Entry(student).State = EntityState.Modified;
+        }
 
-    //        var student = _db.Students.Find(id);
+        public IEnumerable<StudentDTO> Find(Func<Student, bool> predicate)
+        {
+            var students = _db.Students.Where(predicate).ToList();
+            return students
+                .Select(CreateStudentDto);
+        }
 
-    //        if (student != null)
-    //            _db.Students.Remove(student);
-    //    }
-    //}
+        public void Delete(int? id)
+        {
+            Validator.IdValidation(id, _logger);
+
+            var student = _db.Students.Find(id);
+
+            Validator.EntityValidation(student, _logger, nameof(student));
+            
+            _db.Students.Remove(student);
+        }
+    }
 }

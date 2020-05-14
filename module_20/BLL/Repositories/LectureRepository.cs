@@ -19,6 +19,19 @@ namespace BLL.Repositories
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
 
+        private LectureDTO CreateLectureDto(Lecture lecture)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+            return new LectureDTO()
+            {
+                Id = lecture.Id,
+                Name = lecture.Name,
+                ProfessorId = lecture.ProfessorId,
+                LectureHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(lecture.LectureHomeWorks)
+            };
+        }
+
         public LectureRepository(DataBaseContext context, ILogger logger)
         {
             _db = context;
@@ -27,34 +40,27 @@ namespace BLL.Repositories
 
         public IEnumerable<LectureDTO> GetAll()
         {
-            if (!_db.Lectures.Any())
+            var lectures = _db.Lectures.ToList();
+
+            if (!lectures.Any())
             {
-                _logger.LogError("There is no lectures in data base");
-                throw new ValidationException("There is no lectures in data base");
+                _logger.LogError($"There are no lectures in database");
+                throw new ValidationException($"There are no lectures in database");
             }
 
-            var mapper = new MapperConfiguration(cfg => 
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(_db.Lectures);
+            return lectures
+                .Select(CreateLectureDto);
         }
 
         public LectureDTO Get(int? id)
         {
-            if (id == null)
-            {
-                _logger.LogError("Lecture's id hasn't entered");
-                throw new ValidationException("Lecture's id hasn't entered");
-            }
+            Validator.IdValidation(id, _logger);
 
             var lecture = _db.Lectures.Find(id);
 
-            if (lecture == null)
-            {
-                _logger.LogError("There is no lecture in data base with this id");
-                throw new ValidationException("There is no lecture in data base with this id");
-            }
+            Validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            return new LectureDTO() {Id = lecture.Id, Name = lecture.Name, ProfessorId = lecture.ProfessorId};
+            return CreateLectureDto(lecture);
         }
 
         public void Create(LectureDTO item)
@@ -68,11 +74,7 @@ namespace BLL.Repositories
 
             var lecture = _db.Lectures.Find(item.Id);
 
-            if (lecture == null)
-            {
-                _logger.LogError("There is no lecture in data base with this id");
-                throw new ValidationException("There is no lecture in data base with this id");
-            }
+            Validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             lecture.Name = item.Name;
             lecture.ProfessorId = item.ProfessorId;
@@ -84,27 +86,18 @@ namespace BLL.Repositories
             var lectures = _db.Lectures
                 .Where(predicate)
                 .ToList();
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(lectures);
+            return lectures
+                .Select(CreateLectureDto);
         }
 
         public void Delete(int? id)
         {
-            if (id == null)
-            {
-                _logger.LogError("Lecture's id hasn't entered");
-                throw new ValidationException("Lecture's id hasn't entered");
-            }
+            Validator.IdValidation(id, _logger);
 
             var lecture = _db.Lectures.Find(id);
 
-            if (lecture == null)
-            {
-                _logger.LogError("There is no lecture in data base with this id");
-                throw new ValidationException("There is no lecture in data base with this id");
-            }
-            
+            Validator.EntityValidation(lecture, _logger, nameof(lecture));
+
             _db.Lectures.Remove(lecture);
         }
     }

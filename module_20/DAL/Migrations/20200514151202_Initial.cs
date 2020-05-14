@@ -63,8 +63,8 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    LectureId = table.Column<int>(nullable: false),
+                    StudentId = table.Column<int>(nullable: true),
+                    LectureId = table.Column<int>(nullable: true),
                     Presence = table.Column<bool>(nullable: false),
                     Mark = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false)
@@ -77,13 +77,13 @@ namespace DAL.Migrations
                         column: x => x.LectureId,
                         principalTable: "Lectures",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_HomeWorks_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(

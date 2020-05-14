@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BLL.DTO
 {
-    public class ProfessorDTO
+    public class StudentDTO
     {
         public int Id { get; set; }
 
@@ -12,6 +12,10 @@ namespace BLL.DTO
 
         public string LastName { get; set; }
 
-        public List<LectureDTO> Lectures { get; set; }
+        public float AverageMark { get; set; }
+
+        public int MissedLectures { get; set; }
+
+        public List<HomeWorkDTO> StudentHomeWorks { get; set; }
     }
 }

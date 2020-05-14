@@ -7,7 +7,7 @@ namespace BLL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        //IRepository<Student> Students { get; }
+        IRepository<StudentDTO, Student> Students { get; }
         IRepository<ProfessorDTO, Professor> Professors { get; }
         IRepository<LectureDTO, Lecture> Lectures { get; }
         //IRepository<HomeWork> HomeWorks { get; }

@@ -57,7 +57,7 @@ namespace module_20.Controllers
             if (prof == null)
                 BadRequest();
 
-            if (!_db.Professors.Find(p => p.Id == prof.Id).Any())
+            if (!_db.Professors.Find(p => p.Id == prof.Id).ToList().Any())
                 NotFound();
 
             _db.Professors.Update(prof);

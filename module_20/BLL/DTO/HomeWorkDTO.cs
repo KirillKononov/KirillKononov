@@ -1,25 +1,21 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Text;
 
-namespace DAL.Entities
+namespace BLL.DTO
 {
-    public class HomeWork
+    public class HomeWorkDTO
     {
         public int Id { get; set; }
 
         public int? StudentId { get; set; }
-        public virtual Student Student { get; set; }
 
         public int? LectureId { get; set; }
-        public virtual Lecture Lecture { get; set; }
 
-        [Required]
         public bool Presence { get; set; }
 
-        [Required]
         public int Mark { get; set; }
 
-        [Required]
         public DateTime Date { get; set; }
     }
 }
