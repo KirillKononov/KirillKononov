@@ -33,7 +33,7 @@ namespace BLL.Repositories
             }
 
             return students
-                .Select(CreateStudentDto);
+                .Select(CreateStudentDTO);
         }
 
         public StudentDTO Get(int? id)
@@ -44,7 +44,7 @@ namespace BLL.Repositories
 
             Validator.EntityValidation(student, _logger, nameof(student));
 
-            return CreateStudentDto(student);
+            return CreateStudentDTO(student);
         }
 
         public void Create(StudentDTO item)
@@ -62,10 +62,12 @@ namespace BLL.Repositories
         public void Update(StudentDTO item)
         {
             var student = _db.Students.Find(item.Id);
+
             student.FirstName = item.FirstName;
             student.LastName = item.LastName;
             student.AverageMark = item.AverageMark;
             student.MissedLectures = item.MissedLectures;
+
             _db.Entry(student).State = EntityState.Modified;
         }
 
@@ -73,7 +75,7 @@ namespace BLL.Repositories
         {
             var students = _db.Students.Where(predicate).ToList();
             return students
-                .Select(CreateStudentDto);
+                .Select(CreateStudentDTO);
         }
 
         public void Delete(int? id)
@@ -87,10 +89,10 @@ namespace BLL.Repositories
             _db.Students.Remove(student);
         }
 
-        private StudentDTO CreateStudentDto(Student student)
+        private static StudentDTO CreateStudentDTO(Student student)
         {
             var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
             return new StudentDTO()
             {
                 Id = student.Id,
@@ -98,7 +100,7 @@ namespace BLL.Repositories
                 LastName = student.LastName,
                 AverageMark = student.AverageMark,
                 MissedLectures = student.MissedLectures,
-                StudentHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(student.StudentHomeWorks)
+                StudentHomeWorks = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(student.StudentHomeWorks)
             };
         }
     }

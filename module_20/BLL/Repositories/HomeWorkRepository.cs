@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.DataAccess;
@@ -10,74 +12,95 @@ using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    //class HomeWorkRepository : IRepository<HomeWork>
-    //{
-    //    private readonly DataBaseContext _db;
-    //    private readonly ILogger _logger;
+    class HomeworkRepository : IRepository<HomeworkDTO, Homework>
+    {
+        private readonly DataBaseContext _db;
+        private readonly ILogger _logger;
 
-    //    public HomeWorkRepository(DataBaseContext context, ILogger logger)
-    //    {
-    //        _db = context;
-    //        _logger = logger;
-    //    }
+        public HomeworkRepository(DataBaseContext context, ILogger logger)
+        {
+            _db = context;
+            _logger = logger;
+        }
 
-    //    public IEnumerable<HomeWork> GetAll()
-    //    {
-    //        if (!_db.HomeWorks.Any())
-    //        {
-    //            _logger.LogError("There is no home works in data base");
-    //            throw new ValidationException("There is no home works in data base");
-    //        }
+        public IEnumerable<HomeworkDTO> GetAll()
+        {
+            var homework = _db.Homework.ToList();
 
-    //        return _db.HomeWorks;
-    //    }
+            if (!homework.Any())
+            {
+                _logger.LogError("There is no homework in data base");
+                throw new ValidationException("There is no homework in data base");
+            }
 
-    //    public HomeWork Get(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            _logger.LogError("Home work's id hasn't entered");
-    //            throw new ValidationException("Home work's id hasn't entered");
-    //        }
+            return homework
+                .Select(CreateHomeworkDTO);
+        }
 
-    //        if (_db.HomeWorks.Find(id) == null)
-    //        {
-    //            _logger.LogError("There is no home work in data base with this id");
-    //            throw new ValidationException("There is no home work in data base with this id");
-    //        }
+        public HomeworkDTO Get(int? id)
+        {
+            Validator.IdValidation(id, _logger);
 
-    //        return _db.HomeWorks.Find(id);
-    //    }
+            var homework = _db.Homework.Find(id);
 
-    //    public void Create(HomeWork item)
-    //    {
-    //        _db.HomeWorks.Add(item);
-    //    }
+            Validator.EntityValidation(homework, _logger, nameof(homework));
 
-    //    public void Update(HomeWork item)
-    //    {
-    //        _db.Entry(item).State = EntityState.Modified;
-    //    }
+            return CreateHomeworkDTO(homework);
+        }
 
-    //    public IEnumerable<HomeWork> Find(Func<HomeWork, bool> predicate)
-    //    {
-    //        return _db.HomeWorks
-    //            .Where(predicate)
-    //            .ToList();
-    //    }
+        public void Create(HomeworkDTO item)
+        {
+            var homework = new Homework()
+            {
+                StudentId = item.StudentId,
+                LectureId = item.LectureId,
+                Presence = item.Presence,
+                Mark = item.Mark,
+                Date = item.Date
+            };
+            _db.Homework.Add(homework);
+        }
 
-    //    public void Delete(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            _logger.LogError("Home work's id hasn't entered");
-    //            throw new ValidationException("Home work's id hasn't entered");
-    //        }
+        public void Update(HomeworkDTO item)
+        {
+            var homework = _db.Homework.Find(item.Id);
 
-    //        var attendance = _db.HomeWorks.Find(id);
+            Validator.EntityValidation(homework, _logger, nameof(homework));
 
-    //        if (attendance != null)
-    //            _db.HomeWorks.Remove(attendance);
-    //    }
-    //}
+            homework.StudentId = item.StudentId;
+            homework.LectureId = item.LectureId;
+            homework.Presence = item.Presence;
+            homework.Mark = item.Mark;
+            homework.Date = item.Date;
+
+            _db.Entry(homework).State = EntityState.Modified;
+        }
+
+        public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
+        {
+            var homework = _db.Homework
+                .Where(predicate)
+                .ToList();
+            return homework
+                .Select(CreateHomeworkDTO);
+        }
+
+        public void Delete(int? id)
+        {
+            Validator.IdValidation(id, _logger);
+
+            var homework = _db.Homework.Find(id);
+
+            Validator.EntityValidation(homework, _logger, nameof(homework));
+
+            _db.Homework.Remove(homework);
+        }
+
+        private static HomeworkDTO CreateHomeworkDTO(Homework homework)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
+            return mapper.Map<Homework, HomeworkDTO>(homework);
+        }
+    }
 }

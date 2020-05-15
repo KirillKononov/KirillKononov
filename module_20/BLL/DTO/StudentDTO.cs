@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BLL.DTO
 {
@@ -16,6 +14,6 @@ namespace BLL.DTO
 
         public int MissedLectures { get; set; }
 
-        public List<HomeWorkDTO> StudentHomeWorks { get; set; }
+        public List<HomeworkDTO> StudentHomeWorks { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
 {
-    public class HomeWork
+    public class Homework
     {
         public int Id { get; set; }
 

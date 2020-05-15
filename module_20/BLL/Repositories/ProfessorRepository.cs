@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
 using BLL.DTO;
@@ -36,7 +34,7 @@ namespace BLL.Repositories
             }
 
             return professors
-                .Select(CreateProfessorDto);
+                .Select(CreateProfessorDTO);
         }
 
         public ProfessorDTO Get(int? id)
@@ -47,12 +45,16 @@ namespace BLL.Repositories
 
             Validator.EntityValidation(professor, _logger, nameof(professor));
 
-            return CreateProfessorDto(professor);
+            return CreateProfessorDTO(professor);
         }
 
         public void Create(ProfessorDTO item)
         {
-            var prof = new Professor() {FirstName = item.FirstName, LastName = item.LastName};
+            var prof = new Professor()
+            {
+                FirstName = item.FirstName, 
+                LastName = item.LastName
+            };
             _db.Professors.Add(prof);
         }
 
@@ -64,6 +66,7 @@ namespace BLL.Repositories
 
             professor.FirstName = item.FirstName;
             professor.LastName = item.LastName;
+
             _db.Entry(professor).State = EntityState.Modified;
         }
 
@@ -72,7 +75,7 @@ namespace BLL.Repositories
             var professors = _db.Professors.Where(predicate).ToList();
 
             return professors
-                .Select(CreateProfessorDto);
+                .Select(CreateProfessorDTO);
         }
 
         public void Delete(int? id)
@@ -86,7 +89,7 @@ namespace BLL.Repositories
             _db.Professors.Remove(professor);
         }
 
-        private ProfessorDTO CreateProfessorDto(Professor professor)
+        private static ProfessorDTO CreateProfessorDTO(Professor professor)
         {
             var mapper = new MapperConfiguration(cfg =>
                 cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();

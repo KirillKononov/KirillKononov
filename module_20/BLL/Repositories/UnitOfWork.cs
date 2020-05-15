@@ -13,7 +13,7 @@ namespace BLL.Repositories
         private StudentRepository _studentRepository;
         private ProfessorRepository _professorRepository;
         private LectureRepository _lectureRepository;
-        //private HomeWorkRepository _homeWorkRepository;
+        private HomeworkRepository _homeworkRepository;
 
         private readonly ILogger _logger;
 
@@ -32,8 +32,8 @@ namespace BLL.Repositories
         public IRepository<LectureDTO, Lecture> Lectures => _lectureRepository ?? 
                                                 (_lectureRepository = new LectureRepository(_db, _logger));
 
-        //public IRepository<HomeWork> HomeWorks => _homeWorkRepository ??
-                                                  //    (_homeWorkRepository = new HomeWorkRepository(_db, _logger));
+        public IRepository<HomeworkDTO, Homework> Homework => _homeworkRepository ??
+                                                      (_homeworkRepository = new HomeworkRepository(_db, _logger));
 
         public void Save()
         {

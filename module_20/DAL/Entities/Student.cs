@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
@@ -22,6 +21,6 @@ namespace DAL.Entities
         [Required]
         public int MissedLectures { get; set; }
 
-        public virtual List<HomeWork> StudentHomeWorks { get; set; }
+        public virtual List<Homework> StudentHomeWorks { get; set; }
     }
 }

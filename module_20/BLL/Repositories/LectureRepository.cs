@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
@@ -9,7 +8,6 @@ using BLL.Interfaces;
 using DAL.DataAccess;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
@@ -36,7 +34,7 @@ namespace BLL.Repositories
             }
 
             return lectures
-                .Select(CreateLectureDto);
+                .Select(CreateLectureDTO);
         }
 
         public LectureDTO Get(int? id)
@@ -47,12 +45,16 @@ namespace BLL.Repositories
 
             Validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            return CreateLectureDto(lecture);
+            return CreateLectureDTO(lecture);
         }
 
         public void Create(LectureDTO item)
         {
-            var lecture = new Lecture() {Name =  item.Name, ProfessorId = item.ProfessorId};
+            var lecture = new Lecture()
+            {
+                Name =  item.Name,
+                ProfessorId = item.ProfessorId
+            };
             _db.Lectures.Add(lecture);
         }
 
@@ -65,6 +67,7 @@ namespace BLL.Repositories
 
             lecture.Name = item.Name;
             lecture.ProfessorId = item.ProfessorId;
+
             _db.Entry(lecture).State = EntityState.Modified;
         }
 
@@ -74,7 +77,7 @@ namespace BLL.Repositories
                 .Where(predicate)
                 .ToList();
             return lectures
-                .Select(CreateLectureDto);
+                .Select(CreateLectureDTO);
         }
 
         public void Delete(int? id)
@@ -87,16 +90,16 @@ namespace BLL.Repositories
 
             _db.Lectures.Remove(lecture);
         }
-        private LectureDTO CreateLectureDto(Lecture lecture)
+        private static LectureDTO CreateLectureDTO(Lecture lecture)
         {
             var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
             return new LectureDTO()
             {
                 Id = lecture.Id,
                 Name = lecture.Name,
                 ProfessorId = lecture.ProfessorId,
-                LectureHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(lecture.LectureHomeWorks)
+                LectureHomeWorks = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(lecture.LectureHomeWorks)
             };
         }
     }

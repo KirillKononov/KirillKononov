@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +13,7 @@ namespace DAL.DataAccess
         }
 
         public DbSet<Student> Students { get; set; }
-        public DbSet<HomeWork> HomeWorks { get; set; }
+        public DbSet<Homework> Homework { get; set; }
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<Professor> Professors { get; set; }
 
@@ -55,40 +54,40 @@ namespace DAL.DataAccess
                     new Lecture { Id = 3, Name = "Physics", ProfessorId = 3}
                 });
 
-            modelBuilder.Entity<HomeWork>().HasData(
-                new HomeWork[]
+            modelBuilder.Entity<Homework>().HasData(
+                new Homework[]
                 {
-                    new HomeWork { Id = 1, StudentId = 1, LectureId = 1, Presence = true,
+                    new Homework { Id = 1, StudentId = 1, LectureId = 1, Presence = true,
                         Mark = 5, Date = new DateTime(2019,12, 02)},
-                    new HomeWork { Id = 2, StudentId = 2, LectureId = 1, Presence = false,
+                    new Homework { Id = 2, StudentId = 2, LectureId = 1, Presence = false,
                         Mark = 0, Date = new DateTime(2019,12, 02)},
-                    new HomeWork { Id = 3, StudentId = 3, LectureId = 1, Presence = true,
+                    new Homework { Id = 3, StudentId = 3, LectureId = 1, Presence = true,
                         Mark = 4, Date = new DateTime(2019,12, 02)},
-                    new HomeWork { Id = 4, StudentId = 4, LectureId = 1, Presence = true,
+                    new Homework { Id = 4, StudentId = 4, LectureId = 1, Presence = true,
                         Mark = 5, Date = new DateTime(2019,12, 02)},
-                    new HomeWork { Id = 5, StudentId = 5, LectureId = 1, Presence = true,
+                    new Homework { Id = 5, StudentId = 5, LectureId = 1, Presence = true,
                         Mark = 5, Date = new DateTime(2019,12, 02)},
 
-                    new HomeWork { Id = 6, StudentId = 1, LectureId = 2, Presence = true,
+                    new Homework { Id = 6, StudentId = 1, LectureId = 2, Presence = true,
                         Mark = 5, Date = new DateTime(2019,12, 04)},
-                    new HomeWork { Id = 7, StudentId = 2, LectureId = 2, Presence = false,
+                    new Homework { Id = 7, StudentId = 2, LectureId = 2, Presence = false,
                         Mark = 0, Date = new DateTime(2019,12, 04)},
-                    new HomeWork { Id = 8, StudentId = 3, LectureId = 2, Presence = true,
+                    new Homework { Id = 8, StudentId = 3, LectureId = 2, Presence = true,
                         Mark = 4, Date = new DateTime(2019,12, 04)},
-                    new HomeWork { Id = 9, StudentId = 4, LectureId = 2, Presence = false,
+                    new Homework { Id = 9, StudentId = 4, LectureId = 2, Presence = false,
                         Mark = 0, Date = new DateTime(2019,12, 04)},
-                    new HomeWork { Id = 10, StudentId = 5, LectureId = 2, Presence = true,
+                    new Homework { Id = 10, StudentId = 5, LectureId = 2, Presence = true,
                         Mark = 5, Date = new DateTime(2019,12, 04)},
 
-                    new HomeWork { Id = 11, StudentId = 1, LectureId = 3, Presence = true,
+                    new Homework { Id = 11, StudentId = 1, LectureId = 3, Presence = true,
                         Mark = 4, Date = new DateTime(2019,12, 06)},
-                    new HomeWork { Id = 12, StudentId = 2, LectureId = 3, Presence = false,
+                    new Homework { Id = 12, StudentId = 2, LectureId = 3, Presence = false,
                         Mark = 0, Date = new DateTime(2019,12, 06)},
-                    new HomeWork { Id = 13, StudentId = 3, LectureId = 3, Presence = true,
+                    new Homework { Id = 13, StudentId = 3, LectureId = 3, Presence = true,
                         Mark = 4, Date = new DateTime(2019,12, 06)},
-                    new HomeWork { Id = 14, StudentId = 4, LectureId = 3, Presence = false,
+                    new Homework { Id = 14, StudentId = 4, LectureId = 3, Presence = false,
                         Mark = 0, Date = new DateTime(2019,12, 06)},
-                    new HomeWork { Id = 15, StudentId = 5, LectureId = 3, Presence = true,
+                    new Homework { Id = 15, StudentId = 5, LectureId = 3, Presence = true,
                         Mark = 0, Date = new DateTime(2019,12, 06)}
                 });
         }

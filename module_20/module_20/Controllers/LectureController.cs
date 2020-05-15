@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BLL.DTO;
 using BLL.Interfaces;
-using DAL.DataAccess;
 using DAL.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace module_20.Controllers
@@ -49,7 +45,6 @@ namespace module_20.Controllers
 
             _db.Lectures.Create(lecture);
             _db.Save();
-
             return Ok(lecture);
         }
 
@@ -60,8 +55,8 @@ namespace module_20.Controllers
             if (lecture == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecture.Id).ToList().Any())
-                return NotFound();
+            if (!_db.Lectures.Find(l => l.Id == lecture.Id).ToList().Any()) 
+                NotFound();
 
             _db.Lectures.Update(lecture);
             _db.Save();

@@ -1,11 +1,4 @@
-﻿using System.Linq;
-using BLL.Infrastructure;
-using BLL.Interfaces;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace BLL.BusinessLogic
+﻿namespace BLL.BusinessLogic
 {
     public class ReportMaker //: IReportMaker
     {
@@ -27,7 +20,7 @@ namespace BLL.BusinessLogic
 
         //    if (student.Count != 0)
         //    {
-        //        var attendance = _dataBase.HomeWorks.Find(homeWork =>
+        //        var attendance = _dataBase.Homework.Find(homeWork =>
         //            homeWork.Student == student[0]);
         //        return JsonConvert.SerializeObject(attendance, 
         //            new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });
@@ -38,7 +31,7 @@ namespace BLL.BusinessLogic
 
         //    if (lecture.Count != 0)
         //    {
-        //        var attendance = _dataBase.HomeWorks.Find(homeWork => 
+        //        var attendance = _dataBase.Homework.Find(homeWork => 
         //            homeWork.Lecture == lecture[0]);
         //        return JsonConvert.SerializeObject(attendance,
         //            new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" });

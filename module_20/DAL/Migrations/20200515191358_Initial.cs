@@ -58,7 +58,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HomeWorks",
+                name: "Homework",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -71,15 +71,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HomeWorks", x => x.Id);
+                    table.PrimaryKey("PK_Homework", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HomeWorks_Lectures_LectureId",
+                        name: "FK_Homework_Lectures_LectureId",
                         column: x => x.LectureId,
                         principalTable: "Lectures",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_HomeWorks_Students_StudentId",
+                        name: "FK_Homework_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
@@ -124,7 +124,7 @@ namespace DAL.Migrations
                 values: new object[] { 3, "Physics", 3 });
 
             migrationBuilder.InsertData(
-                table: "HomeWorks",
+                table: "Homework",
                 columns: new[] { "Id", "Date", "LectureId", "Mark", "Presence", "StudentId" },
                 values: new object[,]
                 {
@@ -146,13 +146,13 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_HomeWorks_LectureId",
-                table: "HomeWorks",
+                name: "IX_Homework_LectureId",
+                table: "Homework",
                 column: "LectureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HomeWorks_StudentId",
-                table: "HomeWorks",
+                name: "IX_Homework_StudentId",
+                table: "Homework",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
@@ -164,7 +164,7 @@ namespace DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "HomeWorks");
+                name: "Homework");
 
             migrationBuilder.DropTable(
                 name: "Lectures");

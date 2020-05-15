@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20200514151202_Initial")]
+    [Migration("20200515191358_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DAL.Entities.HomeWork", b =>
+            modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("HomeWorks");
+                    b.ToTable("Homework");
 
                     b.HasData(
                         new
@@ -343,7 +343,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.HomeWork", b =>
+            modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
                         .WithMany("LectureHomeWorks")

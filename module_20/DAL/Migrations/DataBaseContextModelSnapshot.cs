@@ -19,7 +19,7 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DAL.Entities.HomeWork", b =>
+            modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("HomeWorks");
+                    b.ToTable("Homework");
 
                     b.HasData(
                         new
@@ -341,7 +341,7 @@ namespace DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DAL.Entities.HomeWork", b =>
+            modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
                         .WithMany("LectureHomeWorks")
