@@ -19,18 +19,6 @@ namespace BLL.Repositories
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
 
-        private ProfessorDTO CreateProfessorDto(Professor professor)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
-            return new ProfessorDTO()
-            {
-                Id = professor.Id,
-                FirstName = professor.FirstName,
-                LastName = professor.LastName,
-                Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(professor.Lectures)
-            };
-        }
         public ProfessorRepository(DataBaseContext context, ILogger logger)
         {
             _db = context;
@@ -96,6 +84,19 @@ namespace BLL.Repositories
             Validator.EntityValidation(professor, _logger, nameof(professor));
 
             _db.Professors.Remove(professor);
+        }
+
+        private ProfessorDTO CreateProfessorDto(Professor professor)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
+            return new ProfessorDTO()
+            {
+                Id = professor.Id,
+                FirstName = professor.FirstName,
+                LastName = professor.LastName,
+                Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(professor.Lectures)
+            };
         }
     }
 }

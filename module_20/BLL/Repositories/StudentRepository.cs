@@ -17,21 +17,6 @@ namespace BLL.Repositories
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
 
-        private StudentDTO CreateStudentDto(Student student)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
-            return new StudentDTO()
-            {
-                Id = student.Id,
-                FirstName = student.FirstName,
-                LastName = student.LastName,
-                AverageMark = student.AverageMark,
-                MissedLectures = student.MissedLectures,
-                StudentHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(student.StudentHomeWorks)
-            };
-        }
-
         public StudentRepository(DataBaseContext context, ILogger logger)
         {
             _db = context;
@@ -100,6 +85,21 @@ namespace BLL.Repositories
             Validator.EntityValidation(student, _logger, nameof(student));
             
             _db.Students.Remove(student);
+        }
+
+        private StudentDTO CreateStudentDto(Student student)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+            return new StudentDTO()
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                AverageMark = student.AverageMark,
+                MissedLectures = student.MissedLectures,
+                StudentHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(student.StudentHomeWorks)
+            };
         }
     }
 }

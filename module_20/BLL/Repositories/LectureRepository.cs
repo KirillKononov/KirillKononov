@@ -19,19 +19,6 @@ namespace BLL.Repositories
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
 
-        private LectureDTO CreateLectureDto(Lecture lecture)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
-            return new LectureDTO()
-            {
-                Id = lecture.Id,
-                Name = lecture.Name,
-                ProfessorId = lecture.ProfessorId,
-                LectureHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(lecture.LectureHomeWorks)
-            };
-        }
-
         public LectureRepository(DataBaseContext context, ILogger logger)
         {
             _db = context;
@@ -99,6 +86,18 @@ namespace BLL.Repositories
             Validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             _db.Lectures.Remove(lecture);
+        }
+        private LectureDTO CreateLectureDto(Lecture lecture)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<HomeWork, HomeWorkDTO>()).CreateMapper();
+            return new LectureDTO()
+            {
+                Id = lecture.Id,
+                Name = lecture.Name,
+                ProfessorId = lecture.ProfessorId,
+                LectureHomeWorks = mapper.Map<IEnumerable<HomeWork>, List<HomeWorkDTO>>(lecture.LectureHomeWorks)
+            };
         }
     }
 }
