@@ -24,7 +24,7 @@
 # Module 20
   ASP.NET Core application (not finished):
   
-  -Data access to DataBase (MSSQL) with Students, Professors, Subjects, Attendance;
+  -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework;
   
   -CRUD operations with instances of mentioned models;
   
