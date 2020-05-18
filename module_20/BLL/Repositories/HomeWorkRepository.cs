@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using BLL.BusinessLogic;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
@@ -39,11 +40,12 @@ namespace BLL.Repositories
 
         public HomeworkDTO Get(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var homework = _db.Homework.Find(id);
 
-            Validator.EntityValidation(homework, _logger, nameof(homework));
+            validator.EntityValidation(homework, _logger, nameof(homework));
 
             return CreateHomeworkDTO(homework);
         }
@@ -55,17 +57,20 @@ namespace BLL.Repositories
                 StudentId = item.StudentId,
                 LectureId = item.LectureId,
                 Presence = item.Presence,
-                Mark = item.Mark,
+                Mark = item.Presence ? item.Mark : 0,
                 Date = item.Date
             };
             _db.Homework.Add(homework);
+            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
         public void Update(HomeworkDTO item)
         {
             var homework = _db.Homework.Find(item.Id);
 
-            Validator.EntityValidation(homework, _logger, nameof(homework));
+            var validator = new Validator();
+            validator.EntityValidation(homework, _logger, nameof(homework));
 
             homework.StudentId = item.StudentId;
             homework.LectureId = item.LectureId;
@@ -74,6 +79,8 @@ namespace BLL.Repositories
             homework.Date = item.Date;
 
             _db.Entry(homework).State = EntityState.Modified;
+            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
@@ -87,13 +94,16 @@ namespace BLL.Repositories
 
         public void Delete(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var homework = _db.Homework.Find(id);
 
-            Validator.EntityValidation(homework, _logger, nameof(homework));
+            validator.EntityValidation(homework, _logger, nameof(homework));
 
             _db.Homework.Remove(homework);
+            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
 
         private static HomeworkDTO CreateHomeworkDTO(Homework homework)

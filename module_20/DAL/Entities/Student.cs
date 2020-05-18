@@ -21,6 +21,6 @@ namespace DAL.Entities
         [Required]
         public int MissedLectures { get; set; }
 
-        public virtual List<Homework> StudentHomeWorks { get; set; }
+        public virtual List<Homework> StudentHomework { get; set; }
     }
 }

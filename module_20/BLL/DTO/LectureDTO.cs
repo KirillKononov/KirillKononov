@@ -10,6 +10,6 @@ namespace BLL.DTO
 
         public int? ProfessorId { get; set; }
 
-        public List<HomeworkDTO> LectureHomeWorks { get; set; }
+        public List<HomeworkDTO> LectureHomework { get; set; }
     }
 }

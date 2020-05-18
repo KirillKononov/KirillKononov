@@ -38,11 +38,12 @@ namespace BLL.Repositories
 
         public StudentDTO Get(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var student = _db.Students.Find(id);
 
-            Validator.EntityValidation(student, _logger, nameof(student));
+            validator.EntityValidation(student, _logger, nameof(student));
 
             return CreateStudentDTO(student);
         }
@@ -80,11 +81,12 @@ namespace BLL.Repositories
 
         public void Delete(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var student = _db.Students.Find(id);
 
-            Validator.EntityValidation(student, _logger, nameof(student));
+            validator.EntityValidation(student, _logger, nameof(student));
             
             _db.Students.Remove(student);
         }
@@ -100,7 +102,7 @@ namespace BLL.Repositories
                 LastName = student.LastName,
                 AverageMark = student.AverageMark,
                 MissedLectures = student.MissedLectures,
-                StudentHomeWorks = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(student.StudentHomeWorks)
+                StudentHomework = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(student.StudentHomework)
             };
         }
     }

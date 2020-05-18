@@ -2,9 +2,9 @@
 
 namespace BLL.Infrastructure
 {
-    public static class Validator
+    public class Validator
     {
-        public static void IdValidation(int? id, ILogger logger)
+        public void IdValidation(int? id, ILogger logger)
         {
             if (id == null)
             {
@@ -13,7 +13,7 @@ namespace BLL.Infrastructure
             }
         }
 
-        public static void EntityValidation<T>(T entity, ILogger logger, string type) where T : class
+        public void EntityValidation<T>(T entity, ILogger logger, string type) where T : class
         {
             if (entity == null)
             {

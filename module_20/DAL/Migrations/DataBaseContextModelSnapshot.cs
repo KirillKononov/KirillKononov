@@ -344,11 +344,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
-                        .WithMany("LectureHomeWorks")
+                        .WithMany("LectureHomework")
                         .HasForeignKey("LectureId");
 
                     b.HasOne("DAL.Entities.Student", "Student")
-                        .WithMany("StudentHomeWorks")
+                        .WithMany("StudentHomework")
                         .HasForeignKey("StudentId");
                 });
 

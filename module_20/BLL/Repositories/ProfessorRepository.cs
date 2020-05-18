@@ -39,11 +39,12 @@ namespace BLL.Repositories
 
         public ProfessorDTO Get(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var professor = _db.Professors.Find(id);
 
-            Validator.EntityValidation(professor, _logger, nameof(professor));
+            validator.EntityValidation(professor, _logger, nameof(professor));
 
             return CreateProfessorDTO(professor);
         }
@@ -62,7 +63,8 @@ namespace BLL.Repositories
         {
             var professor = _db.Professors.Find(item.Id);
 
-            Validator.EntityValidation(professor, _logger, nameof(professor));
+            var validator = new Validator();
+            validator.EntityValidation(professor, _logger, nameof(professor));
 
             professor.FirstName = item.FirstName;
             professor.LastName = item.LastName;
@@ -80,11 +82,12 @@ namespace BLL.Repositories
 
         public void Delete(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var professor = _db.Professors.Find(id);
 
-            Validator.EntityValidation(professor, _logger, nameof(professor));
+            validator.EntityValidation(professor, _logger, nameof(professor));
 
             _db.Professors.Remove(professor);
         }

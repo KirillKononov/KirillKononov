@@ -14,6 +14,6 @@ namespace BLL.DTO
 
         public int MissedLectures { get; set; }
 
-        public List<HomeworkDTO> StudentHomeWorks { get; set; }
+        public List<HomeworkDTO> StudentHomework { get; set; }
     }
 }

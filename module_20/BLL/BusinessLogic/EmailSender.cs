@@ -8,11 +8,8 @@ namespace BLL.BusinessLogic
     {
         public void Send(Student student, ILogger logger = null)
         {
-            if (student.MissedLectures > 3)
-            {
-                logger.LogInformation($"Student {student.FirstName} {student.LastName} missed" +
-                                      $" {student.MissedLectures} lectures");
-            }
+            logger.LogInformation($"Student {student.FirstName} {student.LastName} missed" +
+                                  $" {student.MissedLectures} lectures");
         }
     }
 }

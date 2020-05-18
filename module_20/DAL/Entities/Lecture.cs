@@ -14,6 +14,6 @@ namespace DAL.Entities
         public int? ProfessorId { get; set; }
         public virtual Professor Professor { get; set; }
 
-        public virtual List<Homework> LectureHomeWorks { get; set; }
+        public virtual List<Homework> LectureHomework { get; set; }
     }
 }

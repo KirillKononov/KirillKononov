@@ -8,10 +8,7 @@ namespace BLL.BusinessLogic
     {
         public void Send(Student student, ILogger logger = null)
         {
-            if (student.AverageMark < 4)
-            {
-                logger.LogInformation($"Your average mark is {student.AverageMark}. Start doing something!");
-            }
+            logger.LogInformation($"Your average mark is {student.AverageMark}. Start doing something!");
         }
     }
 }

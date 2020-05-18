@@ -39,11 +39,12 @@ namespace BLL.Repositories
 
         public LectureDTO Get(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var lecture = _db.Lectures.Find(id);
 
-            Validator.EntityValidation(lecture, _logger, nameof(lecture));
+            validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             return CreateLectureDTO(lecture);
         }
@@ -63,7 +64,8 @@ namespace BLL.Repositories
 
             var lecture = _db.Lectures.Find(item.Id);
 
-            Validator.EntityValidation(lecture, _logger, nameof(lecture));
+            var validator = new Validator();
+            validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             lecture.Name = item.Name;
             lecture.ProfessorId = item.ProfessorId;
@@ -82,11 +84,12 @@ namespace BLL.Repositories
 
         public void Delete(int? id)
         {
-            Validator.IdValidation(id, _logger);
+            var validator = new Validator();
+            validator.IdValidation(id, _logger);
 
             var lecture = _db.Lectures.Find(id);
 
-            Validator.EntityValidation(lecture, _logger, nameof(lecture));
+            validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             _db.Lectures.Remove(lecture);
         }
@@ -99,7 +102,7 @@ namespace BLL.Repositories
                 Id = lecture.Id,
                 Name = lecture.Name,
                 ProfessorId = lecture.ProfessorId,
-                LectureHomeWorks = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(lecture.LectureHomeWorks)
+                LectureHomework = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(lecture.LectureHomework)
             };
         }
     }

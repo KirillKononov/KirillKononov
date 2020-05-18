@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20200515191358_Initial")]
+    [Migration("20200518180412_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -346,11 +346,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Homework", b =>
                 {
                     b.HasOne("DAL.Entities.Lecture", "Lecture")
-                        .WithMany("LectureHomeWorks")
+                        .WithMany("LectureHomework")
                         .HasForeignKey("LectureId");
 
                     b.HasOne("DAL.Entities.Student", "Student")
-                        .WithMany("StudentHomeWorks")
+                        .WithMany("StudentHomework")
                         .HasForeignKey("StudentId");
                 });
 
