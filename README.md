@@ -1,4 +1,4 @@
-# .NET Training Home Works
+# .NET Training Homework
 
 # Module 2
   Work with classes and dictoinary
@@ -22,10 +22,10 @@
   Work with LINQ
             
 # Module 20
-  ASP.NET Core application (not finished):
+  ASP.NET Core web.api (WIP):
   
-  -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework;
+  -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework via Entity Framework;
   
   -CRUD operations with instances of mentioned models;
   
-  -The Probability to make an Attendance report for any of Subjects or Students.
+  -The probability to make an Attendance report for any of the Subjects or Students.
