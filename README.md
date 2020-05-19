@@ -28,7 +28,7 @@
   Work with LINQ
             
 # Module 20
-  ASP.NET Core web.api (WIP):
+  ASP.NET Core web.api rest application (WIP):
   
   -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework via Entity Framework;
   
