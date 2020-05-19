@@ -1,4 +1,4 @@
-# .NET Training Homework
+# Repository Description
 
 # Module 2
   Work with classes and dictoinary
