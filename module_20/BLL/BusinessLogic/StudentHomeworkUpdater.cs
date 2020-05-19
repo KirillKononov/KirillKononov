@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.DataAccess;
@@ -15,16 +13,19 @@ namespace BLL.BusinessLogic
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
+        private readonly bool _previousPresence;
 
-        public StudentHomeworkUpdater(DataBaseContext db, ILogger logger)
+        public StudentHomeworkUpdater(DataBaseContext db , ILogger logger, bool previousPresence = true)
         {
             _db = db;
             _logger = logger;
+            _previousPresence = previousPresence;
         }
 
         public enum UpdateType
         {
             AddHomework,
+            UpdateHomework,
             RemoveHomework
         }
 
@@ -35,24 +36,39 @@ namespace BLL.BusinessLogic
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
 
-            student.AverageMark = AverageMarkCount(student.StudentHomework);
+            student.AverageMark = AverageMarkCount(student.StudentHomework, homework.Mark, updateType);
 
-            if (!homework.Presence)
-                student.MissedLectures = updateType == UpdateType.AddHomework ? 
-                    student.MissedLectures + 1 : student.MissedLectures - 1;
+            student.MissedLectures = MissedLecturesCount(homework.Presence, student.MissedLectures, updateType);
 
             _db.Entry(student).State = EntityState.Modified;
 
-            if(updateType == UpdateType.AddHomework)
+            if(updateType == UpdateType.AddHomework || updateType == UpdateType.UpdateHomework)
                 SendMessage(student, _logger);
         }
 
-        private float AverageMarkCount(IReadOnlyCollection<Homework> studentHomework)
+        private float AverageMarkCount(IReadOnlyCollection<Homework> studentHomework,int mark, UpdateType updateType)
         {
             float marks = studentHomework.Sum(work => work.Mark);
-            return marks / studentHomework.Count;
-            //return updateType == UpdateType.AddHomework ? 
-            //    (marks + mark) / (studentHomework.Count + 1) : (marks - mark) / (studentHomework.Count - 1);
+            return updateType == UpdateType.RemoveHomework ? 
+                (marks - mark) / (studentHomework.Count - 1) : marks / studentHomework.Count;
+        }
+
+        private int MissedLecturesCount(bool presence, int missedLectures, UpdateType updateType)
+        {
+            if (updateType == UpdateType.UpdateHomework)
+            {
+                if (!_previousPresence && presence)
+                    return missedLectures - 1;
+
+                if (_previousPresence && !presence)
+                    return missedLectures + 1;
+            }
+            
+            if (!presence)
+                return updateType == UpdateType.AddHomework ? 
+                    missedLectures + 1 : missedLectures - 1;
+
+            return missedLectures;
         }
 
         private void SendMessage(Student student, ILogger logger)

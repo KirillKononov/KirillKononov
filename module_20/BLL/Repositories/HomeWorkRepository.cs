@@ -68,6 +68,7 @@ namespace BLL.Repositories
         public void Update(HomeworkDTO item)
         {
             var homework = _db.Homework.Find(item.Id);
+            var previousHomeworkPresence = homework.Presence;
 
             var validator = new Validator();
             validator.EntityValidation(homework, _logger, nameof(homework));
@@ -75,12 +76,12 @@ namespace BLL.Repositories
             homework.StudentId = item.StudentId;
             homework.LectureId = item.LectureId;
             homework.Presence = item.Presence;
-            homework.Mark = item.Mark;
+            homework.Mark = item.Presence ? item.Mark : 0;
             homework.Date = item.Date;
 
             _db.Entry(homework).State = EntityState.Modified;
-            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
-            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
+            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
+            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.UpdateHomework);
         }
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
