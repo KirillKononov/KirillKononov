@@ -1,5 +1,11 @@
 # Repository Description
 
+# AnseremTest
+  ASP.NET Core MVC application
+  
+# BookListRazor
+  ASP.NET Core Razor Pages application
+  
 # Module 2
   Work with classes and dictoinary
   
