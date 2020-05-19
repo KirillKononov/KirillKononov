@@ -1,5 +1,14 @@
 # Repository Description
 
+# Module 20 (WIP)
+  ASP.NET Core Web.API REST application:
+  
+  -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework via Entity Framework;
+  
+  -CRUD operations with instances of mentioned models;
+  
+  -The probability to make an Attendance report for any of the Subjects or Students.
+
 # AnseremTest
   ASP.NET Core MVC application
   
@@ -26,12 +35,3 @@
           
 # Module 9
   Work with LINQ
-            
-# Module 20 (WIP)
-  ASP.NET Core Web.API REST application:
-  
-  -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework via Entity Framework;
-  
-  -CRUD operations with instances of mentioned models;
-  
-  -The probability to make an Attendance report for any of the Subjects or Students.
