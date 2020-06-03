@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
+using module_20.DTO;
 
 namespace module_20.Controllers
 {
@@ -38,11 +40,12 @@ namespace module_20.Controllers
 
         // POST: Lecture
         [HttpPost]
-        public ActionResult<Lecture> Post(LectureDTO lecture)
+        public ActionResult<Lecture> Post(LecturePl lecturePl)
         {
-            if (lecture == null)
+            if (lecturePl == null)
                 BadRequest();
 
+            var lecture = CreateLectureDTO(lecturePl);
             _db.Lectures.Create(lecture);
             _db.Save();
             return Ok(lecture);
@@ -50,14 +53,15 @@ namespace module_20.Controllers
 
         // PUT: Lecture
         [HttpPut]
-        public ActionResult<LectureDTO> Put(LectureDTO lecture)
+        public ActionResult<LectureDTO> Put(LecturePl lecturePl)
         {
-            if (lecture == null)
+            if (lecturePl == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecture.Id).ToList().Any()) 
+            if (!_db.Lectures.Find(l => l.Id == lecturePl.Id).ToList().Any()) 
                 NotFound();
 
+            var lecture = CreateLectureDTO(lecturePl);
             _db.Lectures.Update(lecture);
             _db.Save();
 
@@ -75,6 +79,13 @@ namespace module_20.Controllers
             _db.Lectures.Delete(id);
             _db.Save();
             return Ok(lecture);
+        }
+
+        private LectureDTO CreateLectureDTO(LecturePl lecturePl)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<LecturePl, LectureDTO>()).CreateMapper();
+            return mapper.Map<LecturePl, LectureDTO>(lecturePl);
         }
     }
 }

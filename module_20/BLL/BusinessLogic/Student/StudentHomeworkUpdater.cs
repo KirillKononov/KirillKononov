@@ -38,7 +38,7 @@ namespace BLL.BusinessLogic.Student
 
             student.AverageMark = AverageMarkCount(student.StudentHomework, homework.Mark, updateType);
 
-            student.MissedLectures = MissedLecturesCount(homework.Presence, student.MissedLectures, updateType);
+            student.MissedLectures = MissedLecturesCount(homework.StudentPresence, student.MissedLectures, updateType);
 
             _db.Entry(student).State = EntityState.Modified;
 

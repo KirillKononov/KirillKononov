@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using module_20.DTO;
 
 namespace module_20.Controllers
 {
@@ -37,26 +39,28 @@ namespace module_20.Controllers
 
         // POST: Professor
         [HttpPost]
-        public ActionResult<ProfessorDTO> Post(ProfessorDTO prof)
+        public ActionResult<ProfessorDTO> Post(ProfessorPl profPl)
         {
-            if (prof == null)
+            if (profPl == null)
                 BadRequest();
-            
+
+            var prof = createProfessorDTO(profPl);
             _db.Professors.Create(prof);
             _db.Save();
             return Ok(prof);
         }
 
-        // PUT: Professor/5
+        // PUT: Professor
         [HttpPut]
-        public ActionResult<ProfessorDTO> Put(ProfessorDTO prof)
+        public ActionResult<ProfessorDTO> Put(ProfessorPl profPl)
         {
-            if (prof == null)
+            if (profPl == null)
                 BadRequest();
 
-            if (!_db.Professors.Find(p => p.Id == prof.Id).ToList().Any())
+            if (!_db.Professors.Find(p => p.Id == profPl.Id).ToList().Any())
                 NotFound();
 
+            var prof = createProfessorDTO(profPl);
             _db.Professors.Update(prof);
             _db.Save();
             return Ok(prof);
@@ -73,6 +77,13 @@ namespace module_20.Controllers
             _db.Professors.Delete(id);
             _db.Save();
             return Ok(prof);
+        }
+
+        private ProfessorDTO createProfessorDTO(ProfessorPl professorPl)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<ProfessorPl, ProfessorDTO>()).CreateMapper();
+            return mapper.Map<ProfessorPl, ProfessorDTO>(professorPl);
         }
     }
 }

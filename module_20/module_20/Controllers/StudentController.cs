@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using module_20.DTO;
 
 namespace module_20.Controllers
 {
@@ -37,26 +39,28 @@ namespace module_20.Controllers
 
         // POST: Student
         [HttpPost]
-        public ActionResult<StudentDTO> Post(StudentDTO student)
+        public ActionResult<StudentDTO> Post(StudentPl studentPl)
         {
-            if (student == null)
+            if (studentPl == null)
                 BadRequest();
 
+            var student = createStudentDTO(studentPl);
             _db.Students.Create(student);
             _db.Save();
             return Ok(student);
         }
 
-        // PUT: Student/5
+        // PUT: Student
         [HttpPut]
-        public ActionResult<StudentDTO> Put(StudentDTO student)
+        public ActionResult<StudentDTO> Put(StudentPl studentPl)
         {
-            if (student == null)
+            if (studentPl == null)
                 BadRequest();
 
-            if (!_db.Students.Find(s => s.Id == student.Id).Any())
+            if (!_db.Students.Find(s => s.Id == studentPl.Id).Any())
                 NotFound();
 
+            var student = createStudentDTO(studentPl);
             _db.Students.Update(student);
             _db.Save();
             return Ok(student);
@@ -73,6 +77,13 @@ namespace module_20.Controllers
             _db.Students.Delete(id);
             _db.Save();
             return Ok(student);
+        }
+
+        private StudentDTO createStudentDTO(StudentPl studentPl)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<StudentPl, StudentDTO>()).CreateMapper();
+            return mapper.Map<StudentPl, StudentDTO>(studentPl);
         }
     }
 }

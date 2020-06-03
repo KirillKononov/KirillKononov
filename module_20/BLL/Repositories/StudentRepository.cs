@@ -54,9 +54,8 @@ namespace BLL.Repositories
             {
                 FirstName = item.FirstName,
                 LastName = item.LastName,
-                AverageMark = item.AverageMark,
-                MissedLectures = item.MissedLectures
             };
+
             _db.Students.Add(student);
         }
 
@@ -64,10 +63,11 @@ namespace BLL.Repositories
         {
             var student = _db.Students.Find(item.Id);
 
+            var validator = new Validator();
+            validator.EntityValidation(student, _logger, nameof(student));
+
             student.FirstName = item.FirstName;
             student.LastName = item.LastName;
-            student.AverageMark = item.AverageMark;
-            student.MissedLectures = item.MissedLectures;
 
             _db.Entry(student).State = EntityState.Modified;
         }

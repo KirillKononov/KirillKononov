@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using module_20.DTO;
 
 namespace module_20.Controllers
 {
@@ -37,23 +39,25 @@ namespace module_20.Controllers
 
         // POST: Homework
         [HttpPost]
-        public ActionResult<HomeworkDTO> Post(HomeworkDTO homework)
+        public ActionResult<HomeworkDTO> Post(HomeworkPl homeworkPl)
         {
-            if (homework == null)
+            if (homeworkPl == null)
                 BadRequest();
 
+            var homework = CreateHomeworkDTO(homeworkPl);
             _db.Homework.Create(homework);
             _db.Save();
             return Ok(homework);
         }
 
-        // PUT: Homework/5
+        // PUT: Homework
         [HttpPut]
-        public ActionResult<HomeworkDTO> Put(HomeworkDTO homework)
+        public ActionResult<HomeworkDTO> Put(HomeworkPl homeworkPl)
         {
-            if (homework == null)
+            if (homeworkPl == null)
                 BadRequest();
 
+            var homework = CreateHomeworkDTO(homeworkPl);
             if (!_db.Homework.Find(h => h.Id == homework.Id).Any())
                 NotFound();
 
@@ -73,6 +77,13 @@ namespace module_20.Controllers
             _db.Homework.Delete(id);
             _db.Save();
             return Ok(homework);
+        }
+
+        private HomeworkDTO CreateHomeworkDTO(HomeworkPl homeworkPl)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<HomeworkPl, HomeworkDTO>()).CreateMapper();
+            return mapper.Map<HomeworkPl, HomeworkDTO>(homeworkPl);
         }
     }
 }

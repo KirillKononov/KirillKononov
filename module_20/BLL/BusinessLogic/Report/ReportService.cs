@@ -46,7 +46,8 @@ namespace BLL.BusinessLogic.Report
                     ProfessorName = $"{_db.Professors.Get(_db.Lectures.Get(homework.LectureId).ProfessorId).FirstName} " +
                                     $"{_db.Professors.Get(_db.Lectures.Get(homework.LectureId).ProfessorId).LastName}",
                     StudentName = $"{student.FirstName} {student.LastName}",
-                    Presence = homework.Presence,
+                    StudentPresence = homework.StudentPresence,
+                    HomeworkPresence = homework.HomeworkPresence,
                     Mark = homework.Mark,
                     Date = homework.Date
                 };
@@ -78,7 +79,8 @@ namespace BLL.BusinessLogic.Report
                                     $"{_db.Professors.Get(lecture.ProfessorId).LastName}",
                     StudentName = $"{_db.Students.Get(homework.StudentId).FirstName} " +
                                   $"{_db.Students.Get(homework.StudentId).LastName}",
-                    Presence = homework.Presence,
+                    StudentPresence = homework.StudentPresence, 
+                    HomeworkPresence = homework.HomeworkPresence,
                     Mark = homework.Mark,
                     Date = homework.Date
                 };

@@ -56,31 +56,46 @@ namespace BLL.Repositories
             {
                 StudentId = item.StudentId,
                 LectureId = item.LectureId,
-                Presence = item.Presence,
-                Mark = item.Presence ? item.Mark : 0,
+                StudentPresence = item.StudentPresence,
+                HomeworkPresence = item.StudentPresence && item.HomeworkPresence, 
+                Mark = item.StudentPresence && item.HomeworkPresence ? item.Mark : 0,
                 Date = item.Date
             };
+
+            if (homework.HomeworkPresence && homework.Mark < 1)
+            {
+                _logger.LogWarning($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+            }
+
             _db.Homework.Add(homework);
-            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
             studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
         public void Update(HomeworkDTO item)
         {
             var homework = _db.Homework.Find(item.Id);
-            var previousHomeworkPresence = homework.Presence;
+            var previousHomeworkPresence = homework.StudentPresence;
 
             var validator = new Validator();
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             homework.StudentId = item.StudentId;
             homework.LectureId = item.LectureId;
-            homework.Presence = item.Presence;
-            homework.Mark = item.Presence ? item.Mark : 0;
+            homework.StudentPresence = item.StudentPresence;
+            homework.HomeworkPresence = item.StudentPresence && item.HomeworkPresence;
+            homework.Mark = homework.HomeworkPresence ? item.Mark : 0;
             homework.Date = item.Date;
 
+            if (homework.HomeworkPresence && homework.Mark < 1)
+            {
+                _logger.LogWarning($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+            }
+
             _db.Entry(homework).State = EntityState.Modified;
-            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
             studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.UpdateHomework);
         }
 
@@ -103,7 +118,7 @@ namespace BLL.Repositories
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             _db.Homework.Remove(homework);
-            IStudentHomeworkUpdater studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
             studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
 

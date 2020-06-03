@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20200518180412_Initial")]
+    [Migration("20200603184249_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,17 +31,20 @@ namespace DAL.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("HomeworkPresence")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("LectureId")
                         .HasColumnType("int");
 
                     b.Property<int>("Mark")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Presence")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("StudentId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("StudentPresence")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -56,136 +59,151 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             Date = new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 1,
                             Mark = 5,
-                            Presence = true,
-                            StudentId = 1
+                            StudentId = 1,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 2,
                             Date = new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = false,
                             LectureId = 1,
                             Mark = 0,
-                            Presence = false,
-                            StudentId = 2
+                            StudentId = 2,
+                            StudentPresence = false
                         },
                         new
                         {
                             Id = 3,
                             Date = new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 1,
                             Mark = 4,
-                            Presence = true,
-                            StudentId = 3
+                            StudentId = 3,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 4,
                             Date = new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 1,
                             Mark = 5,
-                            Presence = true,
-                            StudentId = 4
+                            StudentId = 4,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 5,
                             Date = new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 1,
                             Mark = 5,
-                            Presence = true,
-                            StudentId = 5
+                            StudentId = 5,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 6,
                             Date = new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 2,
                             Mark = 5,
-                            Presence = true,
-                            StudentId = 1
+                            StudentId = 1,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 7,
                             Date = new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = false,
                             LectureId = 2,
                             Mark = 0,
-                            Presence = false,
-                            StudentId = 2
+                            StudentId = 2,
+                            StudentPresence = false
                         },
                         new
                         {
                             Id = 8,
                             Date = new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 2,
                             Mark = 4,
-                            Presence = true,
-                            StudentId = 3
+                            StudentId = 3,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 9,
                             Date = new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = false,
                             LectureId = 2,
                             Mark = 0,
-                            Presence = false,
-                            StudentId = 4
+                            StudentId = 4,
+                            StudentPresence = false
                         },
                         new
                         {
                             Id = 10,
                             Date = new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 2,
                             Mark = 5,
-                            Presence = true,
-                            StudentId = 5
+                            StudentId = 5,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 11,
                             Date = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 3,
                             Mark = 4,
-                            Presence = true,
-                            StudentId = 1
+                            StudentId = 1,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 12,
                             Date = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = false,
                             LectureId = 3,
                             Mark = 0,
-                            Presence = false,
-                            StudentId = 2
+                            StudentId = 2,
+                            StudentPresence = false
                         },
                         new
                         {
                             Id = 13,
                             Date = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 3,
                             Mark = 4,
-                            Presence = true,
-                            StudentId = 3
+                            StudentId = 3,
+                            StudentPresence = true
                         },
                         new
                         {
                             Id = 14,
                             Date = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = false,
                             LectureId = 3,
                             Mark = 0,
-                            Presence = false,
-                            StudentId = 4
+                            StudentId = 4,
+                            StudentPresence = false
                         },
                         new
                         {
                             Id = 15,
                             Date = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HomeworkPresence = true,
                             LectureId = 3,
-                            Mark = 0,
-                            Presence = true,
-                            StudentId = 5
+                            Mark = 1,
+                            StudentId = 5,
+                            StudentPresence = true
                         });
                 });
 
@@ -336,7 +354,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 5,
-                            AverageMark = 3.33f,
+                            AverageMark = 3.67f,
                             FirstName = "Anton",
                             LastName = "Antipov",
                             MissedLectures = 0

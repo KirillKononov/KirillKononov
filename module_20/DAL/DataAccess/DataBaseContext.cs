@@ -35,7 +35,7 @@ namespace DAL.DataAccess
                         AverageMark = (float) 1.67, MissedLectures = 2},
 
                     new Student { Id = 5, FirstName = "Anton", LastName = "Antipov",
-                        AverageMark = (float) 3.33, MissedLectures = 0}
+                        AverageMark = (float) 3.67, MissedLectures = 0}
                 });
 
             modelBuilder.Entity<Professor>().HasData(
@@ -57,38 +57,38 @@ namespace DAL.DataAccess
             modelBuilder.Entity<Homework>().HasData(
                 new Homework[]
                 {
-                    new Homework { Id = 1, StudentId = 1, LectureId = 1, Presence = true,
-                        Mark = 5, Date = new DateTime(2019,12, 02)},
-                    new Homework { Id = 2, StudentId = 2, LectureId = 1, Presence = false,
-                        Mark = 0, Date = new DateTime(2019,12, 02)},
-                    new Homework { Id = 3, StudentId = 3, LectureId = 1, Presence = true,
-                        Mark = 4, Date = new DateTime(2019,12, 02)},
-                    new Homework { Id = 4, StudentId = 4, LectureId = 1, Presence = true,
-                        Mark = 5, Date = new DateTime(2019,12, 02)},
-                    new Homework { Id = 5, StudentId = 5, LectureId = 1, Presence = true,
-                        Mark = 5, Date = new DateTime(2019,12, 02)},
+                    new Homework { Id = 1, StudentId = 1, LectureId = 1, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 5, Date = new DateTime(2019,12, 02)},
+                    new Homework { Id = 2, StudentId = 2, LectureId = 1, StudentPresence = false,
+                        HomeworkPresence = false, Mark = 0, Date = new DateTime(2019,12, 02)},
+                    new Homework { Id = 3, StudentId = 3, LectureId = 1, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 4, Date = new DateTime(2019,12, 02)},
+                    new Homework { Id = 4, StudentId = 4, LectureId = 1, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 5, Date = new DateTime(2019,12, 02)},
+                    new Homework { Id = 5, StudentId = 5, LectureId = 1, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 5, Date = new DateTime(2019,12, 02)},
 
-                    new Homework { Id = 6, StudentId = 1, LectureId = 2, Presence = true,
-                        Mark = 5, Date = new DateTime(2019,12, 04)},
-                    new Homework { Id = 7, StudentId = 2, LectureId = 2, Presence = false,
-                        Mark = 0, Date = new DateTime(2019,12, 04)},
-                    new Homework { Id = 8, StudentId = 3, LectureId = 2, Presence = true,
-                        Mark = 4, Date = new DateTime(2019,12, 04)},
-                    new Homework { Id = 9, StudentId = 4, LectureId = 2, Presence = false,
-                        Mark = 0, Date = new DateTime(2019,12, 04)},
-                    new Homework { Id = 10, StudentId = 5, LectureId = 2, Presence = true,
-                        Mark = 5, Date = new DateTime(2019,12, 04)},
+                    new Homework { Id = 6, StudentId = 1, LectureId = 2, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 5, Date = new DateTime(2019,12, 04)},
+                    new Homework { Id = 7, StudentId = 2, LectureId = 2, StudentPresence = false,
+                        HomeworkPresence = false, Mark = 0, Date = new DateTime(2019,12, 04)},
+                    new Homework { Id = 8, StudentId = 3, LectureId = 2, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 4, Date = new DateTime(2019,12, 04)},
+                    new Homework { Id = 9, StudentId = 4, LectureId = 2, StudentPresence = false,
+                        HomeworkPresence = false, Mark = 0, Date = new DateTime(2019,12, 04)},
+                    new Homework { Id = 10, StudentId = 5, LectureId = 2, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 5, Date = new DateTime(2019,12, 04)},
 
-                    new Homework { Id = 11, StudentId = 1, LectureId = 3, Presence = true,
-                        Mark = 4, Date = new DateTime(2019,12, 06)},
-                    new Homework { Id = 12, StudentId = 2, LectureId = 3, Presence = false,
-                        Mark = 0, Date = new DateTime(2019,12, 06)},
-                    new Homework { Id = 13, StudentId = 3, LectureId = 3, Presence = true,
-                        Mark = 4, Date = new DateTime(2019,12, 06)},
-                    new Homework { Id = 14, StudentId = 4, LectureId = 3, Presence = false,
-                        Mark = 0, Date = new DateTime(2019,12, 06)},
-                    new Homework { Id = 15, StudentId = 5, LectureId = 3, Presence = true,
-                        Mark = 0, Date = new DateTime(2019,12, 06)}
+                    new Homework { Id = 11, StudentId = 1, LectureId = 3, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 4, Date = new DateTime(2019,12, 06)},
+                    new Homework { Id = 12, StudentId = 2, LectureId = 3, StudentPresence = false,
+                        HomeworkPresence = false, Mark = 0, Date = new DateTime(2019,12, 06)},
+                    new Homework { Id = 13, StudentId = 3, LectureId = 3, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 4, Date = new DateTime(2019,12, 06)},
+                    new Homework { Id = 14, StudentId = 4, LectureId = 3, StudentPresence = false,
+                        HomeworkPresence = false, Mark = 0, Date = new DateTime(2019,12, 06)},
+                    new Homework { Id = 15, StudentId = 5, LectureId = 3, StudentPresence = true,
+                        HomeworkPresence = true, Mark = 1, Date = new DateTime(2019,12, 06)}
                 });
         }
     }

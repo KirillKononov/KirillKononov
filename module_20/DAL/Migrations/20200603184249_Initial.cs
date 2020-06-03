@@ -65,7 +65,8 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(nullable: true),
                     LectureId = table.Column<int>(nullable: true),
-                    Presence = table.Column<bool>(nullable: false),
+                    StudentPresence = table.Column<bool>(nullable: false),
+                    HomeworkPresence = table.Column<bool>(nullable: false),
                     Mark = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false)
                 },
@@ -105,7 +106,7 @@ namespace DAL.Migrations
                     { 2, 0f, "Ivan", "Ivanov", 3 },
                     { 3, 4f, "Semen", "Petrov", 0 },
                     { 4, 1.67f, "Dennis", "Gavrilov", 2 },
-                    { 5, 3.33f, "Anton", "Antipov", 0 }
+                    { 5, 3.67f, "Anton", "Antipov", 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -125,24 +126,24 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Homework",
-                columns: new[] { "Id", "Date", "LectureId", "Mark", "Presence", "StudentId" },
+                columns: new[] { "Id", "Date", "HomeworkPresence", "LectureId", "Mark", "StudentId", "StudentPresence" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, true, 1 },
-                    { 2, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 0, false, 2 },
-                    { 3, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, true, 3 },
-                    { 4, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, true, 4 },
-                    { 5, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, true, 5 },
-                    { 6, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, true, 1 },
-                    { 7, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 0, false, 2 },
-                    { 8, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, true, 3 },
-                    { 9, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 0, false, 4 },
-                    { 10, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, true, 5 },
-                    { 11, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 4, true, 1 },
-                    { 12, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 0, false, 2 },
-                    { 13, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 4, true, 3 },
-                    { 14, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 0, false, 4 },
-                    { 15, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 0, true, 5 }
+                    { 1, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 5, 1, true },
+                    { 2, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1, 0, 2, false },
+                    { 3, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 4, 3, true },
+                    { 4, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 5, 4, true },
+                    { 5, new DateTime(2019, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 5, 5, true },
+                    { 6, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 2, 5, 1, true },
+                    { 7, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, 0, 2, false },
+                    { 8, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 2, 4, 3, true },
+                    { 9, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, 0, 4, false },
+                    { 10, new DateTime(2019, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 2, 5, 5, true },
+                    { 11, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 3, 4, 1, true },
+                    { 12, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 3, 0, 2, false },
+                    { 13, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 3, 4, 3, true },
+                    { 14, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 3, 0, 4, false },
+                    { 15, new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 3, 1, 5, true }
                 });
 
             migrationBuilder.CreateIndex(
