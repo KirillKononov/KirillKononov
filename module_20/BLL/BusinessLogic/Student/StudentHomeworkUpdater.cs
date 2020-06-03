@@ -7,7 +7,7 @@ using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.BusinessLogic
+namespace BLL.BusinessLogic.Student
 {
     public class StudentHomeworkUpdater : IStudentHomeworkUpdater
     {
@@ -71,7 +71,7 @@ namespace BLL.BusinessLogic
             return missedLectures;
         }
 
-        private void SendMessage(Student student, ILogger logger)
+        private void SendMessage(DAL.Entities.Student student, ILogger logger)
         {
             IMessageSender message = new SMSSender();
             if (student.AverageMark < 4)

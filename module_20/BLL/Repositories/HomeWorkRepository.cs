@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using BLL.BusinessLogic;
+using BLL.BusinessLogic.Student;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;

@@ -95,13 +95,22 @@ namespace BLL.Repositories
         private static ProfessorDTO CreateProfessorDTO(Professor professor)
         {
             var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Lecture, LectureDTO>()).CreateMapper();
+                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
             return new ProfessorDTO()
             {
                 Id = professor.Id,
                 FirstName = professor.FirstName,
                 LastName = professor.LastName,
-                Lectures = mapper.Map<IEnumerable<Lecture>, List<LectureDTO>>(professor.Lectures)
+                Lectures = professor.Lectures
+                    .Select(l => 
+                        new LectureDTO()
+                        {
+                            Id = l.Id,
+                            Name = l.Name,
+                            ProfessorId = l.ProfessorId,
+                            LectureHomework = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(l.LectureHomework)
+                        })
+                    .ToList()
             };
         }
     }

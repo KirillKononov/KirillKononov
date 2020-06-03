@@ -1,4 +1,4 @@
-﻿using BLL.BusinessLogic;
+﻿using BLL.BusinessLogic.Student;
 using DAL.Entities;
 
 namespace BLL.Interfaces
