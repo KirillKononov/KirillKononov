@@ -1,6 +1,8 @@
 using BLL.BusinessLogic.Report;
 using BLL.Interfaces;
 using BLL.Repositories;
+using BLL.Repositories.Mapper;
+using BLL.Repositories.UnitOfWork;
 using DAL.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,13 +27,19 @@ namespace module_20
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddDbContext<DataBaseContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("Default")));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Module 20"});
             });
+
+            services.AddSingleton<IMapperCreator, MapperCreator>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IReportService, ReportService>();
         }
 

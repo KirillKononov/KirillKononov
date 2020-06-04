@@ -1,15 +1,17 @@
 ﻿using System;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using DAL.DataAccess;
 using DAL.Entities;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.Repositories
+namespace BLL.Repositories.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataBaseContext _db;
+        private readonly IMapper _mapper;
         private StudentRepository _studentRepository;
         private ProfessorRepository _professorRepository;
         private LectureRepository _lectureRepository;
@@ -17,23 +19,24 @@ namespace BLL.Repositories
 
         private readonly ILogger _logger;
 
-        public UnitOfWork(DataBaseContext db, ILogger<UnitOfWork> logger = null)
+        public UnitOfWork(DataBaseContext db, IMapperCreator mapper, ILogger<UnitOfWork> logger = null)
         {
             _db = db;
             _logger = logger;
+            _mapper = mapper.CreateMapper();
         }
 
         public IRepository<StudentDTO,Student> Students => _studentRepository ?? 
-                                                (_studentRepository = new StudentRepository(_db, _logger));
+                                                (_studentRepository = new StudentRepository(_db, _mapper, _logger));
 
         public IRepository<ProfessorDTO, Professor> Professors => _professorRepository ?? 
-                                                    (_professorRepository = new ProfessorRepository(_db, _logger));
+                                                    (_professorRepository = new ProfessorRepository(_db, _mapper, _logger));
 
         public IRepository<LectureDTO, Lecture> Lectures => _lectureRepository ?? 
-                                                (_lectureRepository = new LectureRepository(_db, _logger));
+                                                (_lectureRepository = new LectureRepository(_db, _mapper, _logger));
 
         public IRepository<HomeworkDTO, Homework> Homework => _homeworkRepository ??
-                                                      (_homeworkRepository = new HomeworkRepository(_db, _logger));
+                                                      (_homeworkRepository = new HomeworkRepository(_db, _mapper, _logger));
 
         public void Save()
         {

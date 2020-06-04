@@ -16,11 +16,13 @@ namespace BLL.Repositories
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public LectureRepository(DataBaseContext context, ILogger logger)
+        public LectureRepository(DataBaseContext context, IMapper mapper, ILogger logger)
         {
             _db = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public IEnumerable<LectureDTO> GetAll()
@@ -34,7 +36,7 @@ namespace BLL.Repositories
             }
 
             return lectures
-                .Select(CreateLectureDTO);
+                .Select(l => _mapper.Map<LectureDTO>(l));
         }
 
         public LectureDTO Get(int? id)
@@ -46,7 +48,7 @@ namespace BLL.Repositories
 
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            return CreateLectureDTO(lecture);
+            return _mapper.Map<LectureDTO>(lecture);
         }
 
         public void Create(LectureDTO item)
@@ -79,7 +81,7 @@ namespace BLL.Repositories
                 .Where(predicate)
                 .ToList();
             return lectures
-                .Select(CreateLectureDTO);
+                .Select(l => _mapper.Map<LectureDTO>(l));
         }
 
         public void Delete(int? id)
@@ -92,18 +94,6 @@ namespace BLL.Repositories
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             _db.Lectures.Remove(lecture);
-        }
-        private static LectureDTO CreateLectureDTO(Lecture lecture)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
-            return new LectureDTO()
-            {
-                Id = lecture.Id,
-                Name = lecture.Name,
-                ProfessorId = lecture.ProfessorId,
-                LectureHomework = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(lecture.LectureHomework)
-            };
         }
     }
 }

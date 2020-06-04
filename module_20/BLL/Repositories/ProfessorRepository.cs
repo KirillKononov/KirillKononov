@@ -16,11 +16,13 @@ namespace BLL.Repositories
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public ProfessorRepository(DataBaseContext context, ILogger logger)
+        public ProfessorRepository(DataBaseContext context, IMapper mapper, ILogger logger)
         {
             _db = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public IEnumerable<ProfessorDTO> GetAll()
@@ -34,7 +36,7 @@ namespace BLL.Repositories
             }
 
             return professors
-                .Select(CreateProfessorDTO);
+                .Select(p => _mapper.Map<ProfessorDTO>(p));
         }
 
         public ProfessorDTO Get(int? id)
@@ -46,7 +48,7 @@ namespace BLL.Repositories
 
             validator.EntityValidation(professor, _logger, nameof(professor));
 
-            return CreateProfessorDTO(professor);
+            return _mapper.Map<ProfessorDTO>(professor);
         }
 
         public void Create(ProfessorDTO item)
@@ -77,7 +79,7 @@ namespace BLL.Repositories
             var professors = _db.Professors.Where(predicate).ToList();
 
             return professors
-                .Select(CreateProfessorDTO);
+                .Select(p => _mapper.Map<ProfessorDTO>(p));
         }
 
         public void Delete(int? id)
@@ -90,28 +92,6 @@ namespace BLL.Repositories
             validator.EntityValidation(professor, _logger, nameof(professor));
 
             _db.Professors.Remove(professor);
-        }
-
-        private static ProfessorDTO CreateProfessorDTO(Professor professor)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
-            return new ProfessorDTO()
-            {
-                Id = professor.Id,
-                FirstName = professor.FirstName,
-                LastName = professor.LastName,
-                Lectures = professor.Lectures
-                    .Select(l => 
-                        new LectureDTO()
-                        {
-                            Id = l.Id,
-                            Name = l.Name,
-                            ProfessorId = l.ProfessorId,
-                            LectureHomework = mapper.Map<IEnumerable<Homework>, List<HomeworkDTO>>(l.LectureHomework)
-                        })
-                    .ToList()
-            };
         }
     }
 }

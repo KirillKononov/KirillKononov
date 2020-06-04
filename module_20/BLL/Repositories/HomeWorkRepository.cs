@@ -17,11 +17,13 @@ namespace BLL.Repositories
     {
         private readonly DataBaseContext _db;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public HomeworkRepository(DataBaseContext context, ILogger logger)
+        public HomeworkRepository(DataBaseContext context, IMapper mapper, ILogger logger)
         {
             _db = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public IEnumerable<HomeworkDTO> GetAll()
@@ -35,7 +37,7 @@ namespace BLL.Repositories
             }
 
             return homework
-                .Select(CreateHomeworkDTO);
+                .Select(h => _mapper.Map<HomeworkDTO>(h));
         }
 
         public HomeworkDTO Get(int? id)
@@ -47,7 +49,7 @@ namespace BLL.Repositories
 
             validator.EntityValidation(homework, _logger, nameof(homework));
 
-            return CreateHomeworkDTO(homework);
+            return _mapper.Map<HomeworkDTO>(homework);
         }
 
         public void Create(HomeworkDTO item)
@@ -105,7 +107,7 @@ namespace BLL.Repositories
                 .Where(predicate)
                 .ToList();
             return homework
-                .Select(CreateHomeworkDTO);
+                .Select(h => _mapper.Map<HomeworkDTO>(h));
         }
 
         public void Delete(int? id)
@@ -120,13 +122,6 @@ namespace BLL.Repositories
             _db.Homework.Remove(homework);
             var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
             studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
-        }
-
-        private static HomeworkDTO CreateHomeworkDTO(Homework homework)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<Homework, HomeworkDTO>()).CreateMapper();
-            return mapper.Map<Homework, HomeworkDTO>(homework);
         }
     }
 }
