@@ -1,3 +1,4 @@
+using BLL.BusinessLogic.Report;
 using BLL.Interfaces;
 using BLL.Repositories;
 using DAL.DataAccess;
@@ -31,6 +32,7 @@ namespace module_20
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Module 20"});
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IReportService, ReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

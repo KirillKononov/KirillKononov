@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BLL.BusinessLogic.Report
 {
-    public class ReportService : IReportServicer
+    public class ReportService : IReportService
     {
         private readonly IUnitOfWork _db;
         private readonly ILogger _logger;

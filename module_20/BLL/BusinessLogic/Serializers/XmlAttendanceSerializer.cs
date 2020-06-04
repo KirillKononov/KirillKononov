@@ -3,10 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using BLL.DTO;
+using BLL.Interfaces;
 
 namespace BLL.BusinessLogic.Serializers
 {
-    public class XmlAttendanceSerializer
+    public class XmlAttendanceSerializer : ISerializer
     {
         public string Serialize(IEnumerable<Attendance> attendance)
         {
