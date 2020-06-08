@@ -30,7 +30,7 @@ namespace module_20.Controllers
             ISerializer serializer = null;
 
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
-                return BadRequest();
+                BadRequest();
 
             switch (type)
             {
@@ -61,7 +61,7 @@ namespace module_20.Controllers
             ISerializer serializer = null;
 
             if (string.IsNullOrEmpty(lectureName))
-                return BadRequest();
+                BadRequest();
 
             switch (type)
             {

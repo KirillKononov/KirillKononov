@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -22,62 +23,62 @@ namespace module_20.Controllers
 
         // GET: Lecture
         [HttpGet]
-        public ActionResult<IEnumerable<LectureDTO>> Get()
+        public async Task<IEnumerable<LectureDTO>> Get()
         {
-            return _db.Lectures.GetAll().ToList();
+            return await _db.Lectures.GetAllAsync();
         }
 
         // GET: Lecture/5
         [HttpGet("{id}")]
-        public ActionResult<LectureDTO> Get(int? id)
+        public async Task<ActionResult<LectureDTO>> Get(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var lecture = _db.Lectures.Get(id);
+            var lecture = await _db.Lectures.GetAsync(id);
             return new ObjectResult(lecture);
         }
 
         // POST: Lecture
         [HttpPost]
-        public ActionResult<Lecture> Post(LecturePl lecturePl)
+        public async Task<ActionResult<Lecture>> Post(LecturePl lecturePl)
         {
             if (lecturePl == null)
                 BadRequest();
 
             var lecture = CreateLectureDTO(lecturePl);
-            _db.Lectures.Create(lecture);
-            _db.Save();
+            await _db.Lectures.CreateAsync(lecture);
+            await _db.SaveAsync();
             return Ok(lecture);
         }
 
         // PUT: Lecture
         [HttpPut]
-        public ActionResult<LectureDTO> Put(LecturePl lecturePl)
+        public async Task<ActionResult<LectureDTO>> Put(LecturePl lecturePl)
         {
             if (lecturePl == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecturePl.Id).ToList().Any()) 
+            if (!_db.Lectures.Find(l => l.Id == lecturePl.Id).Any()) 
                 NotFound();
 
             var lecture = CreateLectureDTO(lecturePl);
-            _db.Lectures.Update(lecture);
-            _db.Save();
+            await _db.Lectures.UpdateAsync(lecture);
+            await _db.SaveAsync();
 
             return Ok(lecture);
         }
 
         // DELETE: Lecture/5
         [HttpDelete("{id}")]
-        public ActionResult<Lecture> Delete(int? id)
+        public async Task<ActionResult<Lecture>> Delete(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var lecture = _db.Lectures.Get(id);
-            _db.Lectures.Delete(id);
-            _db.Save();
+            var lecture = await _db.Lectures.GetAsync(id);
+            await _db.Lectures.DeleteAsync(id);
+            await _db.SaveAsync();
             return Ok(lecture);
         }
 

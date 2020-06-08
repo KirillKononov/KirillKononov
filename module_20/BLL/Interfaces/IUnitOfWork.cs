@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BLL.DTO;
 using DAL.Entities;
 
@@ -10,6 +11,6 @@ namespace BLL.Interfaces
         IRepository<ProfessorDTO, Professor> Professors { get; }
         IRepository<LectureDTO, Lecture> Lectures { get; }
         IRepository<HomeworkDTO, Homework> Homework { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

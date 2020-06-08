@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
@@ -25,9 +26,9 @@ namespace BLL.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<LectureDTO> GetAll()
+        public async Task<IEnumerable<LectureDTO>> GetAllAsync()
         {
-            var lectures = _db.Lectures.ToList();
+            var lectures = await _db.Lectures.ToListAsync();
 
             if (!lectures.Any())
             {
@@ -39,32 +40,32 @@ namespace BLL.Repositories
                 .Select(l => _mapper.Map<LectureDTO>(l));
         }
 
-        public LectureDTO Get(int? id)
+        public async Task<LectureDTO> GetAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var lecture = _db.Lectures.Find(id);
+            var lecture = await _db.Lectures.FindAsync(id);
 
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             return _mapper.Map<LectureDTO>(lecture);
         }
 
-        public void Create(LectureDTO item)
+        public async Task CreateAsync(LectureDTO item)
         {
             var lecture = new Lecture()
             {
                 Name =  item.Name,
                 ProfessorId = item.ProfessorId
             };
-            _db.Lectures.Add(lecture);
+            await _db.Lectures.AddAsync(lecture);
         }
 
-        public void Update(LectureDTO item)
+        public async Task UpdateAsync(LectureDTO item)
         {
 
-            var lecture = _db.Lectures.Find(item.Id);
+            var lecture = await _db.Lectures.FindAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(lecture, _logger, nameof(lecture));
@@ -84,12 +85,12 @@ namespace BLL.Repositories
                 .Select(l => _mapper.Map<LectureDTO>(l));
         }
 
-        public void Delete(int? id)
+        public async Task DeleteAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var lecture = _db.Lectures.Find(id);
+            var lecture = await _db.Lectures.FindAsync(id);
 
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 

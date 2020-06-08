@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -21,38 +23,38 @@ namespace module_20.Controllers
 
         // GET: Homework
         [HttpGet]
-        public ActionResult<IEnumerable<HomeworkDTO>> Get()
+        public async Task<IEnumerable<HomeworkDTO>> Get()
         {
-            return _db.Homework.GetAll().ToList();
+            return await _db.Homework.GetAllAsync();
         }
 
         // GET: Homework/5
         [HttpGet("{id}")]
-        public ActionResult<HomeworkDTO> Get(int? id)
+        public async Task<ActionResult<HomeworkDTO>> Get(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var homework = _db.Homework.Get(id);
+            var homework = await _db.Homework.GetAsync(id);
             return new ObjectResult(homework);
         }
 
         // POST: Homework
         [HttpPost]
-        public ActionResult<HomeworkDTO> Post(HomeworkPl homeworkPl)
+        public async Task<ActionResult<HomeworkDTO>> Post(HomeworkPl homeworkPl)
         {
             if (homeworkPl == null)
                 BadRequest();
 
             var homework = CreateHomeworkDTO(homeworkPl);
-            _db.Homework.Create(homework);
-            _db.Save();
+            await _db.Homework.CreateAsync(homework);
+            await _db.SaveAsync();
             return Ok(homework);
         }
 
         // PUT: Homework
         [HttpPut]
-        public ActionResult<HomeworkDTO> Put(HomeworkPl homeworkPl)
+        public async Task<ActionResult<HomeworkDTO>> Put(HomeworkPl homeworkPl)
         {
             if (homeworkPl == null)
                 BadRequest();
@@ -61,21 +63,21 @@ namespace module_20.Controllers
             if (!_db.Homework.Find(h => h.Id == homework.Id).Any())
                 NotFound();
 
-            _db.Homework.Update(homework);
-            _db.Save();
+            await _db.Homework.UpdateAsync(homework);
+            await _db.SaveAsync();
             return Ok(homework);
         }
 
         // DELETE: Homework/5
         [HttpDelete("{id}")]
-        public ActionResult<HomeworkDTO> Delete(int? id)
+        public async Task<ActionResult<HomeworkDTO>> Delete(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var homework = _db.Homework.Get(id);
-            _db.Homework.Delete(id);
-            _db.Save();
+            var homework = await _db.Homework.GetAsync(id);
+            await _db.Homework.DeleteAsync(id);
+            await _db.SaveAsync();
             return Ok(homework);
         }
 

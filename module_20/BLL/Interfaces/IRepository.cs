@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
@@ -7,11 +8,11 @@ namespace BLL.Interfaces
         where T : class
         where TU : class
     {
-        IEnumerable<T> GetAll();
-        T Get(int? id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int? id);
         IEnumerable<T> Find(Func<TU, bool> predicate);
-        void Create(T item);
-        void Update(T item);
-        void Delete(int? id);
+        Task CreateAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(int? id);
     }
 }

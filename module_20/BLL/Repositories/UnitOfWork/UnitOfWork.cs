@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -38,9 +39,9 @@ namespace BLL.Repositories.UnitOfWork
         public IRepository<HomeworkDTO, Homework> Homework => _homeworkRepository ??
                                                       (_homeworkRepository = new HomeworkRepository(_db, _mapper, _logger));
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
         private bool _disposed = false;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
@@ -25,9 +27,10 @@ namespace BLL.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<StudentDTO> GetAll()
+        public async Task<IEnumerable<StudentDTO>> GetAllAsync()
         {
-            var students = _db.Students.ToList();
+            var students = await _db.Students.ToListAsync();
+
             if (!students.Any())
             {
                 _logger.LogError("There is no students in data base");
@@ -38,19 +41,19 @@ namespace BLL.Repositories
                 .Select(s => _mapper.Map<StudentDTO>(s));
         }
 
-        public StudentDTO Get(int? id)
+        public async Task<StudentDTO> GetAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var student = _db.Students.Find(id);
+            var student = await _db.Students.FindAsync(id);
 
             validator.EntityValidation(student, _logger, nameof(student));
 
             return _mapper.Map<StudentDTO>(student);
         }
 
-        public void Create(StudentDTO item)
+        public async Task CreateAsync(StudentDTO item)
         {
             var student = new Student()
             {
@@ -58,12 +61,12 @@ namespace BLL.Repositories
                 LastName = item.LastName,
             };
 
-            _db.Students.Add(student);
+            await _db.Students.AddAsync(student);
         }
 
-        public void Update(StudentDTO item)
+        public async Task UpdateAsync(StudentDTO item)
         {
-            var student = _db.Students.Find(item.Id);
+            var student = await _db.Students.FindAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
@@ -76,17 +79,19 @@ namespace BLL.Repositories
 
         public IEnumerable<StudentDTO> Find(Func<Student, bool> predicate)
         {
-            var students = _db.Students.Where(predicate).ToList();
+            var students = _db.Students
+                .Where(predicate)
+                .ToList();
             return students
                 .Select(s => _mapper.Map<StudentDTO>(s));
         }
 
-        public void Delete(int? id)
+        public async Task DeleteAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var student = _db.Students.Find(id);
+            var student = await _db.Students.FindAsync(id);
 
             validator.EntityValidation(student, _logger, nameof(student));
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.BusinessLogic.Student;
 using BLL.DTO;
@@ -26,9 +27,9 @@ namespace BLL.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<HomeworkDTO> GetAll()
+        public async Task<IEnumerable<HomeworkDTO>> GetAllAsync()
         {
-            var homework = _db.Homework.ToList();
+            var homework = await _db.Homework.ToListAsync();
 
             if (!homework.Any())
             {
@@ -40,19 +41,19 @@ namespace BLL.Repositories
                 .Select(h => _mapper.Map<HomeworkDTO>(h));
         }
 
-        public HomeworkDTO Get(int? id)
+        public async Task<HomeworkDTO> GetAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var homework = _db.Homework.Find(id);
+            var homework = await _db.Homework.FindAsync(id);
 
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             return _mapper.Map<HomeworkDTO>(homework);
         }
 
-        public void Create(HomeworkDTO item)
+        public async Task CreateAsync(HomeworkDTO item)
         {
             var homework = new Homework()
             {
@@ -70,15 +71,26 @@ namespace BLL.Repositories
                 throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
             }
 
-            _db.Homework.Add(homework);
+            await _db.Homework.AddAsync(homework);
             var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
-            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
+            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
-        public void Update(HomeworkDTO item)
+        public async Task UpdateAsync(HomeworkDTO item)
         {
-            var homework = _db.Homework.Find(item.Id);
+            if (item.StudentPresence && item.HomeworkPresence && item.Mark < 1)
+            {
+                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
+                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
+            }
+
+            var homework = await _db.Homework.FindAsync(item.Id);
             var previousHomeworkPresence = homework.StudentPresence;
+            var previousStudentId = homework.StudentId;
+
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
+            if (previousStudentId != item.StudentId)
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
 
             var validator = new Validator();
             validator.EntityValidation(homework, _logger, nameof(homework));
@@ -90,15 +102,12 @@ namespace BLL.Repositories
             homework.Mark = homework.HomeworkPresence ? item.Mark : 0;
             homework.Date = item.Date;
 
-            if (homework.HomeworkPresence && homework.Mark < 1)
-            {
-                _logger.LogWarning($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
-                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
-            }
-
             _db.Entry(homework).State = EntityState.Modified;
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
-            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.UpdateHomework);
+
+            if (previousStudentId != homework.StudentId)
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
+            else
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.UpdateHomework);
         }
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
@@ -110,18 +119,18 @@ namespace BLL.Repositories
                 .Select(h => _mapper.Map<HomeworkDTO>(h));
         }
 
-        public void Delete(int? id)
+        public async Task DeleteAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var homework = _db.Homework.Find(id);
+            var homework = await _db.Homework.FindAsync(id);
 
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             _db.Homework.Remove(homework);
             var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
-            studentHomeworkUpdater.Update(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
+            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
     }
 }

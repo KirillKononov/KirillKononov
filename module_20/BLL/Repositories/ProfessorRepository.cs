@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
@@ -25,9 +27,9 @@ namespace BLL.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<ProfessorDTO> GetAll()
+        public async Task<IEnumerable<ProfessorDTO>> GetAllAsync()
         {
-            var professors = _db.Professors.ToList();
+            var professors = await _db.Professors.ToListAsync();
 
             if (!professors.Any())
             {
@@ -39,31 +41,31 @@ namespace BLL.Repositories
                 .Select(p => _mapper.Map<ProfessorDTO>(p));
         }
 
-        public ProfessorDTO Get(int? id)
+        public async Task<ProfessorDTO> GetAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var professor = _db.Professors.Find(id);
+            var professor = await _db.Professors.FindAsync(id);
 
             validator.EntityValidation(professor, _logger, nameof(professor));
 
             return _mapper.Map<ProfessorDTO>(professor);
         }
 
-        public void Create(ProfessorDTO item)
+        public async Task CreateAsync(ProfessorDTO item)
         {
             var prof = new Professor()
             {
                 FirstName = item.FirstName, 
                 LastName = item.LastName
             };
-            _db.Professors.Add(prof);
+            await _db.Professors.AddAsync(prof);
         }
 
-        public void Update(ProfessorDTO item)
+        public async Task UpdateAsync(ProfessorDTO item)
         {
-            var professor = _db.Professors.Find(item.Id);
+            var professor = await _db.Professors.FindAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(professor, _logger, nameof(professor));
@@ -76,18 +78,19 @@ namespace BLL.Repositories
 
         public IEnumerable<ProfessorDTO> Find(Func<Professor, bool> predicate)
         {
-            var professors = _db.Professors.Where(predicate).ToList();
-
+            var professors =_db.Professors
+                .Where(predicate)
+                .ToList();
             return professors
                 .Select(p => _mapper.Map<ProfessorDTO>(p));
         }
 
-        public void Delete(int? id)
+        public async Task DeleteAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var professor = _db.Professors.Find(id);
+            var professor = await _db.Professors.FindAsync(id);
 
             validator.EntityValidation(professor, _logger, nameof(professor));
 

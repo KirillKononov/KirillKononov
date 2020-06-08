@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.DataAccess;
@@ -29,9 +30,9 @@ namespace BLL.BusinessLogic.Student
             RemoveHomework
         }
 
-        public void Update(Homework homework, UpdateType updateType)
+        public async Task UpdateAsync(Homework homework, UpdateType updateType)
         {
-            var student = _db.Students.Find(homework.StudentId);
+            var student = await _db.Students.FindAsync(homework.StudentId);
 
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
@@ -74,6 +75,7 @@ namespace BLL.BusinessLogic.Student
         private void SendMessage(DAL.Entities.Student student, ILogger logger)
         {
             IMessageSender message = new SMSSender();
+
             if (student.AverageMark < 4)
                 message.Send(student, logger);
 

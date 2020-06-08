@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -21,38 +22,38 @@ namespace module_20.Controllers
 
         // GET: Student
         [HttpGet]
-        public ActionResult<IEnumerable<StudentDTO>> Get()
+        public async Task<IEnumerable<StudentDTO>> Get()
         {
-            return _db.Students.GetAll().ToList();
+            return await _db.Students.GetAllAsync();
         }
 
         // GET: Student/5
         [HttpGet("{id}")]
-        public ActionResult<StudentDTO> Get(int? id)
+        public async Task<ActionResult<StudentDTO>> Get(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var student = _db.Students.Get(id);
+            var student = await _db.Students.GetAsync(id);
             return new ObjectResult(student);
         }
 
         // POST: Student
         [HttpPost]
-        public ActionResult<StudentDTO> Post(StudentPl studentPl)
+        public async Task<ActionResult<StudentDTO>> Post(StudentPl studentPl)
         {
             if (studentPl == null)
                 BadRequest();
 
             var student = createStudentDTO(studentPl);
-            _db.Students.Create(student);
-            _db.Save();
+            await _db.Students.CreateAsync(student);
+            await _db.SaveAsync();
             return Ok(student);
         }
 
         // PUT: Student
         [HttpPut]
-        public ActionResult<StudentDTO> Put(StudentPl studentPl)
+        public async Task<ActionResult<StudentDTO>> Put(StudentPl studentPl)
         {
             if (studentPl == null)
                 BadRequest();
@@ -61,21 +62,21 @@ namespace module_20.Controllers
                 NotFound();
 
             var student = createStudentDTO(studentPl);
-            _db.Students.Update(student);
-            _db.Save();
+            await _db.Students.UpdateAsync(student);
+            await _db.SaveAsync();
             return Ok(student);
         }
 
         // DELETE: Student/5
         [HttpDelete("{id}")]
-        public ActionResult<StudentDTO> Delete(int? id)
+        public async Task<ActionResult<StudentDTO>> Delete(int? id)
         {
             if (id == null)
                 BadRequest();
 
-            var student = _db.Students.Get(id);
-            _db.Students.Delete(id);
-            _db.Save();
+            var student = await _db.Students.GetAsync(id);
+            await _db.Students.DeleteAsync(id);
+            await _db.SaveAsync();
             return Ok(student);
         }
 

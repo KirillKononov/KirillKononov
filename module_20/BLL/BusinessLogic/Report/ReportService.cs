@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BLL.BusinessLogic.Serializers;
 using BLL.DTO;
 using BLL.Infrastructure;
@@ -42,9 +43,9 @@ namespace BLL.BusinessLogic.Report
                 from homework in student.StudentHomework
                 select new Attendance()
                 {
-                    LectureName = _db.Lectures.Get(homework.LectureId).Name,
-                    ProfessorName = $"{_db.Professors.Get(_db.Lectures.Get(homework.LectureId).ProfessorId).FirstName} " +
-                                    $"{_db.Professors.Get(_db.Lectures.Get(homework.LectureId).ProfessorId).LastName}",
+                    LectureName = _db.Lectures.GetAsync(homework.LectureId).Result.Name,
+                    ProfessorName = $"{_db.Professors.GetAsync(_db.Lectures.GetAsync(homework.LectureId).Result.ProfessorId).Result.FirstName} " +
+                                    $"{_db.Professors.GetAsync(_db.Lectures.GetAsync(homework.LectureId).Result.ProfessorId).Result.LastName}",
                     StudentName = $"{student.FirstName} {student.LastName}",
                     StudentPresence = homework.StudentPresence,
                     HomeworkPresence = homework.HomeworkPresence,
@@ -75,10 +76,10 @@ namespace BLL.BusinessLogic.Report
                 select new Attendance()
                 {
                     LectureName = lecture.Name,
-                    ProfessorName = $"{_db.Professors.Get(lecture.ProfessorId).FirstName} " +
-                                    $"{_db.Professors.Get(lecture.ProfessorId).LastName}",
-                    StudentName = $"{_db.Students.Get(homework.StudentId).FirstName} " +
-                                  $"{_db.Students.Get(homework.StudentId).LastName}",
+                    ProfessorName = $"{_db.Professors.GetAsync(lecture.ProfessorId).Result.FirstName} " +
+                                    $"{_db.Professors.GetAsync(lecture.ProfessorId).Result.LastName}",
+                    StudentName = $"{_db.Students.GetAsync(homework.StudentId).Result.FirstName} " +
+                                  $"{_db.Students.GetAsync(homework.StudentId).Result.LastName}",
                     StudentPresence = homework.StudentPresence, 
                     HomeworkPresence = homework.HomeworkPresence,
                     Mark = homework.Mark,
