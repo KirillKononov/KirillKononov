@@ -33,7 +33,7 @@ namespace BLL.Repositories
 
             if (!students.Any())
             {
-                _logger.LogError("There is no students in data base");
+                _logger.LogWarning("There is no students in data base");
                 throw new ValidationException("There is no students in data base");
             }
 
@@ -55,12 +55,7 @@ namespace BLL.Repositories
 
         public async Task CreateAsync(StudentDTO item)
         {
-            var student = new Student()
-            {
-                FirstName = item.FirstName,
-                LastName = item.LastName,
-            };
-
+            var student = _mapper.Map<Student>(item);
             await _db.Students.AddAsync(student);
         }
 
@@ -71,9 +66,7 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
 
-            student.FirstName = item.FirstName;
-            student.LastName = item.LastName;
-
+            student = _mapper.Map<Student>(item);
             _db.Entry(student).State = EntityState.Modified;
         }
 

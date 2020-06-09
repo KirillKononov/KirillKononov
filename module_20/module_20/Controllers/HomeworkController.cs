@@ -49,7 +49,7 @@ namespace module_20.Controllers
             var homework = CreateHomeworkDTO(homeworkPl);
             await _db.Homework.CreateAsync(homework);
             await _db.SaveAsync();
-            return Ok(homework);
+            return Ok(homeworkPl);
         }
 
         // PUT: Homework
@@ -65,7 +65,7 @@ namespace module_20.Controllers
 
             await _db.Homework.UpdateAsync(homework);
             await _db.SaveAsync();
-            return Ok(homework);
+            return Ok(homeworkPl);
         }
 
         // DELETE: Homework/5

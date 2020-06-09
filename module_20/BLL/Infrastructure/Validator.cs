@@ -8,7 +8,7 @@ namespace BLL.Infrastructure
         {
             if (id == null)
             {
-                logger.LogError("The id hasn't entered");
+                logger.LogWarning("The id hasn't entered");
                 throw new ValidationException("The id hasn't entered");
             }
         }
@@ -17,7 +17,7 @@ namespace BLL.Infrastructure
         {
             if (entity == null)
             {
-                logger.LogError($"There is no {type} in database with this id");
+                logger.LogWarning($"There is no {type} in database with this id");
                 throw new ValidationException($"There is no {type} in database with this id");
             }
         }

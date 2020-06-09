@@ -29,7 +29,7 @@ namespace BLL.BusinessLogic.Report
 
             if (students.Count == 0)
             {
-                _logger.LogError($"Entered student {firstName} {lastName} doesn't exist");
+                _logger.LogWarning($"Entered student {firstName} {lastName} doesn't exist");
                 throw new ValidationException($"Entered student {firstName} {lastName} doesn't exist");
             }
 
@@ -61,7 +61,7 @@ namespace BLL.BusinessLogic.Report
 
             if (lectures.Count == 0)
             {
-                _logger.LogError($"Entered lecture {lectureName} doesn't exist");
+                _logger.LogWarning($"Entered lecture {lectureName} doesn't exist");
                 throw new ValidationException($"Entered lecture {lectureName} doesn't exist");
             }
 

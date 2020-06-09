@@ -48,7 +48,7 @@ namespace module_20.Controllers
             var prof = createProfessorDTO(profPl);
             await _db.Professors.CreateAsync(prof);
             await _db.SaveAsync();
-            return Ok(prof);
+            return Ok(profPl);
         }
 
         // PUT: Professor
@@ -64,7 +64,7 @@ namespace module_20.Controllers
             var prof = createProfessorDTO(profPl);
             await _db.Professors.UpdateAsync(prof);
             await _db.SaveAsync();
-            return Ok(prof);
+            return Ok(profPl);
         }
 
         // DELETE: Professor/5

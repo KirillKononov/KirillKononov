@@ -33,7 +33,7 @@ namespace BLL.Repositories
 
             if (!professors.Any())
             {
-                _logger.LogError("There is no professors in data base");
+                _logger.LogWarning("There is no professors in data base");
                 throw new ValidationException("There is no professors in data base");
             }
 
@@ -55,11 +55,7 @@ namespace BLL.Repositories
 
         public async Task CreateAsync(ProfessorDTO item)
         {
-            var prof = new Professor()
-            {
-                FirstName = item.FirstName, 
-                LastName = item.LastName
-            };
+            var prof = _mapper.Map<Professor>(item);
             await _db.Professors.AddAsync(prof);
         }
 
@@ -70,9 +66,7 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.EntityValidation(professor, _logger, nameof(professor));
 
-            professor.FirstName = item.FirstName;
-            professor.LastName = item.LastName;
-
+            professor = _mapper.Map<Professor>(item);
             _db.Entry(professor).State = EntityState.Modified;
         }
 

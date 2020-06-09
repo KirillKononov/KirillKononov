@@ -33,7 +33,7 @@ namespace BLL.Repositories
 
             if (!homework.Any())
             {
-                _logger.LogError("There is no homework in data base");
+                _logger.LogWarning("There is no homework in data base");
                 throw new ValidationException("There is no homework in data base");
             }
 
@@ -55,23 +55,21 @@ namespace BLL.Repositories
 
         public async Task CreateAsync(HomeworkDTO item)
         {
-            var homework = new Homework()
+            if (item.StudentPresence && item.HomeworkPresence && item.Mark < 1)
             {
-                StudentId = item.StudentId,
-                LectureId = item.LectureId,
-                StudentPresence = item.StudentPresence,
-                HomeworkPresence = item.StudentPresence && item.HomeworkPresence, 
-                Mark = item.StudentPresence && item.HomeworkPresence ? item.Mark : 0,
-                Date = item.Date
-            };
-
-            if (homework.HomeworkPresence && homework.Mark < 1)
-            {
-                _logger.LogWarning($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
-                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
+                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
             }
 
+            if ((!item.StudentPresence || !item.HomeworkPresence) && item.Mark > 0)
+            {
+                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be 0");
+                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be 0");
+            }
+
+            var homework = _mapper.Map<Homework>(item);
             await _db.Homework.AddAsync(homework);
+
             var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
             await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
@@ -84,24 +82,25 @@ namespace BLL.Repositories
                 throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
             }
 
-            var homework = await _db.Homework.FindAsync(item.Id);
-            var previousHomeworkPresence = homework.StudentPresence;
-            var previousStudentId = homework.StudentId;
+            if ((!item.StudentPresence || !item.HomeworkPresence) && item.Mark > 0)
+            {
+                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be 0");
+                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be 0");
+            }
 
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
-            if (previousStudentId != item.StudentId)
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
+            var homework = await _db.Homework.FindAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(homework, _logger, nameof(homework));
 
-            homework.StudentId = item.StudentId;
-            homework.LectureId = item.LectureId;
-            homework.StudentPresence = item.StudentPresence;
-            homework.HomeworkPresence = item.StudentPresence && item.HomeworkPresence;
-            homework.Mark = homework.HomeworkPresence ? item.Mark : 0;
-            homework.Date = item.Date;
+            var previousHomeworkPresence = homework.StudentPresence;
+            var previousStudentId = homework.StudentId;
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
 
+            if (previousStudentId != item.StudentId)
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
+
+            homework = _mapper.Map<Homework>(item);
             _db.Entry(homework).State = EntityState.Modified;
 
             if (previousStudentId != homework.StudentId)

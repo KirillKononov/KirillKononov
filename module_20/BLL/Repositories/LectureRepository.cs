@@ -32,7 +32,7 @@ namespace BLL.Repositories
 
             if (!lectures.Any())
             {
-                _logger.LogError($"There are no lectures in database");
+                _logger.LogWarning($"There are no lectures in database");
                 throw new ValidationException($"There are no lectures in database");
             }
 
@@ -54,25 +54,18 @@ namespace BLL.Repositories
 
         public async Task CreateAsync(LectureDTO item)
         {
-            var lecture = new Lecture()
-            {
-                Name =  item.Name,
-                ProfessorId = item.ProfessorId
-            };
+            var lecture = _mapper.Map<Lecture>(item);
             await _db.Lectures.AddAsync(lecture);
         }
 
         public async Task UpdateAsync(LectureDTO item)
         {
-
             var lecture = await _db.Lectures.FindAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            lecture.Name = item.Name;
-            lecture.ProfessorId = item.ProfessorId;
-
+            lecture = _mapper.Map<Lecture>(item);
             _db.Entry(lecture).State = EntityState.Modified;
         }
 

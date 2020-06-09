@@ -48,7 +48,7 @@ namespace module_20.Controllers
             var student = createStudentDTO(studentPl);
             await _db.Students.CreateAsync(student);
             await _db.SaveAsync();
-            return Ok(student);
+            return Ok(studentPl);
         }
 
         // PUT: Student
@@ -64,7 +64,7 @@ namespace module_20.Controllers
             var student = createStudentDTO(studentPl);
             await _db.Students.UpdateAsync(student);
             await _db.SaveAsync();
-            return Ok(student);
+            return Ok(studentPl);
         }
 
         // DELETE: Student/5

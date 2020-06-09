@@ -49,7 +49,7 @@ namespace module_20.Controllers
             var lecture = CreateLectureDTO(lecturePl);
             await _db.Lectures.CreateAsync(lecture);
             await _db.SaveAsync();
-            return Ok(lecture);
+            return Ok(lecturePl);
         }
 
         // PUT: Lecture
@@ -66,7 +66,7 @@ namespace module_20.Controllers
             await _db.Lectures.UpdateAsync(lecture);
             await _db.SaveAsync();
 
-            return Ok(lecture);
+            return Ok(lecturePl);
         }
 
         // DELETE: Lecture/5

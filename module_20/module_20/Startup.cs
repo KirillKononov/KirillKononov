@@ -27,20 +27,16 @@ namespace module_20
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
+            
             services.AddDbContext<DataBaseContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("Default")));
-
+            
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Module 20"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Module 20" });
             });
-
-            services.AddSingleton<IMapperCreator, MapperCreator>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IReportService, ReportService>();
+            
+            ServicesBuilder.BuildServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
