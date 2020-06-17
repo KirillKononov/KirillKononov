@@ -1,4 +1,5 @@
-﻿using BLL.Interfaces;
+﻿using System;
+using BLL.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.BusinessLogic.Student
@@ -7,8 +8,8 @@ namespace BLL.BusinessLogic.Student
     {
         public void Send(DAL.Entities.Student student, ILogger logger = null)
         {
-            logger.LogInformation($"Student {student.FirstName} {student.LastName} missed" +
-                                  $" {student.MissedLectures} lectures");
+            logger.LogInformation($"{DateTime.UtcNow} Student {student.FirstName} {student.LastName} with id {student.Id}" +
+                                  $" missed {student.MissedLectures} lectures");
         }
     }
 }
