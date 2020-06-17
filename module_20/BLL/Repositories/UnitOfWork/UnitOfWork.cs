@@ -18,26 +18,26 @@ namespace BLL.Repositories.UnitOfWork
         private LectureRepository _lectureRepository;
         private HomeworkRepository _homeworkRepository;
 
-        private readonly ILogger _logger;
+        private readonly ILoggerFactory _factory;
 
-        public UnitOfWork(DataBaseContext db, IMapperBLL mapper, ILogger<UnitOfWork> logger = null)
+        public UnitOfWork(DataBaseContext db, IMapperBLL mapper, ILoggerFactory factory = null)
         {
             _db = db;
-            _logger = logger;
+            _factory = factory;
             _mapper = mapper.CreateMapper();
         }
 
         public IRepository<StudentDTO,Student> Students => _studentRepository ?? 
-                                                (_studentRepository = new StudentRepository(_db, _mapper, _logger));
+                                                (_studentRepository = new StudentRepository(_db, _mapper, _factory));
 
         public IRepository<ProfessorDTO, Professor> Professors => _professorRepository ?? 
-                                                    (_professorRepository = new ProfessorRepository(_db, _mapper, _logger));
+                                                    (_professorRepository = new ProfessorRepository(_db, _mapper, _factory));
 
         public IRepository<LectureDTO, Lecture> Lectures => _lectureRepository ?? 
-                                                (_lectureRepository = new LectureRepository(_db, _mapper, _logger));
+                                                (_lectureRepository = new LectureRepository(_db, _mapper, _factory));
 
         public IRepository<HomeworkDTO, Homework> Homework => _homeworkRepository ??
-                                                      (_homeworkRepository = new HomeworkRepository(_db, _mapper, _logger));
+                                                      (_homeworkRepository = new HomeworkRepository(_db, _mapper, _factory));
 
         public async Task SaveAsync()
         {

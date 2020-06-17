@@ -20,10 +20,10 @@ namespace BLL.Repositories
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public HomeworkRepository(DataBaseContext context, IMapper mapper, ILogger logger)
+        public HomeworkRepository(DataBaseContext context, IMapper mapper, ILoggerFactory factory)
         {
             _db = context;
-            _logger = logger;
+            _logger = factory.CreateLogger("Homework Repository");
             _mapper = mapper;
         }
 
