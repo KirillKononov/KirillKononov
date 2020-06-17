@@ -100,7 +100,12 @@ namespace BLL.Repositories
             if (previousStudentId != item.StudentId)
                 await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
 
-            homework = _mapper.Map<Homework>(item);
+            homework.StudentId = item.StudentId;
+            homework.LectureId = item.LectureId;
+            homework.StudentPresence = item.StudentPresence;
+            homework.HomeworkPresence = item.HomeworkPresence;
+            homework.Mark = item.Mark;
+            homework.Date = item.Date;
             _db.Entry(homework).State = EntityState.Modified;
 
             if (previousStudentId != homework.StudentId)

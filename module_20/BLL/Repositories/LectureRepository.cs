@@ -65,7 +65,8 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            lecture = _mapper.Map<Lecture>(item);
+            lecture.Name = item.Name;
+            lecture.ProfessorId = item.ProfessorId;
             _db.Entry(lecture).State = EntityState.Modified;
         }
 

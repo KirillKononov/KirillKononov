@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -78,13 +78,6 @@ namespace module_20.Controllers
             await _db.Students.DeleteAsync(id);
             await _db.SaveAsync();
             return Ok(student);
-        }
-
-        private StudentDTO createStudentDTO(StudentPl studentPl)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<StudentPl, StudentDTO>()).CreateMapper();
-            return mapper.Map<StudentPl, StudentDTO>(studentPl);
         }
     }
 }

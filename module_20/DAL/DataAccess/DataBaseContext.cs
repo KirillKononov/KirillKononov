@@ -6,7 +6,6 @@ namespace DAL.DataAccess
 {
     public class DataBaseContext : DbContext
     {
-
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
             Database.EnsureCreated();
