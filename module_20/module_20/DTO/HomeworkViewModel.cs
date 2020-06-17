@@ -2,7 +2,7 @@
 
 namespace module_20.DTO
 {
-    public class HomeworkPl
+    public class HomeworkViewModel
     {
         public int Id { get; set; }
 

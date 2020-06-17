@@ -1,16 +1,10 @@
 ﻿using BLL.BusinessLogic.Report;
 using BLL.Interfaces;
-using BLL.Repositories;
 using BLL.Repositories.Mapper;
 using BLL.Repositories.UnitOfWork;
-using DAL.DataAccess;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using module_20.Interfaces;
+using module_20.Mapper;
 
 namespace module_20
 {
@@ -18,7 +12,9 @@ namespace module_20
     {
         public static void BuildServices(IServiceCollection services)
         {
-            services.AddSingleton<IMapperCreator, MapperCreator>();
+            services.AddSingleton<IMapperBLL, MapperBll>();
+
+            services.AddSingleton<IMapperPL, MapperPL>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

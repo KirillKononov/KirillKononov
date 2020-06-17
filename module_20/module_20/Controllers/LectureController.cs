@@ -7,6 +7,7 @@ using BLL.Interfaces;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
+using module_20.Interfaces;
 
 namespace module_20.Controllers
 {
@@ -15,10 +16,12 @@ namespace module_20.Controllers
     public class LectureController : ControllerBase
     {
         private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper; 
 
-        public LectureController(IUnitOfWork uow)
+        public LectureController(IUnitOfWork uow, IMapperPL mapper)
         {
             _db = uow;
+            _mapper = mapper.CreateMapper();
         }
 
         // GET: Lecture
@@ -41,32 +44,32 @@ namespace module_20.Controllers
 
         // POST: Lecture
         [HttpPost]
-        public async Task<ActionResult<Lecture>> Post(LecturePl lecturePl)
+        public async Task<ActionResult<Lecture>> Post(LectureViewModel lectureViewModel)
         {
-            if (lecturePl == null)
+            if (lectureViewModel == null)
                 BadRequest();
 
-            var lecture = CreateLectureDTO(lecturePl);
+            var lecture =_mapper.Map<LectureDTO>(lectureViewModel);
             await _db.Lectures.CreateAsync(lecture);
             await _db.SaveAsync();
-            return Ok(lecturePl);
+            return Ok(lectureViewModel);
         }
 
         // PUT: Lecture
         [HttpPut]
-        public async Task<ActionResult<LectureDTO>> Put(LecturePl lecturePl)
+        public async Task<ActionResult<LectureDTO>> Put(LectureViewModel lectureViewModel)
         {
-            if (lecturePl == null)
+            if (lectureViewModel == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lecturePl.Id).Any()) 
+            if (!_db.Lectures.Find(l => l.Id == lectureViewModel.Id).Any()) 
                 NotFound();
 
-            var lecture = CreateLectureDTO(lecturePl);
+            var lecture = _mapper.Map<LectureDTO>(lectureViewModel);
             await _db.Lectures.UpdateAsync(lecture);
             await _db.SaveAsync();
 
-            return Ok(lecturePl);
+            return Ok(lectureViewModel);
         }
 
         // DELETE: Lecture/5
@@ -80,13 +83,6 @@ namespace module_20.Controllers
             await _db.Lectures.DeleteAsync(id);
             await _db.SaveAsync();
             return Ok(lecture);
-        }
-
-        private LectureDTO CreateLectureDTO(LecturePl lecturePl)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<LecturePl, LectureDTO>()).CreateMapper();
-            return mapper.Map<LecturePl, LectureDTO>(lecturePl);
         }
     }
 }

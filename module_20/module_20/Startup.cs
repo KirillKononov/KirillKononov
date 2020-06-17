@@ -1,8 +1,3 @@
-using BLL.BusinessLogic.Report;
-using BLL.Interfaces;
-using BLL.Repositories;
-using BLL.Repositories.Mapper;
-using BLL.Repositories.UnitOfWork;
 using DAL.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,7 +30,7 @@ namespace module_20
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Module 20" });
             });
-            
+
             ServicesBuilder.BuildServices(services);
         }
 

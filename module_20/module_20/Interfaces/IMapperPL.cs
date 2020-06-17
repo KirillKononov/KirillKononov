@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 
-namespace BLL.Interfaces
+namespace module_20.Interfaces
 {
-    public interface IMapperCreator
+    public interface IMapperPL
     {
         IMapper CreateMapper();
     }

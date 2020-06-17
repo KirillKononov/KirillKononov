@@ -6,6 +6,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
+using module_20.Interfaces;
 
 namespace module_20.Controllers
 {
@@ -14,10 +15,12 @@ namespace module_20.Controllers
     public class ProfessorController : ControllerBase
     {
         private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper; 
 
-        public ProfessorController(IUnitOfWork uow)
+        public ProfessorController(IUnitOfWork uow, IMapperPL mapper)
         {
             _db = uow;
+            _mapper = mapper.CreateMapper();
         }
 
         // GET: Professor
@@ -40,31 +43,31 @@ namespace module_20.Controllers
 
         // POST: Professor
         [HttpPost]
-        public async Task<ActionResult<ProfessorDTO>> Post(ProfessorPl profPl)
+        public async Task<ActionResult<ProfessorDTO>> Post(ProfessorViewModel profViewModel)
         {
-            if (profPl == null)
+            if (profViewModel == null)
                 BadRequest();
 
-            var prof = createProfessorDTO(profPl);
+            var prof = _mapper.Map<ProfessorDTO>(profViewModel);
             await _db.Professors.CreateAsync(prof);
             await _db.SaveAsync();
-            return Ok(profPl);
+            return Ok(profViewModel);
         }
 
         // PUT: Professor
         [HttpPut]
-        public async Task<ActionResult<ProfessorDTO>> Put(ProfessorPl profPl)
+        public async Task<ActionResult<ProfessorDTO>> Put(ProfessorViewModel profViewModel)
         {
-            if (profPl == null)
+            if (profViewModel == null)
                 BadRequest();
 
-            if (!_db.Professors.Find(p => p.Id == profPl.Id).ToList().Any())
+            if (!_db.Professors.Find(p => p.Id == profViewModel.Id).ToList().Any())
                 NotFound();
 
-            var prof = createProfessorDTO(profPl);
+            var prof = _mapper.Map<ProfessorDTO>(profViewModel);
             await _db.Professors.UpdateAsync(prof);
             await _db.SaveAsync();
-            return Ok(profPl);
+            return Ok(profViewModel);
         }
 
         // DELETE: Professor/5
@@ -78,13 +81,6 @@ namespace module_20.Controllers
             await _db.Professors.DeleteAsync(id);
             await _db.SaveAsync();
             return Ok(prof);
-        }
-
-        private ProfessorDTO createProfessorDTO(ProfessorPl professorPl)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<ProfessorPl, ProfessorDTO>()).CreateMapper();
-            return mapper.Map<ProfessorPl, ProfessorDTO>(professorPl);
         }
     }
 }

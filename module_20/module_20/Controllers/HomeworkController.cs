@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +6,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
+using module_20.Interfaces;
 
 namespace module_20.Controllers
 {
@@ -15,10 +15,12 @@ namespace module_20.Controllers
     public class HomeworkController : ControllerBase
     {
         private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper;
 
-        public HomeworkController(IUnitOfWork uow)
+        public HomeworkController(IUnitOfWork uow, IMapperPL mapper)
         {
             _db = uow;
+            _mapper = mapper.CreateMapper();
         }
 
         // GET: Homework
@@ -41,31 +43,31 @@ namespace module_20.Controllers
 
         // POST: Homework
         [HttpPost]
-        public async Task<ActionResult<HomeworkDTO>> Post(HomeworkPl homeworkPl)
+        public async Task<ActionResult<HomeworkDTO>> Post(HomeworkViewModel homeworkViewModel)
         {
-            if (homeworkPl == null)
+            if (homeworkViewModel == null)
                 BadRequest();
 
-            var homework = CreateHomeworkDTO(homeworkPl);
+            var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
             await _db.Homework.CreateAsync(homework);
             await _db.SaveAsync();
-            return Ok(homeworkPl);
+            return Ok(homeworkViewModel);
         }
 
         // PUT: Homework
         [HttpPut]
-        public async Task<ActionResult<HomeworkDTO>> Put(HomeworkPl homeworkPl)
+        public async Task<ActionResult<HomeworkDTO>> Put(HomeworkViewModel homeworkViewModel)
         {
-            if (homeworkPl == null)
+            if (homeworkViewModel == null)
                 BadRequest();
 
-            var homework = CreateHomeworkDTO(homeworkPl);
+            var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
             if (!_db.Homework.Find(h => h.Id == homework.Id).Any())
                 NotFound();
 
             await _db.Homework.UpdateAsync(homework);
             await _db.SaveAsync();
-            return Ok(homeworkPl);
+            return Ok(homeworkViewModel);
         }
 
         // DELETE: Homework/5
@@ -79,13 +81,6 @@ namespace module_20.Controllers
             await _db.Homework.DeleteAsync(id);
             await _db.SaveAsync();
             return Ok(homework);
-        }
-
-        private HomeworkDTO CreateHomeworkDTO(HomeworkPl homeworkPl)
-        {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<HomeworkPl, HomeworkDTO>()).CreateMapper();
-            return mapper.Map<HomeworkPl, HomeworkDTO>(homeworkPl);
         }
     }
 }

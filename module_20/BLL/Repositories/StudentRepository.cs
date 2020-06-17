@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,7 +65,8 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
 
-            student = _mapper.Map<Student>(item);
+            student.FirstName = item.FirstName;
+            student.LastName = item.LastName;
             _db.Entry(student).State = EntityState.Modified;
         }
 

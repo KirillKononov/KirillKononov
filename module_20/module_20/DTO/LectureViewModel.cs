@@ -1,6 +1,6 @@
 ﻿namespace module_20.DTO
 {
-    public class LecturePl
+    public class LectureViewModel
     {
         public int Id { get; set; }
 

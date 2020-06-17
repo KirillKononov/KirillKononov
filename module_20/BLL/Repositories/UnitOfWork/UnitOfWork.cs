@@ -20,7 +20,7 @@ namespace BLL.Repositories.UnitOfWork
 
         private readonly ILogger _logger;
 
-        public UnitOfWork(DataBaseContext db, IMapperCreator mapper, ILogger<UnitOfWork> logger = null)
+        public UnitOfWork(DataBaseContext db, IMapperBLL mapper, ILogger<UnitOfWork> logger = null)
         {
             _db = db;
             _logger = logger;

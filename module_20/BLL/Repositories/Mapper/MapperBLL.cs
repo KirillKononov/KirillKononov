@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 
 namespace BLL.Repositories.Mapper
 {
-    public class MapperCreator : IMapperCreator
+    public class MapperBll : IMapperBLL
     {
         public IMapper CreateMapper()
         {

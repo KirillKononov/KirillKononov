@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -6,6 +6,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
+using module_20.Interfaces;
 
 namespace module_20.Controllers
 {
@@ -14,10 +15,12 @@ namespace module_20.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper;
 
-        public StudentController(IUnitOfWork uow)
+        public StudentController(IUnitOfWork uow, IMapperPL mapper)
         {
             _db = uow;
+            _mapper = mapper.CreateMapper();
         }
 
         // GET: Student
@@ -40,31 +43,31 @@ namespace module_20.Controllers
 
         // POST: Student
         [HttpPost]
-        public async Task<ActionResult<StudentDTO>> Post(StudentPl studentPl)
+        public async Task<ActionResult<StudentDTO>> Post(StudentViewModel studentViewModel)
         {
-            if (studentPl == null)
+            if (studentViewModel == null)
                 BadRequest();
 
-            var student = createStudentDTO(studentPl);
+            var student = _mapper.Map<StudentDTO>(studentViewModel);
             await _db.Students.CreateAsync(student);
             await _db.SaveAsync();
-            return Ok(studentPl);
+            return Ok(studentViewModel);
         }
 
         // PUT: Student
         [HttpPut]
-        public async Task<ActionResult<StudentDTO>> Put(StudentPl studentPl)
+        public async Task<ActionResult<StudentDTO>> Put(StudentViewModel studentViewModel)
         {
-            if (studentPl == null)
+            if (studentViewModel == null)
                 BadRequest();
 
-            if (!_db.Students.Find(s => s.Id == studentPl.Id).Any())
+            if (!_db.Students.Find(s => s.Id == studentViewModel.Id).Any())
                 NotFound();
 
-            var student = createStudentDTO(studentPl);
+            var student = _mapper.Map<StudentDTO>(studentViewModel);
             await _db.Students.UpdateAsync(student);
             await _db.SaveAsync();
-            return Ok(studentPl);
+            return Ok(studentViewModel);
         }
 
         // DELETE: Student/5
