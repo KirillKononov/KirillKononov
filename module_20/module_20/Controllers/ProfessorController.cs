@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
-using BLL.Interfaces;
+using BLL.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
 using module_20.Interfaces;
@@ -14,12 +14,12 @@ namespace module_20.Controllers
     [ApiController]
     public class ProfessorController : ControllerBase
     {
-        private readonly IUnitOfWork _db;
+        private readonly IProfessorService _db;
         private readonly IMapper _mapper; 
 
-        public ProfessorController(IUnitOfWork uow, IMapperPL mapper)
+        public ProfessorController(IProfessorService professorService, IMapperPL mapper)
         {
-            _db = uow;
+            _db = professorService;
             _mapper = mapper.CreateMapper();
         }
 
@@ -27,7 +27,7 @@ namespace module_20.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProfessorDTO>> Get()
         {
-            return await _db.Professors.GetAllAsync();
+            return await _db.GetAllAsync();
         }
 
         // GET: Professor/5
@@ -37,7 +37,7 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var prof = await _db.Professors.GetAsync(id);
+            var prof = await _db.GetAsync(id);
             return new ObjectResult(prof);
         }
 
@@ -49,8 +49,7 @@ namespace module_20.Controllers
                 BadRequest();
 
             var prof = _mapper.Map<ProfessorDTO>(profViewModel);
-            await _db.Professors.CreateAsync(prof);
-            await _db.SaveAsync();
+            await _db.CreateAsync(prof);
             return Ok(profViewModel);
         }
 
@@ -61,12 +60,11 @@ namespace module_20.Controllers
             if (profViewModel == null)
                 BadRequest();
 
-            if (!_db.Professors.Find(p => p.Id == profViewModel.Id).ToList().Any())
+            if (!_db.Find(p => p.Id == profViewModel.Id).Any())
                 NotFound();
 
             var prof = _mapper.Map<ProfessorDTO>(profViewModel);
-            await _db.Professors.UpdateAsync(prof);
-            await _db.SaveAsync();
+            await _db.UpdateAsync(prof);
             return Ok(profViewModel);
         }
 
@@ -77,9 +75,8 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var prof = await _db.Professors.GetAsync(id);
-            await _db.Professors.DeleteAsync(id);
-            await _db.SaveAsync();
+            var prof = await _db.GetAsync(id);
+            await _db.DeleteAsync(id);
             return Ok(prof);
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BLL.DTO;
 
-namespace BLL.Interfaces
+namespace BLL.Interfaces.ServicesInterfaces
 {
     public interface IReportService
     {

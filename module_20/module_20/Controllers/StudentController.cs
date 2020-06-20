@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
-using BLL.Interfaces;
+using BLL.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
 using module_20.Interfaces;
@@ -14,12 +14,12 @@ namespace module_20.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IUnitOfWork _db;
+        private readonly IStudentService _db;
         private readonly IMapper _mapper;
 
-        public StudentController(IUnitOfWork uow, IMapperPL mapper)
+        public StudentController(IStudentService studentService, IMapperPL mapper)
         {
-            _db = uow;
+            _db = studentService;
             _mapper = mapper.CreateMapper();
         }
 
@@ -27,7 +27,7 @@ namespace module_20.Controllers
         [HttpGet]
         public async Task<IEnumerable<StudentDTO>> Get()
         {
-            return await _db.Students.GetAllAsync();
+            return await _db.GetAllAsync();
         }
 
         // GET: Student/5
@@ -37,7 +37,7 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var student = await _db.Students.GetAsync(id);
+            var student = await _db.GetAsync(id);
             return new ObjectResult(student);
         }
 
@@ -49,8 +49,7 @@ namespace module_20.Controllers
                 BadRequest();
 
             var student = _mapper.Map<StudentDTO>(studentViewModel);
-            await _db.Students.CreateAsync(student);
-            await _db.SaveAsync();
+            await _db.CreateAsync(student);
             return Ok(studentViewModel);
         }
 
@@ -61,12 +60,11 @@ namespace module_20.Controllers
             if (studentViewModel == null)
                 BadRequest();
 
-            if (!_db.Students.Find(s => s.Id == studentViewModel.Id).Any())
+            if (!_db.Find(s => s.Id == studentViewModel.Id).Any())
                 NotFound();
 
             var student = _mapper.Map<StudentDTO>(studentViewModel);
-            await _db.Students.UpdateAsync(student);
-            await _db.SaveAsync();
+            await _db.UpdateAsync(student);
             return Ok(studentViewModel);
         }
 
@@ -77,9 +75,8 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var student = await _db.Students.GetAsync(id);
-            await _db.Students.DeleteAsync(id);
-            await _db.SaveAsync();
+            var student = await _db.GetAsync(id);
+            await _db.DeleteAsync(id);
             return Ok(student);
         }
     }

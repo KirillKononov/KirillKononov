@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BLL.BusinessLogic.Student;
+using BLL.BusinessLogic.StudentUpdater;
 using DAL.Entities;
 
 namespace BLL.Interfaces

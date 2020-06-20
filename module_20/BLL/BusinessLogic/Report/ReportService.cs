@@ -4,26 +4,33 @@ using System.Linq;
 using BLL.BusinessLogic.Serializers;
 using BLL.DTO;
 using BLL.Infrastructure;
-using BLL.Interfaces;
+using BLL.Interfaces.ServicesInterfaces;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.BusinessLogic.Report
 {
     public class ReportService : IReportService
     {
-        private readonly IUnitOfWork _db;
+        private readonly IHomeworkService _homeworkService;
+        private readonly IStudentService _studentService;
+        private readonly ILectureService _lectureService;
+        private readonly IProfessorService _professorService;
         private readonly ILogger _logger;
 
-        public ReportService(IUnitOfWork uow, ILogger<ReportService> logger = null)
+        public ReportService(IHomeworkService homeworkService,IStudentService studentService,
+            ILectureService lectureService, IProfessorService professorService, ILogger<ReportService> logger = null)
         {
-            _db = uow;
+            _homeworkService = homeworkService;
+            _studentService = studentService;
+            _lectureService = lectureService;
+            _professorService = professorService;
             _logger = logger;
         }
 
         public string MakeStudentReport(string firstName, string lastName, 
             Func<IEnumerable<Attendance>, string> serializer = null)
         {
-            var students = _db.Students.Find(s =>
+            var students = _studentService.Find(s =>
                 s.FirstName == firstName && s.LastName == lastName).ToList();
 
             if (students.Count == 0)
@@ -42,9 +49,9 @@ namespace BLL.BusinessLogic.Report
                 from homework in student.StudentHomework
                 select new Attendance()
                 {
-                    LectureName = _db.Lectures.GetAsync(homework.LectureId).Result.Name,
-                    ProfessorName = $"{_db.Professors.GetAsync(_db.Lectures.GetAsync(homework.LectureId).Result.ProfessorId).Result.FirstName} " +
-                                    $"{_db.Professors.GetAsync(_db.Lectures.GetAsync(homework.LectureId).Result.ProfessorId).Result.LastName}",
+                    LectureName = _lectureService.GetAsync(homework.LectureId).Result.Name,
+                    ProfessorName = $"{_professorService.GetAsync(_lectureService.GetAsync(homework.LectureId).Result.ProfessorId).Result.FirstName} " +
+                                    $"{_professorService.GetAsync(_lectureService.GetAsync(homework.LectureId).Result.ProfessorId).Result.LastName}",
                     StudentName = $"{student.FirstName} {student.LastName}",
                     StudentPresence = homework.StudentPresence,
                     HomeworkPresence = homework.HomeworkPresence,
@@ -56,7 +63,7 @@ namespace BLL.BusinessLogic.Report
 
         public string MakeLectureReport(string lectureName, Func<IEnumerable<Attendance>, string> serializer = null)
         {
-            var lectures = _db.Lectures.Find(l => l.Name == lectureName).ToList();
+            var lectures = _lectureService.Find(l => l.Name == lectureName).ToList();
 
             if (lectures.Count == 0)
             {
@@ -75,10 +82,10 @@ namespace BLL.BusinessLogic.Report
                 select new Attendance()
                 {
                     LectureName = lecture.Name,
-                    ProfessorName = $"{_db.Professors.GetAsync(lecture.ProfessorId).Result.FirstName} " +
-                                    $"{_db.Professors.GetAsync(lecture.ProfessorId).Result.LastName}",
-                    StudentName = $"{_db.Students.GetAsync(homework.StudentId).Result.FirstName} " +
-                                  $"{_db.Students.GetAsync(homework.StudentId).Result.LastName}",
+                    ProfessorName = $"{_professorService.GetAsync(lecture.ProfessorId).Result.FirstName} " +
+                                    $"{_professorService.GetAsync(lecture.ProfessorId).Result.LastName}",
+                    StudentName = $"{_studentService.GetAsync(homework.StudentId).Result.FirstName} " +
+                                  $"{_studentService.GetAsync(homework.StudentId).Result.LastName}",
                     StudentPresence = homework.StudentPresence, 
                     HomeworkPresence = homework.HomeworkPresence,
                     Mark = homework.Mark,

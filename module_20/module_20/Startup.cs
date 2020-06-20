@@ -22,7 +22,7 @@ namespace module_20
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.AddDbContext<DataBaseContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("Default")));
             

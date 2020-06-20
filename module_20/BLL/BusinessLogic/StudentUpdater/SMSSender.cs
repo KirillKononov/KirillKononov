@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.BusinessLogic.Student
+namespace BLL.BusinessLogic.StudentUpdater
 {
     public class SMSSender : IMessageSender
     {

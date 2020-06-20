@@ -6,29 +6,30 @@ using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using DAL.DataAccess;
+using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    class LectureRepository : IRepository<LectureDTO, Lecture>
+    public class LectureService : ILectureService
     {
-        private readonly DataBaseContext _db;
+        private readonly IRepository<Lecture> _lectureRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public LectureRepository(DataBaseContext context, IMapper mapper, ILoggerFactory factory)
+        public LectureService(IRepository<Lecture> repository, IMapperBLL mapper, ILoggerFactory factory)
         {
-            _db = context;
-            _logger = factory.CreateLogger("Lecture Repository");
-            _mapper = mapper;
+            _lectureRepository = repository;
+            _logger = factory.CreateLogger("Lecture Service");
+            _mapper = mapper.CreateMapper();
         }
 
         public async Task<IEnumerable<LectureDTO>> GetAllAsync()
         {
-            var lectures = await _db.Lectures.ToListAsync();
+            var lectures = await _lectureRepository.GetAllAsync();
 
             if (!lectures.Any())
             {
@@ -45,7 +46,7 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var lecture = await _db.Lectures.FindAsync(id);
+            var lecture = await _lectureRepository.GetAsync(id);
 
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
@@ -55,25 +56,25 @@ namespace BLL.Repositories
         public async Task CreateAsync(LectureDTO item)
         {
             var lecture = _mapper.Map<Lecture>(item);
-            await _db.Lectures.AddAsync(lecture);
+            await _lectureRepository.CreateAsync(lecture);
         }
 
         public async Task UpdateAsync(LectureDTO item)
         {
-            var lecture = await _db.Lectures.FindAsync(item.Id);
+            var lecture = await _lectureRepository.GetAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
             lecture.Name = item.Name;
             lecture.ProfessorId = item.ProfessorId;
-            _db.Entry(lecture).State = EntityState.Modified;
+            _lectureRepository.Update(lecture);
         }
 
         public IEnumerable<LectureDTO> Find(Func<Lecture, bool> predicate)
         {
-            var lectures = _db.Lectures
-                .Where(predicate)
+            var lectures = _lectureRepository
+                .Find(predicate)
                 .ToList();
             return lectures
                 .Select(l => _mapper.Map<LectureDTO>(l));
@@ -84,11 +85,11 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var lecture = await _db.Lectures.FindAsync(id);
+            var lecture = await _lectureRepository.GetAsync(id);
 
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            _db.Lectures.Remove(lecture);
+            _lectureRepository.Delete(lecture);
         }
     }
 }

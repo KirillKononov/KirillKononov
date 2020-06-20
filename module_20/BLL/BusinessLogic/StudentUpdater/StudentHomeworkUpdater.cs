@@ -3,22 +3,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using DAL.DataAccess;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.BusinessLogic.Student
+namespace BLL.BusinessLogic.StudentUpdater
 {
     public class StudentHomeworkUpdater : IStudentHomeworkUpdater
     {
-        private readonly DataBaseContext _db;
+        private readonly IRepository<Student> _studentRepository;
+        private readonly IRepository<Homework> _homeworkRepository;
         private readonly ILogger _logger;
         private readonly bool _previousPresence;
 
-        public StudentHomeworkUpdater(DataBaseContext db , ILogger logger, bool previousPresence = true)
+        public StudentHomeworkUpdater(IRepository<Student> studentRepository, IRepository<Homework> homeworkRepository,
+            ILogger logger, bool previousPresence = true)
         {
-            _db = db;
+            _studentRepository = studentRepository;
+            _homeworkRepository = homeworkRepository;
             _logger = logger;
             _previousPresence = previousPresence;
         }
@@ -32,7 +34,7 @@ namespace BLL.BusinessLogic.Student
 
         public async Task UpdateAsync(Homework homework, UpdateType updateType)
         {
-            var student = await _db.Students.FindAsync(homework.StudentId);
+            var student = await _studentRepository.GetAsync(homework.StudentId);
 
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
@@ -41,7 +43,7 @@ namespace BLL.BusinessLogic.Student
 
             student.MissedLectures = MissedLecturesCount(homework.StudentPresence, student.MissedLectures, updateType);
 
-            _db.Entry(student).State = EntityState.Modified;
+            _studentRepository.Update(student);
 
             if(updateType == UpdateType.AddHomework || updateType == UpdateType.UpdateHomework)
                 SendMessage(student, _logger);

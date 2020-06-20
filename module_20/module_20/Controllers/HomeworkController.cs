@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
-using BLL.Interfaces;
+using BLL.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
 using module_20.Interfaces;
@@ -14,12 +14,12 @@ namespace module_20.Controllers
     [ApiController]
     public class HomeworkController : ControllerBase
     {
-        private readonly IUnitOfWork _db;
+        private readonly IHomeworkService _db;
         private readonly IMapper _mapper;
 
-        public HomeworkController(IUnitOfWork uow, IMapperPL mapper)
+        public HomeworkController(IHomeworkService homeworkService, IMapperPL mapper)
         {
-            _db = uow;
+            _db = homeworkService;
             _mapper = mapper.CreateMapper();
         }
 
@@ -27,7 +27,7 @@ namespace module_20.Controllers
         [HttpGet]
         public async Task<IEnumerable<HomeworkDTO>> Get()
         {
-            return await _db.Homework.GetAllAsync();
+            return await _db.GetAllAsync();
         }
 
         // GET: Homework/5
@@ -37,7 +37,7 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var homework = await _db.Homework.GetAsync(id);
+            var homework = await _db.GetAsync(id);
             return new ObjectResult(homework);
         }
 
@@ -49,8 +49,7 @@ namespace module_20.Controllers
                 BadRequest();
 
             var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
-            await _db.Homework.CreateAsync(homework);
-            await _db.SaveAsync();
+            await _db.CreateAsync(homework);
             return Ok(homeworkViewModel);
         }
 
@@ -62,11 +61,10 @@ namespace module_20.Controllers
                 BadRequest();
 
             var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
-            if (!_db.Homework.Find(h => h.Id == homework.Id).Any())
+            if (!_db.Find(h => h.Id == homework.Id).Any())
                 NotFound();
 
-            await _db.Homework.UpdateAsync(homework);
-            await _db.SaveAsync();
+            await _db.UpdateAsync(homework);
             return Ok(homeworkViewModel);
         }
 
@@ -77,9 +75,8 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var homework = await _db.Homework.GetAsync(id);
-            await _db.Homework.DeleteAsync(id);
-            await _db.SaveAsync();
+            var homework = await _db.GetAsync(id);
+            await _db.DeleteAsync(id);
             return Ok(homework);
         }
     }

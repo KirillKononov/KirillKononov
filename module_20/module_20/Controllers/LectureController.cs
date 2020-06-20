@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
-using BLL.Interfaces;
+using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using module_20.DTO;
@@ -15,12 +15,12 @@ namespace module_20.Controllers
     [ApiController]
     public class LectureController : ControllerBase
     {
-        private readonly IUnitOfWork _db;
+        private readonly ILectureService _db;
         private readonly IMapper _mapper; 
 
-        public LectureController(IUnitOfWork uow, IMapperPL mapper)
+        public LectureController(ILectureService lectureService, IMapperPL mapper)
         {
-            _db = uow;
+            _db = lectureService;
             _mapper = mapper.CreateMapper();
         }
 
@@ -28,7 +28,7 @@ namespace module_20.Controllers
         [HttpGet]
         public async Task<IEnumerable<LectureDTO>> Get()
         {
-            return await _db.Lectures.GetAllAsync();
+            return await _db.GetAllAsync();
         }
 
         // GET: Lecture/5
@@ -38,7 +38,7 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var lecture = await _db.Lectures.GetAsync(id);
+            var lecture = await _db.GetAsync(id);
             return new ObjectResult(lecture);
         }
 
@@ -50,8 +50,7 @@ namespace module_20.Controllers
                 BadRequest();
 
             var lecture =_mapper.Map<LectureDTO>(lectureViewModel);
-            await _db.Lectures.CreateAsync(lecture);
-            await _db.SaveAsync();
+            await _db.CreateAsync(lecture);
             return Ok(lectureViewModel);
         }
 
@@ -62,12 +61,11 @@ namespace module_20.Controllers
             if (lectureViewModel == null)
                 BadRequest();
 
-            if (!_db.Lectures.Find(l => l.Id == lectureViewModel.Id).Any()) 
+            if (!_db.Find(l => l.Id == lectureViewModel.Id).Any()) 
                 NotFound();
 
             var lecture = _mapper.Map<LectureDTO>(lectureViewModel);
-            await _db.Lectures.UpdateAsync(lecture);
-            await _db.SaveAsync();
+            await _db.UpdateAsync(lecture);
 
             return Ok(lectureViewModel);
         }
@@ -79,9 +77,8 @@ namespace module_20.Controllers
             if (id == null)
                 BadRequest();
 
-            var lecture = await _db.Lectures.GetAsync(id);
-            await _db.Lectures.DeleteAsync(id);
-            await _db.SaveAsync();
+            var lecture = await _db.GetAsync(id);
+            await _db.DeleteAsync(id);
             return Ok(lecture);
         }
     }

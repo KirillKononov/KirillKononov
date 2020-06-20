@@ -3,35 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BLL.BusinessLogic.Student;
+using BLL.BusinessLogic.StudentUpdater;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using DAL.DataAccess;
+using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    class HomeworkRepository : IRepository<HomeworkDTO, Homework>
+    public class HomeworkService : IHomeworkService
     {
-        private readonly DataBaseContext _db;
+        private readonly IRepository<Homework> _homeworkRepository;
+        private readonly IRepository<Student> _studentRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public HomeworkRepository(DataBaseContext context, IMapper mapper, ILoggerFactory factory)
+        public HomeworkService(IRepository<Homework> homeworkRepository, IRepository<Student> studentRepository,
+            IMapperBLL mapper, ILoggerFactory factory)
         {
-            _db = context;
-            _logger = factory.CreateLogger("Homework Repository");
-            _mapper = mapper;
+            _homeworkRepository = homeworkRepository;
+            _studentRepository = studentRepository;
+            _logger = factory.CreateLogger("Homework Service");
+            _mapper = mapper.CreateMapper();
         }
 
         public async Task<IEnumerable<HomeworkDTO>> GetAllAsync()
         {
-            var homework = await _db.Homework.ToListAsync();
+            var homework = await _homeworkRepository.GetAllAsync();
 
-            if (!homework.Any())
+            if (!homework.ToList().Any())
             {
                 _logger.LogWarning("There is no homework in data base");
                 throw new ValidationException("There is no homework in data base");
@@ -46,7 +50,7 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var homework = await _db.Homework.FindAsync(id);
+            var homework = await _homeworkRepository.GetAsync(id);
 
             validator.EntityValidation(homework, _logger, nameof(homework));
 
@@ -68,9 +72,9 @@ namespace BLL.Repositories
             }
 
             var homework = _mapper.Map<Homework>(item);
-            await _db.Homework.AddAsync(homework);
+            await _homeworkRepository.CreateAsync(homework);
 
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository, _logger);
             await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
@@ -88,14 +92,15 @@ namespace BLL.Repositories
                 throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be 0");
             }
 
-            var homework = await _db.Homework.FindAsync(item.Id);
+            var homework = await _homeworkRepository.GetAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             var previousHomeworkPresence = homework.StudentPresence;
             var previousStudentId = homework.StudentId;
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger, previousHomeworkPresence);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository,
+                _logger, previousHomeworkPresence);
 
             if (previousStudentId != item.StudentId)
                 await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
@@ -106,7 +111,7 @@ namespace BLL.Repositories
             homework.HomeworkPresence = item.HomeworkPresence;
             homework.Mark = item.Mark;
             homework.Date = item.Date;
-            _db.Entry(homework).State = EntityState.Modified;
+            _homeworkRepository.Update(homework);
 
             if (previousStudentId != homework.StudentId)
                 await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
@@ -116,8 +121,8 @@ namespace BLL.Repositories
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
         {
-            var homework = _db.Homework
-                .Where(predicate)
+            var homework = _homeworkRepository
+                .Find(predicate)
                 .ToList();
             return homework
                 .Select(h => _mapper.Map<HomeworkDTO>(h));
@@ -128,12 +133,12 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var homework = await _db.Homework.FindAsync(id);
+            var homework = await _homeworkRepository.GetAsync(id);
 
             validator.EntityValidation(homework, _logger, nameof(homework));
 
-            _db.Homework.Remove(homework);
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_db, _logger);
+            _homeworkRepository.Delete(homework);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository, _logger);
             await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
     }

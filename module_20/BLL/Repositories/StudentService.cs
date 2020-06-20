@@ -6,29 +6,30 @@ using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using DAL.DataAccess;
+using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace BLL.Repositories
 {
-    class StudentRepository : IRepository<StudentDTO, Student>
+    public class StudentService : IStudentService
     {
-        private readonly DataBaseContext _db;
+        private readonly IRepository<Student> _studentRepository;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public StudentRepository(DataBaseContext context, IMapper mapper, ILoggerFactory factory)
+        public StudentService(IRepository<Student> repository, IMapperBLL mapper, ILoggerFactory factory)
         {
-            _db = context;
-            _logger = factory.CreateLogger("Student Repository");
-            _mapper = mapper;
+            _studentRepository = repository;
+            _logger = factory.CreateLogger("Student Service");
+            _mapper = mapper.CreateMapper();
         }
 
         public async Task<IEnumerable<StudentDTO>> GetAllAsync()
         {
-            var students = await _db.Students.ToListAsync();
+            var students = await _studentRepository.GetAllAsync();
 
             if (!students.Any())
             {
@@ -45,7 +46,7 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var student = await _db.Students.FindAsync(id);
+            var student = await _studentRepository.GetAsync(id);
 
             validator.EntityValidation(student, _logger, nameof(student));
 
@@ -55,25 +56,25 @@ namespace BLL.Repositories
         public async Task CreateAsync(StudentDTO item)
         {
             var student = _mapper.Map<Student>(item);
-            await _db.Students.AddAsync(student);
+            await _studentRepository.CreateAsync(student);
         }
 
         public async Task UpdateAsync(StudentDTO item)
         {
-            var student = await _db.Students.FindAsync(item.Id);
+            var student = await _studentRepository.GetAsync(item.Id);
 
             var validator = new Validator();
             validator.EntityValidation(student, _logger, nameof(student));
 
             student.FirstName = item.FirstName;
             student.LastName = item.LastName;
-            _db.Entry(student).State = EntityState.Modified;
+            _studentRepository.Update(student);
         }
 
         public IEnumerable<StudentDTO> Find(Func<Student, bool> predicate)
         {
-            var students = _db.Students
-                .Where(predicate)
+            var students = _studentRepository
+                .Find(predicate)
                 .ToList();
             return students
                 .Select(s => _mapper.Map<StudentDTO>(s));
@@ -84,11 +85,11 @@ namespace BLL.Repositories
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
-            var student = await _db.Students.FindAsync(id);
+            var student = await _studentRepository.GetAsync(id);
 
             validator.EntityValidation(student, _logger, nameof(student));
             
-            _db.Students.Remove(student);
+            _studentRepository.Delete(student);
         }
     }
 }
