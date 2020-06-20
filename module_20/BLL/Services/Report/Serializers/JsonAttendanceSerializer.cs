@@ -3,7 +3,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using Newtonsoft.Json;
 
-namespace BLL.BusinessLogic.Serializers
+namespace BLL.Services.Report.Serializers
 {
     public class JsonAttendanceSerializer : ISerializer
     {

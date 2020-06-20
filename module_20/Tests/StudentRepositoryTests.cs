@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using BLL.DTO;
 using NUnit.Framework;
-using BLL.Repositories;
-using BLL.Repositories.Mapper;
 using DAL.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using BLL.DTO;
 using BLL.Interfaces;
 
-namespace BLL.BusinessLogic.Serializers
+namespace BLL.Services.Report.Serializers
 {
     public class XmlAttendanceSerializer : ISerializer
     {

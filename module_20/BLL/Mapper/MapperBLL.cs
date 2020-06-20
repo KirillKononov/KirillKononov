@@ -3,7 +3,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 
-namespace BLL.Repositories.Mapper
+namespace BLL.Mapper
 {
     public class MapperBll : IMapperBLL
     {

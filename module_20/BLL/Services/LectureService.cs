@@ -9,10 +9,9 @@ using BLL.Interfaces;
 using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.Repositories
+namespace BLL.Services
 {
     public class LectureService : ILectureService
     {

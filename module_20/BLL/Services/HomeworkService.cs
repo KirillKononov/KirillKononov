@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BLL.BusinessLogic.StudentUpdater;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using BLL.Interfaces.ServicesInterfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.Repositories
+namespace BLL.Services
 {
     public class HomeworkService : IHomeworkService
     {
@@ -74,8 +72,8 @@ namespace BLL.Repositories
             var homework = _mapper.Map<Homework>(item);
             await _homeworkRepository.CreateAsync(homework);
 
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository, _logger);
-            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
+            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
         public async Task UpdateAsync(HomeworkDTO item)
@@ -99,11 +97,10 @@ namespace BLL.Repositories
 
             var previousHomeworkPresence = homework.StudentPresence;
             var previousStudentId = homework.StudentId;
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository,
-                _logger, previousHomeworkPresence);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger, previousHomeworkPresence);
 
             if (previousStudentId != item.StudentId)
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
 
             homework.StudentId = item.StudentId;
             homework.LectureId = item.LectureId;
@@ -114,9 +111,9 @@ namespace BLL.Repositories
             _homeworkRepository.Update(homework);
 
             if (previousStudentId != homework.StudentId)
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.AddHomework);
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework);
             else
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.UpdateHomework);
+                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.UpdateHomework);
         }
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
@@ -138,8 +135,8 @@ namespace BLL.Repositories
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             _homeworkRepository.Delete(homework);
-            var studentHomeworkUpdater = new StudentHomeworkUpdater(_studentRepository, _homeworkRepository, _logger);
-            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.UpdateType.RemoveHomework);
+            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
+            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
     }
 }

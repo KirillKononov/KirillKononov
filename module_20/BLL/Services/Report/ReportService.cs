@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BLL.BusinessLogic.Serializers;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces.ServicesInterfaces;
+using BLL.Services.Report.Serializers;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.BusinessLogic.Report
+namespace BLL.Services.Report
 {
     public class ReportService : IReportService
     {
-        private readonly IHomeworkService _homeworkService;
         private readonly IStudentService _studentService;
         private readonly ILectureService _lectureService;
         private readonly IProfessorService _professorService;
         private readonly ILogger _logger;
 
-        public ReportService(IHomeworkService homeworkService,IStudentService studentService,
+        public ReportService(IStudentService studentService,
             ILectureService lectureService, IProfessorService professorService, ILogger<ReportService> logger = null)
         {
-            _homeworkService = homeworkService;
             _studentService = studentService;
             _lectureService = lectureService;
             _professorService = professorService;

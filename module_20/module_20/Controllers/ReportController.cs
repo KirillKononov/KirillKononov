@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using BLL.BusinessLogic.Serializers;
 using BLL.Interfaces;
 using BLL.Interfaces.ServicesInterfaces;
+using BLL.Services.Report.Serializers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace module_20.Controllers

@@ -7,20 +7,18 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.BusinessLogic.StudentUpdater
+namespace BLL.Services.StudentHomeworkUpdater
 {
     public class StudentHomeworkUpdater : IStudentHomeworkUpdater
     {
         private readonly IRepository<Student> _studentRepository;
-        private readonly IRepository<Homework> _homeworkRepository;
         private readonly ILogger _logger;
         private readonly bool _previousPresence;
 
-        public StudentHomeworkUpdater(IRepository<Student> studentRepository, IRepository<Homework> homeworkRepository,
+        public StudentHomeworkUpdater(IRepository<Student> studentRepository,
             ILogger logger, bool previousPresence = true)
         {
             _studentRepository = studentRepository;
-            _homeworkRepository = homeworkRepository;
             _logger = logger;
             _previousPresence = previousPresence;
         }

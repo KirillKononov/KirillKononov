@@ -1,8 +1,8 @@
-﻿using BLL.BusinessLogic.Report;
-using BLL.Interfaces;
+﻿using BLL.Interfaces;
 using BLL.Interfaces.ServicesInterfaces;
-using BLL.Repositories;
-using BLL.Repositories.Mapper;
+using BLL.Mapper;
+using BLL.Services;
+using BLL.Services.Report;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
