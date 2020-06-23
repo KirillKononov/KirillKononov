@@ -53,7 +53,7 @@
 
     • C# .net
     • MsSql Server
-    • Moq, MsTest, NUnit
+    • Moq, NUnit
     • Entity Framework
     • Code standarts должен удовлетворять ms.net guideline
 
