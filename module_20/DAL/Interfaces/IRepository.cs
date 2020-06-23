@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DAL.Entities;
 
 namespace DAL.Interfaces
 {
@@ -10,8 +9,8 @@ namespace DAL.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetAsync(int? id);
         IEnumerable<T> Find(Func<T, bool> predicate);
-        Task CreateAsync(T homework);
-        void Update(T homework);
-        void Delete(T homework);
+        Task CreateAsync(T item);
+        void Update(T item);
+        void Delete(int? id);
     }
 }

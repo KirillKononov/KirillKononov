@@ -50,8 +50,9 @@ namespace DAL.Repositories
             return professors;
         }
 
-        public void Delete(Professor professor)
+        public void Delete(int? id)
         {
+            var professor = _db.Professors.Find(id);
             _db.Professors.Remove(professor);
             _db.SaveChanges();
         }

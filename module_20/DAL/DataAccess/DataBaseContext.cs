@@ -1,5 +1,4 @@
-﻿using System;
-using DAL.Entities;
+﻿using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.DataAccess

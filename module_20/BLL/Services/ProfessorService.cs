@@ -85,10 +85,9 @@ namespace BLL.Services
             validator.IdValidation(id, _logger);
 
             var professor = await _professorRepository.GetAsync(id);
-
             validator.EntityValidation(professor, _logger, nameof(professor));
 
-            _professorRepository.Delete(professor);
+            _professorRepository.Delete(id);
         }
     }
 }

@@ -79,16 +79,15 @@ namespace BLL.Services
                 .Select(s => _mapper.Map<StudentDTO>(s));
         }
 
-        public async Task DeleteAsync(int? id)
+        public async  Task DeleteAsync(int? id)
         {
             var validator = new Validator();
             validator.IdValidation(id, _logger);
 
             var student = await _studentRepository.GetAsync(id);
-
             validator.EntityValidation(student, _logger, nameof(student));
             
-            _studentRepository.Delete(student);
+            _studentRepository.Delete(id);
         }
     }
 }

@@ -131,10 +131,9 @@ namespace BLL.Services
             validator.IdValidation(id, _logger);
 
             var homework = await _homeworkRepository.GetAsync(id);
-
             validator.EntityValidation(homework, _logger, nameof(homework));
 
-            _homeworkRepository.Delete(homework);
+            _homeworkRepository.Delete(id);
             var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
             await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }
