@@ -133,7 +133,7 @@ namespace BLL.Services
             var homework = await _homeworkRepository.GetAsync(id);
             validator.EntityValidation(homework, _logger, nameof(homework));
 
-            _homeworkRepository.Delete(id);
+            _homeworkRepository.Delete(homework);
             var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
             await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
         }

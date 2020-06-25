@@ -35,10 +35,10 @@ namespace module_20.Controllers
         public async Task<ActionResult<StudentDTO>> Get(int? id)
         {
             if (id == null)
-                BadRequest();
+               return BadRequest();
 
             var student = await _db.GetAsync(id);
-            return new ObjectResult(student);
+            return Ok(student);
         }
 
         // POST: Student
@@ -46,7 +46,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<StudentDTO>> Post(StudentViewModel studentViewModel)
         {
             if (studentViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             var student = _mapper.Map<StudentDTO>(studentViewModel);
             await _db.CreateAsync(student);
@@ -58,10 +58,10 @@ namespace module_20.Controllers
         public async Task<ActionResult<StudentDTO>> Put(StudentViewModel studentViewModel)
         {
             if (studentViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             if (!_db.Find(s => s.Id == studentViewModel.Id).Any())
-                NotFound();
+                return NotFound();
 
             var student = _mapper.Map<StudentDTO>(studentViewModel);
             await _db.UpdateAsync(student);
@@ -73,7 +73,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<StudentDTO>> Delete(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var student = await _db.GetAsync(id);
             await _db.DeleteAsync(id);

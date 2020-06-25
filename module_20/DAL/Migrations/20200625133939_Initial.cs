@@ -29,8 +29,8 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(maxLength: 50, nullable: false),
                     LastName = table.Column<string>(maxLength: 50, nullable: false),
-                    AverageMark = table.Column<float>(nullable: false, defaultValue: 0),
-                    MissedLectures = table.Column<int>(nullable: false, defaultValue: 0)
+                    AverageMark = table.Column<float>(nullable: false),
+                    MissedLectures = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

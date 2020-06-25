@@ -50,9 +50,8 @@ namespace DAL.Repositories
             return homework;
         }
 
-        public void Delete(int? id)
+        public void Delete(Homework homework)
         {
-            var homework = _db.Homework.Find(id);
             _db.Homework.Remove(homework);
             _db.SaveChanges();
         }

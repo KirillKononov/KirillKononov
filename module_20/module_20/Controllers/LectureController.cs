@@ -36,7 +36,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<LectureDTO>> Get(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var lecture = await _db.GetAsync(id);
             return new ObjectResult(lecture);
@@ -47,7 +47,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<Lecture>> Post(LectureViewModel lectureViewModel)
         {
             if (lectureViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             var lecture =_mapper.Map<LectureDTO>(lectureViewModel);
             await _db.CreateAsync(lecture);
@@ -59,10 +59,10 @@ namespace module_20.Controllers
         public async Task<ActionResult<LectureDTO>> Put(LectureViewModel lectureViewModel)
         {
             if (lectureViewModel == null)
-                BadRequest();
+                return BadRequest();
 
-            if (!_db.Find(l => l.Id == lectureViewModel.Id).Any()) 
-                NotFound();
+            if (!_db.Find(l => l.Id == lectureViewModel.Id).Any())
+                return NotFound();
 
             var lecture = _mapper.Map<LectureDTO>(lectureViewModel);
             await _db.UpdateAsync(lecture);
@@ -75,7 +75,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<Lecture>> Delete(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var lecture = await _db.GetAsync(id);
             await _db.DeleteAsync(id);

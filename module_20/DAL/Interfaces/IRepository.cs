@@ -11,6 +11,6 @@ namespace DAL.Interfaces
         IEnumerable<T> Find(Func<T, bool> predicate);
         Task CreateAsync(T item);
         void Update(T item);
-        void Delete(int? id);
+        void Delete(T item);
     }
 }

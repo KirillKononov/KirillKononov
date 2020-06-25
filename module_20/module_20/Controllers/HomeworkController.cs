@@ -35,7 +35,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<HomeworkDTO>> Get(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var homework = await _db.GetAsync(id);
             return new ObjectResult(homework);
@@ -46,7 +46,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<HomeworkDTO>> Post(HomeworkViewModel homeworkViewModel)
         {
             if (homeworkViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
             await _db.CreateAsync(homework);
@@ -58,11 +58,11 @@ namespace module_20.Controllers
         public async Task<ActionResult<HomeworkDTO>> Put(HomeworkViewModel homeworkViewModel)
         {
             if (homeworkViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             var homework = _mapper.Map<HomeworkDTO>(homeworkViewModel);
             if (!_db.Find(h => h.Id == homework.Id).Any())
-                NotFound();
+                return NotFound();
 
             await _db.UpdateAsync(homework);
             return Ok(homeworkViewModel);
@@ -73,7 +73,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<HomeworkDTO>> Delete(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var homework = await _db.GetAsync(id);
             await _db.DeleteAsync(id);

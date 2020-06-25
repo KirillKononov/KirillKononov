@@ -87,7 +87,7 @@ namespace BLL.Services
             var lecture = await _lectureRepository.GetAsync(id);
             validator.EntityValidation(lecture, _logger, nameof(lecture));
 
-            _lectureRepository.Delete(id);
+            _lectureRepository.Delete(lecture);
         }
     }
 }

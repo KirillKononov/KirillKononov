@@ -50,9 +50,8 @@ namespace DAL.Repositories
             return lectures;
         }
 
-        public void Delete(int? id)
+        public void Delete(Lecture lecture)
         {
-            var lecture = _db.Lectures.Find(id);
             _db.Lectures.Remove(lecture);
             _db.SaveChanges();
         }

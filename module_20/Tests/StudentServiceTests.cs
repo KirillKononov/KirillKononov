@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTO;
+using BLL.Infrastructure;
 using BLL.Mapper;
 using BLL.Services;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.Extensions.Logging.Abstractions;
-using module_20.Controllers;
-using module_20.Mapper;
 using Moq;
 using NUnit.Framework;
 
@@ -25,16 +23,6 @@ namespace Tests
             LastName = "Kononov",
             AverageMark = (float) 4.67,
             MissedLectures = 0,
-            StudentHomework = null
-        };
-        
-        private readonly StudentDTO _studentDTOSemen = new StudentDTO
-        {
-            Id = 2,
-            FirstName = "Semen",
-            LastName = "Petrov",
-            AverageMark = 4,
-            MissedLectures = 2,
             StudentHomework = null
         };
 
@@ -61,6 +49,18 @@ namespace Tests
             return users;
         }
         
+        private async Task<IEnumerable<Student>> GetAllExceptionTest()
+        {
+            var users = new List<Student>();
+            return users;
+        }
+        
+        private async Task<Student> GetExceptionTest()
+        {
+            var user = new Student();
+            return user;
+        }
+        
         private async Task<Student> GetTest()
         {
             var user = new Student
@@ -75,23 +75,6 @@ namespace Tests
             return user;
         }
         
-        private IEnumerable<Student> FindTest()
-        {
-            var users = new List<Student>
-            {
-                new Student
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    AverageMark = (float) 4.67,
-                    MissedLectures = 0,
-                    StudentHomework = null
-                }
-            };
-            return users;
-        }
-        
         private StudentService StudentService { get; set; }
         private Mock<IRepository<Student>> Mock { get; set; }
         
@@ -102,12 +85,7 @@ namespace Tests
              Mock.Setup(repo => repo.GetAllAsync()).Returns(GetAllTest());
              Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
                  .Returns(GetTest());
-             Mock.Setup(repo => repo.Update(It.IsAny<Student>()));
-             Mock.Setup(repo => repo.CreateAsync(It.IsAny<Student>()));
-             Mock.Setup(repo => repo.Delete(It.IsAny<int>()));
-             Mock.Setup(repo => repo.Find(It.IsAny<Func<Student, bool>>()))
-                 .Returns(FindTest());
-             
+
              StudentService = new StudentService(Mock.Object, new MapperBll(), new NullLoggerFactory());
         }
         
@@ -117,17 +95,23 @@ namespace Tests
             var students = StudentService.GetAllAsync().Result.ToList();
         
             Mock.Verify(m => m.GetAllAsync());
-            Assert.AreEqual(_studentDTOKirill.Id, students[0].Id); 
-            Assert.AreEqual(_studentDTOKirill.FirstName, students[0].FirstName);
-            Assert.AreEqual(_studentDTOKirill.LastName, students[0].LastName);
-            Assert.AreEqual(_studentDTOKirill.MissedLectures, students[0].MissedLectures);
-            Assert.AreEqual(_studentDTOKirill.AverageMark, students[0].AverageMark);
-            
-            Assert.AreEqual(_studentDTOSemen.Id, students[1].Id); 
-            Assert.AreEqual(_studentDTOSemen.FirstName, students[1].FirstName);
-            Assert.AreEqual(_studentDTOSemen.LastName, students[1].LastName);
-            Assert.AreEqual(_studentDTOSemen.MissedLectures, students[1].MissedLectures);
-            Assert.AreEqual(_studentDTOSemen.AverageMark, students[1].AverageMark);
+
+            for (var i = 1; i < GetAllTest().Result.Count(); ++i)
+            {
+                Assert.AreEqual(GetAllTest().Result.ToList()[i].Id, students[i].Id); 
+                Assert.AreEqual(GetAllTest().Result.ToList()[i].FirstName, students[i].FirstName);
+                Assert.AreEqual(GetAllTest().Result.ToList()[i].LastName, students[i].LastName);
+                Assert.AreEqual(GetAllTest().Result.ToList()[i].MissedLectures, students[i].MissedLectures);
+                Assert.AreEqual(GetAllTest().Result.ToList()[i].AverageMark, students[i].AverageMark);
+            }
+        }
+        
+        [Test]
+        public void GetAllAsync_ThrowsValidationException()
+        {
+            Mock.Setup(repo => repo.GetAllAsync()).Returns(GetAllExceptionTest());
+
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAllAsync());
         }
 
         [Test]
@@ -137,11 +121,21 @@ namespace Tests
             var student = StudentService.GetAsync(id).Result;
         
             Mock.Verify(m => m.GetAsync(id));
-            Assert.AreEqual(_studentDTOKirill.Id, student.Id); 
-            Assert.AreEqual(_studentDTOKirill.FirstName, student.FirstName);
-            Assert.AreEqual(_studentDTOKirill.LastName, student.LastName);
-            Assert.AreEqual(_studentDTOKirill.MissedLectures, student.MissedLectures);
-            Assert.AreEqual(_studentDTOKirill.AverageMark, student.AverageMark);
+            Assert.AreEqual(GetTest().Result.Id, student.Id); 
+            Assert.AreEqual(GetTest().Result.FirstName, student.FirstName);
+            Assert.AreEqual(GetTest().Result.LastName, student.LastName);
+            Assert.AreEqual(GetTest().Result.MissedLectures, student.MissedLectures);
+            Assert.AreEqual(GetTest().Result.AverageMark, student.AverageMark);
+        }
+        
+        [Test]
+        public void GetAsync_ThrowsValidationException()
+        {
+            //Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
+            //    .Returns(GetExceptionTest());
+            
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAsync(null));
+            //Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAsync(1));
         }
         
         [Test]
@@ -149,28 +143,28 @@ namespace Tests
         {
             await StudentService.UpdateAsync(_studentDTOKirill);
             
-            Mock.Verify(m => m.Update(Mock.Object.GetAsync(_studentDTOKirill.Id).Result));
+            Mock.Verify(m => m.Update(It.IsAny<Student>()));
+        }
+
+        //[Test]
+        //public void UpdateAsync_ThrowsValidationException()
+        //{
+        //    Assert.ThrowsAsync<ValidationException>(async () => await StudentService.UpdateAsync(null));
+        //}
+
+        [Test]
+        public async Task DeleteAsync_ValidCall()
+        {
+            const int id = 1;
+            await StudentService.DeleteAsync(id);
+            
+            Mock.Verify(m => m.Delete(It.IsAny<Student>()));
         }
 
         [Test]
-        public void Find_ValidCall()
+        public void DeleteAsync_ThrowsValidationException()
         {
-            var students = StudentService.Find(s => s.Id == 1).ToList();
-            
-            Assert.AreEqual(_studentDTOKirill.Id, students[0].Id); 
-            Assert.AreEqual(_studentDTOKirill.FirstName, students[0].FirstName);
-            Assert.AreEqual(_studentDTOKirill.LastName, students[0].LastName);
-            Assert.AreEqual(_studentDTOKirill.MissedLectures, students[0].MissedLectures);
-            Assert.AreEqual(_studentDTOKirill.AverageMark, students[0].AverageMark);
-        }
-         
-        [Test]
-        public void DeleteAsync_ValidCall()
-        {
-            const int id = 1;
-            StudentService.DeleteAsync(id);
-            
-            Mock.Verify(m => m.Delete(id));
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService.DeleteAsync(null));
         }
     }
 }

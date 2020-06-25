@@ -35,7 +35,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<ProfessorDTO>> Get(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var prof = await _db.GetAsync(id);
             return new ObjectResult(prof);
@@ -46,7 +46,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<ProfessorDTO>> Post(ProfessorViewModel profViewModel)
         {
             if (profViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             var prof = _mapper.Map<ProfessorDTO>(profViewModel);
             await _db.CreateAsync(prof);
@@ -58,10 +58,10 @@ namespace module_20.Controllers
         public async Task<ActionResult<ProfessorDTO>> Put(ProfessorViewModel profViewModel)
         {
             if (profViewModel == null)
-                BadRequest();
+                return BadRequest();
 
             if (!_db.Find(p => p.Id == profViewModel.Id).Any())
-                NotFound();
+                return NotFound();
 
             var prof = _mapper.Map<ProfessorDTO>(profViewModel);
             await _db.UpdateAsync(prof);
@@ -73,7 +73,7 @@ namespace module_20.Controllers
         public async Task<ActionResult<ProfessorDTO>> Delete(int? id)
         {
             if (id == null)
-                BadRequest();
+                return BadRequest();
 
             var prof = await _db.GetAsync(id);
             await _db.DeleteAsync(id);
