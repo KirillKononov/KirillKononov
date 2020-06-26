@@ -39,7 +39,7 @@ namespace module_20.Controllers
                 return BadRequest();
 
             var lecture = await _db.GetAsync(id);
-            return new ObjectResult(lecture);
+            return Ok(lecture);
         }
 
         // POST: Lecture

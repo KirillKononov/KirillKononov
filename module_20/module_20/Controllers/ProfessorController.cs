@@ -38,7 +38,7 @@ namespace module_20.Controllers
                 return BadRequest();
 
             var prof = await _db.GetAsync(id);
-            return new ObjectResult(prof);
+            return Ok(prof);
         }
 
         // POST: Professor

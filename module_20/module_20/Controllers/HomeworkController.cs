@@ -38,7 +38,7 @@ namespace module_20.Controllers
                 return BadRequest();
 
             var homework = await _db.GetAsync(id);
-            return new ObjectResult(homework);
+            return Ok(homework);
         }
 
         // POST: Homework

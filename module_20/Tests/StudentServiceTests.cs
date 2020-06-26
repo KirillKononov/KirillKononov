@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace Tests
 {
     [TestFixture]
-    public class Test
+    public class StudentServiceTests
     {
         private readonly StudentDTO _studentDTOKirill = new StudentDTO
         {
@@ -55,11 +55,11 @@ namespace Tests
             return users;
         }
         
-        private async Task<Student> GetExceptionTest()
-        {
-            var user = new Student();
-            return user;
-        }
+        // private async Task<Student> GetExceptionTest()
+        // {
+        //     var user = new Student();
+        //     return user;
+        // }
         
         private async Task<Student> GetTest()
         {
