@@ -17,12 +17,14 @@ namespace BLL.Services.Report
         private readonly ILogger _logger;
 
         public ReportService(IStudentService studentService,
-            ILectureService lectureService, IProfessorService professorService, ILogger<ReportService> logger = null)
+            ILectureService lectureService, 
+            IProfessorService professorService, 
+            ILoggerFactory factory = null)
         {
             _studentService = studentService;
             _lectureService = lectureService;
             _professorService = professorService;
-            _logger = logger;
+            _logger = factory?.CreateLogger("Report Service");
         }
 
         public string MakeStudentReport(string firstName, string lastName, 
@@ -33,7 +35,7 @@ namespace BLL.Services.Report
 
             if (students.Count == 0)
             {
-                _logger.LogWarning($"Entered student {firstName} {lastName} doesn't exist");
+                _logger?.LogWarning($"Entered student {firstName} {lastName} doesn't exist");
                 throw new ValidationException($"Entered student {firstName} {lastName} doesn't exist");
             }
 
@@ -65,7 +67,7 @@ namespace BLL.Services.Report
 
             if (lectures.Count == 0)
             {
-                _logger.LogWarning($"Entered lecture {lectureName} doesn't exist");
+                _logger?.LogWarning($"Entered lecture {lectureName} doesn't exist");
                 throw new ValidationException($"Entered lecture {lectureName} doesn't exist");
             }
 

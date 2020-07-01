@@ -12,7 +12,7 @@ using module_20.Mapper;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.ControllersTests
 {
     public class HomeworkControllerTests
     {

@@ -19,10 +19,10 @@ namespace BLL.Services
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public StudentService(IRepository<Student> repository, IMapperBLL mapper, ILoggerFactory factory)
+        public StudentService(IRepository<Student> repository, IMapperBLL mapper, ILoggerFactory factory = null)
         {
             _studentRepository = repository;
-            _logger = factory.CreateLogger("Student Service");
+            _logger = factory?.CreateLogger("Student Service");
             _mapper = mapper.CreateMapper();
         }
 
@@ -32,7 +32,7 @@ namespace BLL.Services
 
             if (!students.Any())
             {
-                _logger.LogWarning("There is no students in data base");
+                _logger?.LogWarning("There is no students in data base");
                 throw new ValidationException("There is no students in data base");
             }
 

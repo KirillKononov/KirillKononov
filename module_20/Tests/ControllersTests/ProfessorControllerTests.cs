@@ -12,154 +12,155 @@ using module_20.Mapper;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.ControllersTests
 {
-    public class LectureControllerTests
+    [TestFixture]
+    public class ProfessorControllerTests
     {
-        private async Task<LectureDTO> GetTest()
+         private async Task<ProfessorDTO> GetTest()
         {
-            var lecture = new LectureDTO()
+            var professor = new ProfessorDTO()
             {
                 Id = 1,
-                Name = "Math",
-                ProfessorId = 1,
-                LectureHomework = null
+                FirstName = "Kirill",
+                LastName = "Kononov",
+                Lectures = null
             };
-            return lecture;
+            return professor;
         }
         
-        private async Task<LectureViewModel> ViewModel()
+        private async Task<ProfessorViewModel> ViewModel()
         {
-            var lecture = new LectureViewModel
+            var professor = new ProfessorViewModel
             {
                 Id = 1,
-                Name = "Math",
-                ProfessorId = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
             };
-            return lecture;
+            return professor;
         }
 
-        private IEnumerable<LectureDTO> PutNotFoundTest()
+        private IEnumerable<ProfessorDTO> PutNotFoundTest()
         {
-            var lecture = new List<LectureDTO>();
-            return lecture;
+            var professor = new List<ProfessorDTO>();
+            return professor;
         }
         
-        private IEnumerable<LectureDTO> PutFindTest()
+        private IEnumerable<ProfessorDTO> PutFindTest()
         {
-            var lecture = new List<LectureDTO>()
+            var professor = new List<ProfessorDTO>()
             {
-                new LectureDTO()
+                new ProfessorDTO()
                 {
                     Id = 1,
-                    Name = "Math",
-                    ProfessorId = 1,
-                    LectureHomework = null
+                    FirstName = "Kirill",
+                    LastName = "Kononov",
+                    Lectures = null
                 }
             };
-            return lecture;
+            return professor;
         }
 
-        private LectureController LectureController { get; set; }
-        private Mock<ILectureService> Mock { get; set; }
+        private ProfessorController ProfessorController { get; set; }
+        private Mock<IProfessorService> Mock { get; set; }
 
         [SetUp]
         public void SetUp()
         {
-            Mock = new Mock<ILectureService>();
+            Mock = new Mock<IProfessorService>();
             Mock.Setup(service => service.GetAsync(It.IsAny<int>()))
                 .Returns(GetTest());
-            Mock.Setup(service => service.CreateAsync(It.IsAny<LectureDTO>()))
+            Mock.Setup(service => service.CreateAsync(It.IsAny<ProfessorDTO>()))
                 .Returns(ViewModel());
-            Mock.Setup(service => service.UpdateAsync(It.IsAny<LectureDTO>()))
+            Mock.Setup(service => service.UpdateAsync(It.IsAny<ProfessorDTO>()))
                 .Returns(ViewModel());
-            Mock.Setup(service => service.Find(It.IsAny<Func<Lecture, bool>>()))
+            Mock.Setup(service => service.Find(It.IsAny<Func<Professor, bool>>()))
                 .Returns(PutFindTest());
             Mock.Setup(service => service.DeleteAsync(It.IsAny<int>()))
                 .Returns(ViewModel());
 
-            LectureController = new LectureController(Mock.Object, new MapperPL());
+            ProfessorController = new ProfessorController(Mock.Object, new MapperPL());
         }
 
         [Test]
-        public async Task GetLecture_ValidCall()
+        public async Task GetProfessor_ValidCall()
         {
-            var response = await LectureController.Get(1);
+            var response = await ProfessorController.Get(1);
             var code = ((ObjectResult) response.Result).StatusCode;
             
             Assert.AreEqual((int) HttpStatusCode.OK, code);
         }
 
         [Test]
-        public async Task GetLecture_BadRequest()
+        public async Task GetProfessor_BadRequest()
         {
-            var response = await LectureController.Get(null);
+            var response = await ProfessorController.Get(null);
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
         }
         
         [Test]
-        public async Task PostLecture_ValidCall()
+        public async Task PostProfessor_ValidCall()
         {
-            var response = await LectureController.Post(ViewModel().Result);
+            var response = await ProfessorController.Post(ViewModel().Result);
             var code = ((ObjectResult) response.Result).StatusCode;
             
             Assert.AreEqual((int) HttpStatusCode.OK, code);
         }
         
         [Test]
-        public async Task PostLecture_BadRequest()
+        public async Task PostProfessor_BadRequest()
         {
-            var response = await LectureController.Post(null);
+            var response = await ProfessorController.Post(null);
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
         }
         
         [Test]
-        public async Task PutLecture_ValidCall()
+        public async Task PutProfessor_ValidCall()
         {
-            var response = await LectureController.Put(ViewModel().Result);
+            var response = await ProfessorController.Put(ViewModel().Result);
             var code = ((ObjectResult) response.Result).StatusCode;
             
             Assert.AreEqual((int) HttpStatusCode.OK, code);
         }
         
         [Test]
-        public async Task PutLecture_BadRequest()
+        public async Task PutProfessor_BadRequest()
         {
-            var response = await LectureController.Put(null);
+            var response = await ProfessorController.Put(null);
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
         }
         
         [Test]
-        public async Task PutLecture_NotFound()
+        public async Task PutProfessor_NotFound()
         {
-            Mock.Setup(service => service.Find(It.IsAny<Func<Lecture, bool>>()))
+            Mock.Setup(service => service.Find(It.IsAny<Func<Professor, bool>>()))
                 .Returns(PutNotFoundTest());
             
-            var response = await LectureController.Put(ViewModel().Result);
+            var response = await ProfessorController.Put(ViewModel().Result);
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.NotFound, code.StatusCode);
         }
         
         [Test]
-        public async Task DeleteLecture_ValidCall()
+        public async Task DeleteProfessor_ValidCall()
         {
-            var response = await LectureController.Delete(1);
+            var response = await ProfessorController.Delete(1);
             var code = ((ObjectResult) response.Result).StatusCode;
             
             Assert.AreEqual((int) HttpStatusCode.OK, code);
         }
         
         [Test]
-        public async Task DeleteLecture_BadRequest()
+        public async Task DeleteProfessor_BadRequest()
         {
-            var response = await LectureController.Delete(null);
+            var response = await ProfessorController.Delete(null);
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);

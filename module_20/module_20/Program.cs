@@ -1,4 +1,7 @@
+using System;
+using DAL.DataAccess;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -8,7 +11,22 @@ namespace module_20
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var context = services.GetRequiredService<DataBaseContext>();
+                context.Database.EnsureDeleted();
+            }
+            catch(Exception ex)
+            {
+                var logger = new LoggerFactory().CreateLogger("Program");
+                logger.LogCritical(ex, "Host terminated unexpectedly");
+            }
+            
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

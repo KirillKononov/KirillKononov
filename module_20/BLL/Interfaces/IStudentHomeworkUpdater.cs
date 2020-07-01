@@ -6,6 +6,6 @@ namespace BLL.Interfaces
 {
     public interface IStudentHomeworkUpdater
     {
-        Task UpdateAsync(Homework homework, StudentHomeworkUpdater.UpdateType updateType);
+        Task UpdateAsync(Homework homework, StudentHomeworkUpdater.UpdateType updateType, bool previousPresence = true);
     }
 }

@@ -1,8 +1,12 @@
-﻿using BLL.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using BLL.Infrastructure;
+using BLL.Interfaces;
 using BLL.Interfaces.ServicesInterfaces;
 using BLL.Mapper;
 using BLL.Services;
 using BLL.Services.Report;
+using BLL.Services.StudentHomeworkUpdater;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
@@ -28,7 +32,22 @@ namespace module_20
             services.AddScoped<IRepository<Student>, StudentRepository>();
             services.AddScoped<IStudentService, StudentService>();
 
+            services.AddScoped<IStudentHomeworkUpdater, StudentHomeworkUpdater>();
+            
             services.AddScoped<IReportService, ReportService>();
+
+            services.AddSingleton<SMSSender>();
+            services.AddSingleton<EmailSender>();
+
+            services.AddTransient<Func<string, IMessageSender>>(serviceProvider => key =>
+            {
+                return key switch
+                {
+                    "SMS" => serviceProvider.GetService<SMSSender>(),
+                    "Email" => serviceProvider.GetService<EmailSender>(),
+                    _ => throw new ValidationException($"Was entered wrong message type: {key}")
+                };
+            });
             
             services.AddSingleton<IMapperBLL, MapperBll>();
 

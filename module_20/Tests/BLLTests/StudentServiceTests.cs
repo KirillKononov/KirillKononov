@@ -11,12 +11,12 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.BLLTests
 {
     [TestFixture]
     public class StudentServiceTests
     {
-        private readonly StudentDTO _studentDTOKirill = new StudentDTO
+        private readonly StudentDTO _studentDTO = new StudentDTO
         {
             Id = 1,
             FirstName = "Kirill",
@@ -28,7 +28,7 @@ namespace Tests
 
         private async Task<IEnumerable<Student>> GetAllTest()
         {
-            var users = new List<Student>
+            var students = new List<Student>
             {
                 new Student
                 {
@@ -39,31 +39,31 @@ namespace Tests
                     MissedLectures = 0,
                     StudentHomework = null
                 },
-                new Student { Id = 2,
+                new Student { 
+                    Id = 2,
                     FirstName = "Semen",
                     LastName = "Petrov",
                     AverageMark = 4,
                     MissedLectures = 2,
                     StudentHomework = null }
             };
-            return users;
+            return students;
         }
         
         private async Task<IEnumerable<Student>> GetAllExceptionTest()
         {
-            var users = new List<Student>();
-            return users;
+            var students = new List<Student>();
+            return students;
         }
         
-        // private async Task<Student> GetExceptionTest()
-        // {
-        //     var user = new Student();
-        //     return user;
-        // }
+        private async Task<Student> GetExceptionTest()
+        {
+            return null;
+        }
         
         private async Task<Student> GetTest()
         {
-            var user = new Student
+            var student = new Student
                 {
                     Id = 1,
                     FirstName = "Kirill",
@@ -72,7 +72,7 @@ namespace Tests
                     MissedLectures = 0,
                     StudentHomework = null
                 };
-            return user;
+            return student;
         }
         
         private StudentService StudentService { get; set; }
@@ -131,32 +131,35 @@ namespace Tests
         [Test]
         public void GetAsync_ThrowsValidationException()
         {
-            //Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
-            //    .Returns(GetExceptionTest());
+            Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
+                .Returns(GetExceptionTest());
             
             Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAsync(null));
-            //Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAsync(1));
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService.GetAsync(It.IsAny<int>()));
         }
         
         [Test]
         public async Task UpdateAsync_ValidCall()
         {
-            await StudentService.UpdateAsync(_studentDTOKirill);
+            await StudentService.UpdateAsync(_studentDTO);
             
             Mock.Verify(m => m.Update(It.IsAny<Student>()));
         }
 
-        //[Test]
-        //public void UpdateAsync_ThrowsValidationException()
-        //{
-        //    Assert.ThrowsAsync<ValidationException>(async () => await StudentService.UpdateAsync(null));
-        //}
+        [Test]
+        public void UpdateAsync_ThrowsValidationException()
+        {
+            Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
+                .Returns(GetExceptionTest());
+            
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService
+                .UpdateAsync(_studentDTO));
+        }
 
         [Test]
         public async Task DeleteAsync_ValidCall()
         {
-            const int id = 1;
-            await StudentService.DeleteAsync(id);
+            await StudentService.DeleteAsync(It.IsAny<int>());
             
             Mock.Verify(m => m.Delete(It.IsAny<Student>()));
         }
@@ -164,7 +167,12 @@ namespace Tests
         [Test]
         public void DeleteAsync_ThrowsValidationException()
         {
+            Mock.Setup(repo => repo.GetAsync(It.IsAny<int>()))
+                .Returns(GetExceptionTest());
+            
             Assert.ThrowsAsync<ValidationException>(async () => await StudentService.DeleteAsync(null));
+            Assert.ThrowsAsync<ValidationException>(async () => await StudentService
+                .DeleteAsync(It.IsAny<int>()));
         }
     }
 }

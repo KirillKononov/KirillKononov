@@ -19,10 +19,10 @@ namespace BLL.Services
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public LectureService(IRepository<Lecture> repository, IMapperBLL mapper, ILoggerFactory factory)
+        public LectureService(IRepository<Lecture> repository, IMapperBLL mapper, ILoggerFactory factory = null)
         {
             _lectureRepository = repository;
-            _logger = factory.CreateLogger("Lecture Service");
+            _logger = factory?.CreateLogger("Lecture Service");
             _mapper = mapper.CreateMapper();
         }
 
@@ -32,7 +32,7 @@ namespace BLL.Services
 
             if (!lectures.Any())
             {
-                _logger.LogWarning($"There are no lectures in database");
+                _logger?.LogWarning($"There are no lectures in database");
                 throw new ValidationException($"There are no lectures in database");
             }
 

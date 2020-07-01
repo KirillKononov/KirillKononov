@@ -4,14 +4,12 @@ using System.Net;
 using BLL.DTO;
 using BLL.Interfaces.ServicesInterfaces;
 using BLL.Services.Report.Serializers;
-using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using module_20.Controllers;
-using module_20.Mapper;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.ControllersTests
 {
     [TestFixture]
     public class ReportControllerTests
@@ -56,17 +54,19 @@ namespace Tests
         [Test]
         public void GetStudentReport_ValidCall()
         {
-           ReportController.GetStudentReport(ReportController.FileType.JSON, "Kirill", "Kononov");
+           var response = ReportController.GetStudentReport(ReportController.FileType.JSON, "Kirill", "Kononov");
 
             Mock.Verify(m => m.MakeStudentReport(It.IsAny<string>(), 
                 It.IsAny<string>(),
                 It.IsAny<Func<IEnumerable<Attendance>, string>>()));
+            Assert.IsInstanceOf<FileContentResult>(response);
         }
         
         [Test]
         public void GetStudentReport_BadRequestResult()
         {
-            var response = ReportController.GetStudentReport(ReportController.FileType.JSON, null, "Kononov");
+            var response = ReportController.GetStudentReport(ReportController.FileType.JSON,
+                null, "Kononov");
             var code = (StatusCodeResult) response;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
@@ -75,16 +75,19 @@ namespace Tests
         [Test]
         public void GetLectureReport_ValidCall()
         {
-            ReportController.GetLectureReport(ReportController.FileType.JSON, "Math");
+            var response = ReportController.GetLectureReport(ReportController.FileType.JSON,
+                "Math");
 
             Mock.Verify(m => m.MakeLectureReport(It.IsAny<string>(),
                 It.IsAny<Func<IEnumerable<Attendance>, string>>()));
+            Assert.IsInstanceOf<FileContentResult>(response);
         }
         
         [Test]
         public void GetLectureReport_BadRequestResult()
         {
-            var response = ReportController.GetLectureReport(ReportController.FileType.JSON, "Math");
+            var response = ReportController.GetLectureReport(ReportController.FileType.JSON,
+                null);
             var code = (StatusCodeResult) response;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);

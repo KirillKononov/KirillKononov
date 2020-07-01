@@ -19,10 +19,10 @@ namespace BLL.Services
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public ProfessorService(IRepository<Professor> repository, IMapperBLL mapper, ILoggerFactory factory)
+        public ProfessorService(IRepository<Professor> repository, IMapperBLL mapper, ILoggerFactory factory = null)
         {
             _professorRepository = repository;
-            _logger = factory.CreateLogger("Professor Service");
+            _logger = factory?.CreateLogger("Professor Service");
             _mapper = mapper.CreateMapper();
         }
 
@@ -32,7 +32,7 @@ namespace BLL.Services
 
             if (!professors.Any())
             {
-                _logger.LogWarning("There is no professors in data base");
+                _logger?.LogWarning("There is no professors in data base");
                 throw new ValidationException("There is no professors in data base");
             }
 

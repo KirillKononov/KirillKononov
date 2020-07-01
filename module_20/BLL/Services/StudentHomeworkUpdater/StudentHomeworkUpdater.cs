@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BLL.Infrastructure;
@@ -13,24 +14,28 @@ namespace BLL.Services.StudentHomeworkUpdater
     {
         private readonly IRepository<Student> _studentRepository;
         private readonly ILogger _logger;
-        private readonly bool _previousPresence;
+        private readonly IMessageSender _smsMessageSender;
+        private readonly IMessageSender _emailMessageSender;
 
-        public StudentHomeworkUpdater(IRepository<Student> studentRepository,
-            ILogger logger, bool previousPresence = true)
+        public StudentHomeworkUpdater(IRepository<Student> studentRepository, 
+            Func<string, IMessageSender> messageSender, 
+            ILoggerFactory factory = null)
         {
             _studentRepository = studentRepository;
-            _logger = logger;
-            _previousPresence = previousPresence;
+            _smsMessageSender = messageSender.Invoke("SMS");
+            _emailMessageSender = messageSender.Invoke("Email");
+            _logger = factory?.CreateLogger("Student Homework Updater");
         }
 
         public enum UpdateType
         {
             AddHomework,
             UpdateHomework,
+            RemoveHomeworkWhileUpdate,
             RemoveHomework
         }
 
-        public async Task UpdateAsync(Homework homework, UpdateType updateType)
+        public async Task UpdateAsync(Homework homework, UpdateType updateType, bool previousPresence = true)
         {
             var student = await _studentRepository.GetAsync(homework.StudentId);
 
@@ -39,7 +44,8 @@ namespace BLL.Services.StudentHomeworkUpdater
 
             student.AverageMark = AverageMarkCount(student.StudentHomework, homework.Mark, updateType);
 
-            student.MissedLectures = MissedLecturesCount(homework.StudentPresence, student.MissedLectures, updateType);
+            student.MissedLectures = MissedLecturesCount(homework.StudentPresence, previousPresence,
+                student.MissedLectures, updateType);
 
             _studentRepository.Update(student);
 
@@ -47,21 +53,24 @@ namespace BLL.Services.StudentHomeworkUpdater
                 SendMessage(student, _logger);
         }
 
-        private float AverageMarkCount(IReadOnlyCollection<Homework> studentHomework,int mark, UpdateType updateType)
+        private float AverageMarkCount(IReadOnlyCollection<Homework> studentHomework, int mark, 
+            UpdateType updateType)
         {
             float marks = studentHomework.Sum(work => work.Mark);
-            return updateType == UpdateType.RemoveHomework ? 
+            return updateType == UpdateType.RemoveHomeworkWhileUpdate ? 
                 (marks - mark) / (studentHomework.Count - 1) : marks / studentHomework.Count;
+            
         }
 
-        private int MissedLecturesCount(bool presence, int missedLectures, UpdateType updateType)
+        private int MissedLecturesCount(bool presence, bool previousPresence,
+            int missedLectures, UpdateType updateType)
         {
             if (updateType == UpdateType.UpdateHomework)
             {
-                if (!_previousPresence && presence)
+                if (!previousPresence && presence)
                     return missedLectures - 1;
 
-                if (_previousPresence && !presence)
+                if (previousPresence && !presence)
                     return missedLectures + 1;
             }
             
@@ -72,18 +81,13 @@ namespace BLL.Services.StudentHomeworkUpdater
             return missedLectures;
         }
 
-        private void SendMessage(DAL.Entities.Student student, ILogger logger)
+        private void SendMessage(Student student, ILogger logger)
         {
-            IMessageSender message = new SMSSender();
-
             if (student.AverageMark < 4)
-                message.Send(student, logger);
+                _smsMessageSender.Send(student, logger);
 
             if (student.MissedLectures > 3)
-            {
-                message = new EmailSender();
-                message.Send(student, logger);
-            }
+                _emailMessageSender.Send(student, logger);
         }
     }
 }

@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces.ServicesInterfaces;
-using BLL.Services;
 using BLL.Services.Report;
 using DAL.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
-using module_20.Controllers;
-using module_20.Mapper;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.BLLTests
 {
     public class ReportServiceTests
     {
@@ -149,7 +145,7 @@ namespace Tests
             ReportService = new ReportService(StudentServiceMock.Object, 
                 LectureServiceMock.Object,
                 ProfessorServiceMock.Object,
-                new NullLogger<ReportService>());
+                new NullLoggerFactory());
         }
 
         [Test]
@@ -166,7 +162,7 @@ namespace Tests
         public void MakeStudentReport_ThrowsValidationException()
         {
             StudentServiceMock.Setup(service => service.Find(It.IsAny<Func<Student, bool>>()))
-                .Returns(FindStudentsValidationExceptionTest);
+                .Returns(FindStudentsValidationExceptionTest());
 
             Assert.Throws<ValidationException>(() => ReportService.MakeStudentReport("Kirill", "Kononov"));
         }

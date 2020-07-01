@@ -28,11 +28,10 @@ namespace module_20.Controllers
         [HttpGet("Student")]
         public IActionResult GetStudentReport(FileType type, string firstName, string lastName)
         {
-            ISerializer serializer = null;
-
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
                 return BadRequest();
 
+            ISerializer serializer;
             switch (type)
             {
                 case FileType.JSON:
@@ -59,11 +58,10 @@ namespace module_20.Controllers
         [HttpGet("Lecture")]
         public IActionResult GetLectureReport(FileType type, string lectureName)
         {
-            ISerializer serializer = null;
-
             if (string.IsNullOrEmpty(lectureName))
                 return BadRequest();
 
+            ISerializer serializer;
             switch (type)
             {
                 case FileType.JSON:

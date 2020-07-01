@@ -16,16 +16,16 @@ namespace BLL.Services
     public class HomeworkService : IHomeworkService
     {
         private readonly IRepository<Homework> _homeworkRepository;
-        private readonly IRepository<Student> _studentRepository;
+        private readonly IStudentHomeworkUpdater _studentHomeworkUpdater;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public HomeworkService(IRepository<Homework> homeworkRepository, IRepository<Student> studentRepository,
-            IMapperBLL mapper, ILoggerFactory factory)
+        public HomeworkService(IRepository<Homework> homeworkRepository,
+            IStudentHomeworkUpdater studentHomeworkUpdater, IMapperBLL mapper, ILoggerFactory factory = null)
         {
             _homeworkRepository = homeworkRepository;
-            _studentRepository = studentRepository;
-            _logger = factory.CreateLogger("Homework Service");
+            _studentHomeworkUpdater = studentHomeworkUpdater;
+            _logger = factory?.CreateLogger("Homework Service");
             _mapper = mapper.CreateMapper();
         }
 
@@ -35,7 +35,7 @@ namespace BLL.Services
 
             if (!homework.ToList().Any())
             {
-                _logger.LogWarning("There is no homework in data base");
+                _logger?.LogWarning("There is no homework in data base");
                 throw new ValidationException("There is no homework in data base");
             }
 
@@ -57,39 +57,17 @@ namespace BLL.Services
 
         public async Task CreateAsync(HomeworkDTO item)
         {
-            if (item.StudentPresence && item.HomeworkPresence && item.Mark < 1)
-            {
-                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
-                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
-            }
-
-            if ((!item.StudentPresence || !item.HomeworkPresence) && item.Mark > 0)
-            {
-                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be 0");
-                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be 0");
-            }
-
+            HomeworkValidation(item);
             var homework = _mapper.Map<Homework>(item);
             await _homeworkRepository.CreateAsync(homework);
-
-            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
-            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework);
+            
+            await _studentHomeworkUpdater.UpdateAsync(homework, 
+                StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework);
         }
 
         public async Task UpdateAsync(HomeworkDTO item)
         {
-            if (item.StudentPresence && item.HomeworkPresence && item.Mark < 1)
-            {
-                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
-                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be at least 1 and at most 5");
-            }
-
-            if ((!item.StudentPresence || !item.HomeworkPresence) && item.Mark > 0)
-            {
-                _logger.LogWarning($"This mark {item.Mark} is inappropriate. Must be 0");
-                throw new ValidationException($"This mark {item.Mark} is inappropriate. Must be 0");
-            }
-
+            HomeworkValidation(item);
             var homework = await _homeworkRepository.GetAsync(item.Id);
 
             var validator = new Validator();
@@ -97,10 +75,11 @@ namespace BLL.Services
 
             var previousHomeworkPresence = homework.StudentPresence;
             var previousStudentId = homework.StudentId;
-            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger, previousHomeworkPresence);
 
             if (previousStudentId != item.StudentId)
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
+                await _studentHomeworkUpdater.UpdateAsync(homework,
+                    StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomeworkWhileUpdate,
+                    previousHomeworkPresence);
 
             homework.StudentId = item.StudentId;
             homework.LectureId = item.LectureId;
@@ -111,9 +90,13 @@ namespace BLL.Services
             _homeworkRepository.Update(homework);
 
             if (previousStudentId != homework.StudentId)
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework);
+                await _studentHomeworkUpdater.UpdateAsync(homework, 
+                    StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.AddHomework,
+                    previousHomeworkPresence);
             else
-                await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.UpdateHomework);
+                await _studentHomeworkUpdater.UpdateAsync(homework,
+                    StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.UpdateHomework,
+                    previousHomeworkPresence);
         }
 
         public IEnumerable<HomeworkDTO> Find(Func<Homework, bool> predicate)
@@ -134,8 +117,22 @@ namespace BLL.Services
             validator.EntityValidation(homework, _logger, nameof(homework));
 
             _homeworkRepository.Delete(homework);
-            var studentHomeworkUpdater = new StudentHomeworkUpdater.StudentHomeworkUpdater(_studentRepository, _logger);
-            await studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
+            await _studentHomeworkUpdater.UpdateAsync(homework, StudentHomeworkUpdater.StudentHomeworkUpdater.UpdateType.RemoveHomework);
+        }
+
+        private void HomeworkValidation(HomeworkDTO homework)
+        {
+            if (homework.StudentPresence && homework.HomeworkPresence && (homework.Mark < 1 || homework.Mark > 5))
+            {
+                _logger?.LogWarning($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be at least 1 and at most 5");
+            }
+
+            if ((!homework.StudentPresence || !homework.HomeworkPresence) && homework.Mark > 0)
+            {
+                _logger?.LogWarning($"This mark {homework.Mark} is inappropriate. Must be 0");
+                throw new ValidationException($"This mark {homework.Mark} is inappropriate. Must be 0");
+            }
         }
     }
 }
