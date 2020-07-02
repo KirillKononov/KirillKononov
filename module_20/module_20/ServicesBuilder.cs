@@ -44,7 +44,7 @@ namespace module_20
                 {
                     "SMS" => serviceProvider.GetService<SMSSender>(),
                     "Email" => serviceProvider.GetService<EmailSender>(),
-                    _ => throw new ValidationException($"Was entered wrong message type: {key}")
+                     _ => throw new ValidationException($"Was entered wrong message type: {key}")
                 };
             });
             
