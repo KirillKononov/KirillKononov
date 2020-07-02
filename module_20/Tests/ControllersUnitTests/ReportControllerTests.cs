@@ -9,7 +9,7 @@ using module_20.Controllers;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests.ControllersTests
+namespace Tests.ControllersUnitTests
 {
     [TestFixture]
     public class ReportControllerTests

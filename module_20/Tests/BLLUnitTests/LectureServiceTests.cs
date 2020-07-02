@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 
-namespace Tests.BLLTests
+namespace Tests.BLLUnitTests
 {
     public class LectureServiceTests
     {
