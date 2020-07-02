@@ -16,51 +16,8 @@ namespace Tests.ControllersTests
 {
     public class LectureControllerTests
     {
-        private async Task<LectureDTO> GetTest()
-        {
-            var lecture = new LectureDTO()
-            {
-                Id = 1,
-                Name = "Math",
-                ProfessorId = 1,
-                LectureHomework = null
-            };
-            return lecture;
-        }
-        
-        private async Task<LectureViewModel> ViewModel()
-        {
-            var lecture = new LectureViewModel
-            {
-                Id = 1,
-                Name = "Math",
-                ProfessorId = 1,
-            };
-            return lecture;
-        }
-
-        private IEnumerable<LectureDTO> PutNotFoundTest()
-        {
-            var lecture = new List<LectureDTO>();
-            return lecture;
-        }
-        
-        private IEnumerable<LectureDTO> PutFindTest()
-        {
-            var lecture = new List<LectureDTO>()
-            {
-                new LectureDTO()
-                {
-                    Id = 1,
-                    Name = "Math",
-                    ProfessorId = 1,
-                    LectureHomework = null
-                }
-            };
-            return lecture;
-        }
-
         private LectureController LectureController { get; set; }
+        
         private Mock<ILectureService> Mock { get; set; }
 
         [SetUp]
@@ -163,6 +120,50 @@ namespace Tests.ControllersTests
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
+        }
+        
+        private static async Task<LectureDTO> GetTest()
+        {
+            var lecture = new LectureDTO()
+            {
+                Id = 1,
+                Name = "Math",
+                ProfessorId = 1,
+                LectureHomework = null
+            };
+            return lecture;
+        }
+        
+        private static async Task<LectureViewModel> ViewModel()
+        {
+            var lecture = new LectureViewModel
+            {
+                Id = 1,
+                Name = "Math",
+                ProfessorId = 1,
+            };
+            return lecture;
+        }
+
+        private static IEnumerable<LectureDTO> PutNotFoundTest()
+        {
+            var lecture = new List<LectureDTO>();
+            return lecture;
+        }
+        
+        private static IEnumerable<LectureDTO> PutFindTest()
+        {
+            var lecture = new List<LectureDTO>()
+            {
+                new LectureDTO()
+                {
+                    Id = 1,
+                    Name = "Math",
+                    ProfessorId = 1,
+                    LectureHomework = null
+                }
+            };
+            return lecture;
         }
     }
 }

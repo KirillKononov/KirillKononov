@@ -23,51 +23,8 @@ namespace Tests.BLLTests
             Lectures = null
         };
 
-        private async Task<IEnumerable<Professor>> GetAllTest()
-        {
-            var professors = new List<Professor>
-            {
-                new Professor
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    Lectures = null
-                },
-                new Professor { 
-                    Id = 2,
-                    FirstName = "Semen",
-                    LastName = "Petrov",
-                    Lectures = null
-                }
-            };
-            return professors;
-        }
-        
-        private async Task<IEnumerable<Professor>> GetAllExceptionTest()
-        {
-            var professors = new List<Professor>();
-            return professors;
-        }
-        
-        private async Task<Professor> GetExceptionTest()
-        {
-            return null;
-        }
-        
-        private async Task<Professor> GetTest()
-        {
-            var professor = new Professor
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    Lectures = null
-                };
-            return professor;
-        }
-        
         private ProfessorService ProfessorService { get; set; }
+        
         private Mock<IRepository<Professor>> Mock { get; set; }
         
         [SetUp]
@@ -161,6 +118,50 @@ namespace Tests.BLLTests
             Assert.ThrowsAsync<ValidationException>(async () => await ProfessorService.DeleteAsync(null));
             Assert.ThrowsAsync<ValidationException>(async () => await ProfessorService
                 .DeleteAsync(It.IsAny<int>()));
+        }
+        
+        private static async Task<IEnumerable<Professor>> GetAllTest()
+        {
+            var professors = new List<Professor>
+            {
+                new Professor
+                {
+                    Id = 1,
+                    FirstName = "Kirill",
+                    LastName = "Kononov",
+                    Lectures = null
+                },
+                new Professor { 
+                    Id = 2,
+                    FirstName = "Semen",
+                    LastName = "Petrov",
+                    Lectures = null
+                }
+            };
+            return professors;
+        }
+        
+        private static async Task<IEnumerable<Professor>> GetAllExceptionTest()
+        {
+            var professors = new List<Professor>();
+            return professors;
+        }
+        
+        private static async Task<Professor> GetExceptionTest()
+        {
+            return null;
+        }
+        
+        private static async Task<Professor> GetTest()
+        {
+            var professor = new Professor
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+                Lectures = null
+            };
+            return professor;
         }
     }
 }

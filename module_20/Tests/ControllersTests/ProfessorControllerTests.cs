@@ -17,51 +17,8 @@ namespace Tests.ControllersTests
     [TestFixture]
     public class ProfessorControllerTests
     {
-         private async Task<ProfessorDTO> GetTest()
-        {
-            var professor = new ProfessorDTO()
-            {
-                Id = 1,
-                FirstName = "Kirill",
-                LastName = "Kononov",
-                Lectures = null
-            };
-            return professor;
-        }
-        
-        private async Task<ProfessorViewModel> ViewModel()
-        {
-            var professor = new ProfessorViewModel
-            {
-                Id = 1,
-                FirstName = "Kirill",
-                LastName = "Kononov",
-            };
-            return professor;
-        }
-
-        private IEnumerable<ProfessorDTO> PutNotFoundTest()
-        {
-            var professor = new List<ProfessorDTO>();
-            return professor;
-        }
-        
-        private IEnumerable<ProfessorDTO> PutFindTest()
-        {
-            var professor = new List<ProfessorDTO>()
-            {
-                new ProfessorDTO()
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    Lectures = null
-                }
-            };
-            return professor;
-        }
-
         private ProfessorController ProfessorController { get; set; }
+        
         private Mock<IProfessorService> Mock { get; set; }
 
         [SetUp]
@@ -164,6 +121,50 @@ namespace Tests.ControllersTests
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
+        }
+        
+        private static async Task<ProfessorDTO> GetTest()
+        {
+            var professor = new ProfessorDTO()
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+                Lectures = null
+            };
+            return professor;
+        }
+        
+        private static async Task<ProfessorViewModel> ViewModel()
+        {
+            var professor = new ProfessorViewModel
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+            };
+            return professor;
+        }
+
+        private static IEnumerable<ProfessorDTO> PutNotFoundTest()
+        {
+            var professor = new List<ProfessorDTO>();
+            return professor;
+        }
+        
+        private static IEnumerable<ProfessorDTO> PutFindTest()
+        {
+            var professor = new List<ProfessorDTO>()
+            {
+                new ProfessorDTO()
+                {
+                    Id = 1,
+                    FirstName = "Kirill",
+                    LastName = "Kononov",
+                    Lectures = null
+                }
+            };
+            return professor;
         }
     }
 }

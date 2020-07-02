@@ -51,61 +51,10 @@ namespace Tests.BLLTests
             Date = new DateTime(2020,01,24)
         };
 
-        private async Task<IEnumerable<Homework>> GetAllTest()
-        {
-            var homework = new List<Homework>
-            {
-                new Homework
-                {
-                    Id = 1,
-                    StudentId = 1,
-                    LectureId = 1,
-                    StudentPresence = true,
-                    HomeworkPresence = true,
-                    Mark = 5,
-                    Date = new DateTime(2020,01,24)
-                },
-                new Homework { 
-                    Id = 2,
-                    StudentId = 2,
-                    LectureId = 2,
-                    StudentPresence = false,
-                    HomeworkPresence = false,
-                    Mark = 0,
-                    Date = new DateTime(2020,01,24)
-                }
-            };
-            return homework;
-        }
-        
-        private async Task<IEnumerable<Homework>> GetAllExceptionTest()
-        {
-            var homework = new List<Homework>();
-            return homework;
-        }
-        
-        private async Task<Homework> GetExceptionTest()
-        {
-            return null;
-        }
-        
-        private async Task<Homework> GetTest()
-        {
-            var homework = new Homework
-                {
-                    Id = 1,
-                    StudentId = 1,
-                    LectureId = 1,
-                    StudentPresence = true,
-                    HomeworkPresence = true,
-                    Mark = 5,
-                    Date = new DateTime(2020,01,24)
-                };
-            return homework;
-        }
-        
         private HomeworkService HomeworkService { get; set; }
+        
         private Mock<IRepository<Homework>> RepositoryMock { get; set; }
+        
         private Mock<IStudentHomeworkUpdater> StudentHomeworkUpdaterMock { get; set; }
         
         [SetUp]
@@ -257,6 +206,59 @@ namespace Tests.BLLTests
             Assert.ThrowsAsync<ValidationException>(async () => await HomeworkService.DeleteAsync(null));
             Assert.ThrowsAsync<ValidationException>(async () => await HomeworkService
                 .DeleteAsync(It.IsAny<int>()));
+        }
+        
+        private static async Task<IEnumerable<Homework>> GetAllTest()
+        {
+            var homework = new List<Homework>
+            {
+                new Homework
+                {
+                    Id = 1,
+                    StudentId = 1,
+                    LectureId = 1,
+                    StudentPresence = true,
+                    HomeworkPresence = true,
+                    Mark = 5,
+                    Date = new DateTime(2020,01,24)
+                },
+                new Homework { 
+                    Id = 2,
+                    StudentId = 2,
+                    LectureId = 2,
+                    StudentPresence = false,
+                    HomeworkPresence = false,
+                    Mark = 0,
+                    Date = new DateTime(2020,01,24)
+                }
+            };
+            return homework;
+        }
+        
+        private static async Task<IEnumerable<Homework>> GetAllExceptionTest()
+        {
+            var homework = new List<Homework>();
+            return homework;
+        }
+        
+        private static async Task<Homework> GetExceptionTest()
+        {
+            return null;
+        }
+        
+        private static async Task<Homework> GetTest()
+        {
+            var homework = new Homework
+            {
+                Id = 1,
+                StudentId = 1,
+                LectureId = 1,
+                StudentPresence = true,
+                HomeworkPresence = true,
+                Mark = 5,
+                Date = new DateTime(2020,01,24)
+            };
+            return homework;
         }
     }
 }

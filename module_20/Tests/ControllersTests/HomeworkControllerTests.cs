@@ -16,61 +16,8 @@ namespace Tests.ControllersTests
 {
     public class HomeworkControllerTests
     {
-        private async Task<HomeworkDTO> GetTest()
-        {
-            var homework = new HomeworkDTO()
-            {
-                Id = 1,
-                StudentId = 1,
-                LectureId = 1,
-                StudentPresence = true,
-                HomeworkPresence = true,
-                Mark = 2,
-                Date = DateTime.Now
-            };
-            return homework;
-        }
-        
-        private async Task<HomeworkViewModel> ViewModel()
-        {
-            var homework = new HomeworkViewModel
-            {
-                Id = 1,
-                StudentId = 1,
-                LectureId = 1,
-                StudentPresence = true,
-                HomeworkPresence = true,
-                Mark = 2,
-                Date = DateTime.Now
-            };
-            return homework;
-        }
-
-        private IEnumerable<HomeworkDTO> PutNotFoundTest()
-        {
-            var homework = new List<HomeworkDTO>();
-            return homework;
-        }
-        
-        private IEnumerable<HomeworkDTO> PutFindTest()
-        {
-            var homework = new List<HomeworkDTO>()
-            {
-                new HomeworkDTO()
-                {
-                    Id = 1,
-                    StudentId = 1,
-                    LectureId = 1,
-                    StudentPresence = true,
-                    HomeworkPresence = true,
-                    Mark = 2,
-                    Date = DateTime.Now
-                }
-            };
-            return homework;
-        }
-
         private HomeworkController HomeworkController { get; set; }
+        
         private Mock<IHomeworkService> Mock { get; set; }
 
         [SetUp]
@@ -173,6 +120,60 @@ namespace Tests.ControllersTests
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
+        }
+        
+        private static async Task<HomeworkDTO> GetTest()
+        {
+            var homework = new HomeworkDTO()
+            {
+                Id = 1,
+                StudentId = 1,
+                LectureId = 1,
+                StudentPresence = true,
+                HomeworkPresence = true,
+                Mark = 2,
+                Date = DateTime.Now
+            };
+            return homework;
+        }
+        
+        private static async Task<HomeworkViewModel> ViewModel()
+        {
+            var homework = new HomeworkViewModel
+            {
+                Id = 1,
+                StudentId = 1,
+                LectureId = 1,
+                StudentPresence = true,
+                HomeworkPresence = true,
+                Mark = 2,
+                Date = DateTime.Now
+            };
+            return homework;
+        }
+
+        private static IEnumerable<HomeworkDTO> PutNotFoundTest()
+        {
+            var homework = new List<HomeworkDTO>();
+            return homework;
+        }
+        
+        private static IEnumerable<HomeworkDTO> PutFindTest()
+        {
+            var homework = new List<HomeworkDTO>()
+            {
+                new HomeworkDTO()
+                {
+                    Id = 1,
+                    StudentId = 1,
+                    LectureId = 1,
+                    StudentPresence = true,
+                    HomeworkPresence = true,
+                    Mark = 2,
+                    Date = DateTime.Now
+                }
+            };
+            return homework;
         }
     }
 }

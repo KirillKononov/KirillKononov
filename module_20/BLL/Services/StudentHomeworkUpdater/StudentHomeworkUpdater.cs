@@ -50,7 +50,7 @@ namespace BLL.Services.StudentHomeworkUpdater
             _studentRepository.Update(student);
 
             if(updateType == UpdateType.AddHomework || updateType == UpdateType.UpdateHomework)
-                SendMessage(student, _logger);
+                SendMessage(student);
         }
 
         private float AverageMarkCount(IReadOnlyCollection<Homework> studentHomework, int mark, 
@@ -81,13 +81,17 @@ namespace BLL.Services.StudentHomeworkUpdater
             return missedLectures;
         }
 
-        private void SendMessage(Student student, ILogger logger)
+        private void SendMessage(Student student)
         {
             if (student.AverageMark < 4)
-                _smsMessageSender.Send(student, logger);
+                _smsMessageSender.Send(student, _logger);
 
             if (student.MissedLectures > 3)
-                _emailMessageSender.Send(student, logger);
+            {
+                _emailMessageSender.Send(student, _logger);
+                _emailMessageSender.Send(student, _logger);
+            }
+                
         }
     }
 }

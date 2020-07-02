@@ -26,56 +26,8 @@ namespace Tests.BLLTests
             StudentHomework = null
         };
 
-        private async Task<IEnumerable<Student>> GetAllTest()
-        {
-            var students = new List<Student>
-            {
-                new Student
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    AverageMark = (float) 4.67,
-                    MissedLectures = 0,
-                    StudentHomework = null
-                },
-                new Student { 
-                    Id = 2,
-                    FirstName = "Semen",
-                    LastName = "Petrov",
-                    AverageMark = 4,
-                    MissedLectures = 2,
-                    StudentHomework = null }
-            };
-            return students;
-        }
-        
-        private async Task<IEnumerable<Student>> GetAllExceptionTest()
-        {
-            var students = new List<Student>();
-            return students;
-        }
-        
-        private async Task<Student> GetExceptionTest()
-        {
-            return null;
-        }
-        
-        private async Task<Student> GetTest()
-        {
-            var student = new Student
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    AverageMark = (float) 4.67,
-                    MissedLectures = 0,
-                    StudentHomework = null
-                };
-            return student;
-        }
-        
         private StudentService StudentService { get; set; }
+        
         private Mock<IRepository<Student>> Mock { get; set; }
         
         [SetUp]
@@ -173,6 +125,55 @@ namespace Tests.BLLTests
             Assert.ThrowsAsync<ValidationException>(async () => await StudentService.DeleteAsync(null));
             Assert.ThrowsAsync<ValidationException>(async () => await StudentService
                 .DeleteAsync(It.IsAny<int>()));
+        }
+        
+        private static async Task<IEnumerable<Student>> GetAllTest()
+        {
+            var students = new List<Student>
+            {
+                new Student
+                {
+                    Id = 1,
+                    FirstName = "Kirill",
+                    LastName = "Kononov",
+                    AverageMark = (float) 4.67,
+                    MissedLectures = 0,
+                    StudentHomework = null
+                },
+                new Student { 
+                    Id = 2,
+                    FirstName = "Semen",
+                    LastName = "Petrov",
+                    AverageMark = 4,
+                    MissedLectures = 2,
+                    StudentHomework = null }
+            };
+            return students;
+        }
+        
+        private static async Task<IEnumerable<Student>> GetAllExceptionTest()
+        {
+            var students = new List<Student>();
+            return students;
+        }
+        
+        private static async Task<Student> GetExceptionTest()
+        {
+            return null;
+        }
+        
+        private static async Task<Student> GetTest()
+        {
+            var student = new Student
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+                AverageMark = (float) 4.67,
+                MissedLectures = 0,
+                StudentHomework = null
+            };
+            return student;
         }
     }
 }

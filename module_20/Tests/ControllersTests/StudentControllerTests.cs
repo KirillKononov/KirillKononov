@@ -17,55 +17,8 @@ namespace Tests.ControllersTests
     [TestFixture]
     class StudentControllerTests
     {
-        private async Task<StudentDTO> GetTest()
-        {
-            var student = new StudentDTO
-            {
-                Id = 1,
-                FirstName = "Kirill",
-                LastName = "Kononov",
-                AverageMark = (float)4.67,
-                MissedLectures = 0,
-                StudentHomework = null
-            };
-            return student;
-        }
-        
-        private async Task<StudentViewModel> ViewModel()
-        {
-            var student = new StudentViewModel
-            {
-                Id = 1,
-                FirstName = "Kirill",
-                LastName = "Kononov",
-            };
-            return student;
-        }
-
-        private IEnumerable<StudentDTO> PutNotFoundTest()
-        {
-            var student = new List<StudentDTO>();
-            return student;
-        }
-        
-        private IEnumerable<StudentDTO> PutFindTest()
-        {
-            var student = new List<StudentDTO>()
-            {
-                new StudentDTO()
-                {
-                    Id = 1,
-                    FirstName = "Kirill",
-                    LastName = "Kononov",
-                    AverageMark = (float)4.67,
-                    MissedLectures = 0,
-                    StudentHomework = null
-                }
-            };
-            return student;
-        }
-
         private StudentController StudentController { get; set; }
+        
         private Mock<IStudentService> Mock { get; set; }
 
         [SetUp]
@@ -168,6 +121,54 @@ namespace Tests.ControllersTests
             var code = (StatusCodeResult) response.Result;
             
             Assert.AreEqual((int) HttpStatusCode.BadRequest, code.StatusCode);
+        }
+        
+        private static async Task<StudentDTO> GetTest()
+        {
+            var student = new StudentDTO
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+                AverageMark = (float)4.67,
+                MissedLectures = 0,
+                StudentHomework = null
+            };
+            return student;
+        }
+        
+        private static async Task<StudentViewModel> ViewModel()
+        {
+            var student = new StudentViewModel
+            {
+                Id = 1,
+                FirstName = "Kirill",
+                LastName = "Kononov",
+            };
+            return student;
+        }
+
+        private static IEnumerable<StudentDTO> PutNotFoundTest()
+        {
+            var student = new List<StudentDTO>();
+            return student;
+        }
+        
+        private static IEnumerable<StudentDTO> PutFindTest()
+        {
+            var student = new List<StudentDTO>()
+            {
+                new StudentDTO()
+                {
+                    Id = 1,
+                    FirstName = "Kirill",
+                    LastName = "Kononov",
+                    AverageMark = (float)4.67,
+                    MissedLectures = 0,
+                    StudentHomework = null
+                }
+            };
+            return student;
         }
     }
 }
