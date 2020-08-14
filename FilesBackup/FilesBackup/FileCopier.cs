@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using FilesBackup.PathsExtractor;
 
 namespace FilesBackup
@@ -22,7 +21,7 @@ namespace FilesBackup
                 if (Directory.Exists(sourcePath))
                 {
                     Directory.CreateDirectory(_directoryPaths.TargetPath);
-                    string[] files = Directory.GetFiles(sourcePath);
+                    var files = Directory.GetFiles(sourcePath);
 
                     foreach (string s in files)
                     {
@@ -30,11 +29,26 @@ namespace FilesBackup
                         var destFile = Path.Combine(_directoryPaths.TargetPath, fileName);
                         File.Copy(s, destFile, true);
                     }
+
+                    CopySubDirectories(sourcePath);
                 }
                 else
                 {
                     Console.WriteLine("Source path does not exist!");
                 }
+            }
+        }
+
+        private void CopySubDirectories(string sourcePath)
+        {
+            var subDirs = new DirectoryInfo(sourcePath).GetDirectories();
+            foreach (var dir in subDirs)
+            {
+                var targetPath = _directoryPaths.TargetPath + @"\" + dir.Name;
+                var sourcePaths = new List<string> {dir.FullName};
+                var subDirectoryPaths = new DirectoryPaths(targetPath, sourcePaths);
+
+                new FileCopier(subDirectoryPaths).CopyFiles();
             }
         }
     }
