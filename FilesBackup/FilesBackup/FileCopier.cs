@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security;
 using FilesBackup.PathsExtractor;
 using Serilog;
 
@@ -17,37 +18,86 @@ namespace FilesBackup
             _logger = Log.Logger;
         }
 
-        public void CopyFiles()
+        public void Copy()
         {
-            _logger.Information("Copying files");
             foreach (var sourcePath in _directoryPaths.SourcePaths)
             {
-                if (Directory.Exists(sourcePath))
+                if (!Directory.Exists(sourcePath))
                 {
-                    Directory.CreateDirectory(_directoryPaths.TargetPath);
-                    var files = Directory.GetFiles(sourcePath);
+                    _logger.Error("Folder on this path {@string} does not exist", sourcePath);
+                    continue;
+                }
 
-                    foreach (string s in files)
+                _logger.Debug("Copying files from {@string} to {@string}", 
+                    sourcePath,
+                    _directoryPaths.TargetPath);
+                Directory.CreateDirectory(_directoryPaths.TargetPath);
+                var sourceFilePaths = Directory.GetFiles(sourcePath);
+
+                foreach (var sourceFilePath in sourceFilePaths)
+                {
+                    var fileName = Path.GetFileName(sourceFilePath);
+                    try
                     {
-                        try
-                        {
-                            var fileName = Path.GetFileName(s);
-                            var destFile = Path.Combine(_directoryPaths.TargetPath, fileName);
-                            File.Copy(s, destFile, true);
-                        }
-                        catch (UnauthorizedAccessException)
-                        {
-                            _logger.Error("You don't have permissions to copy this file");
-                        }
+                        CopyFile(fileName, sourceFilePath);
+                        _logger.Debug("File: {@string} successfully copied", fileName);
                     }
+                    catch (UnauthorizedAccessException)
+                    {
+                        _logger.Error("You don't have permissions to copy this file: {@string}", 
+                            fileName);
+                    }
+                    catch (NotSupportedException)
+                    {
+                        _logger.Error("Copy operation is not supported");
+                    }
+                    catch (IOException ex)
+                    {
+                        _logger.Error(ex.Message);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        _logger.Error(ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex.Message);
+                    }
+                }
 
+                try
+                {
                     CopySubDirectories(sourcePath);
                 }
-                else
+                catch (UnauthorizedAccessException)
                 {
-                    _logger.Error("Folder on this path {sourcePath} does not exist");
+                    _logger.Error("You don't have permissions to copy this folder: {@string}",
+                        sourcePath);
                 }
+                catch (SecurityException)
+                {
+                    _logger.Error("You don't have permissions to copy this folder: {@string}",
+                        sourcePath);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    _logger.Error("Source path {@string} is invalid");
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                _logger.Debug("Copying files from {@string} to {@string} finished",
+                    sourcePath,
+                    _directoryPaths.TargetPath);
             }
+        }
+
+        private void CopyFile(string fileName, string sourceFilePath)
+        {
+            var destFilePath = Path.Combine(_directoryPaths.TargetPath, fileName);
+            File.Copy(sourceFilePath, destFilePath, true);
         }
 
         private void CopySubDirectories(string sourcePath)
@@ -59,7 +109,7 @@ namespace FilesBackup
                 var sourcePaths = new List<string> {dir.FullName};
                 var subDirectoryPaths = new DirectoryPaths(targetPath, sourcePaths);
 
-                new FileCopier(subDirectoryPaths).CopyFiles();
+                new FileCopier(subDirectoryPaths).Copy();
             }
         }
     }

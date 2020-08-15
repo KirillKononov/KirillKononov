@@ -1,11 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Serilog;
-using Serilog.Configuration;
-using Serilog.Events;
 
 namespace FilesBackup
 {
@@ -13,6 +7,7 @@ namespace FilesBackup
     {
         private static readonly string DateTime = @"\" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         private static readonly string PathToSettingsFile = Environment.CurrentDirectory + @"\appsettings.json";
+        private static readonly ILogger Logger = Log.Logger;
 
         private static void CreateLogger()
         {
@@ -25,13 +20,16 @@ namespace FilesBackup
         {
             ConfigurationProvider.BuildConfiguration();
             CreateLogger();
-
+            
+            Logger.Information("Application started");
             var pathsExtractor = new PathsExtractor.PathsExtractor(PathToSettingsFile);
             var directoryPaths = pathsExtractor.ExtractPaths();
             directoryPaths.TargetPath += DateTime;
 
-            new FileCopier(directoryPaths).CopyFiles();
-            
+            Logger.Information("Copying started");
+            new FileCopier(directoryPaths).Copy();
+            Logger.Information("Copying finished");
+            Logger.Information("Application completed");
         }
     }
 }
