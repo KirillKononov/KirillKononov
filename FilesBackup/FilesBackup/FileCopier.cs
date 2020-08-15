@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using FilesBackup.PathsExtractor;
+using Serilog;
 
 namespace FilesBackup
 {
     public class FileCopier
     {
         private readonly DirectoryPaths _directoryPaths;
+        private readonly ILogger _logger;
 
         public FileCopier(DirectoryPaths directoryPaths)
         {
             _directoryPaths = directoryPaths;
+            _logger = Log.Logger;
         }
 
         public void CopyFiles()
         {
+            _logger.Information("Copying files");
             foreach (var sourcePath in _directoryPaths.SourcePaths)
             {
                 if (Directory.Exists(sourcePath))
@@ -25,16 +29,23 @@ namespace FilesBackup
 
                     foreach (string s in files)
                     {
-                        var fileName = Path.GetFileName(s);
-                        var destFile = Path.Combine(_directoryPaths.TargetPath, fileName);
-                        File.Copy(s, destFile, true);
+                        try
+                        {
+                            var fileName = Path.GetFileName(s);
+                            var destFile = Path.Combine(_directoryPaths.TargetPath, fileName);
+                            File.Copy(s, destFile, true);
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            _logger.Error("You don't have permissions to copy this file");
+                        }
                     }
 
                     CopySubDirectories(sourcePath);
                 }
                 else
                 {
-                    Console.WriteLine("Source path does not exist!");
+                    _logger.Error("Folder on this path {sourcePath} does not exist");
                 }
             }
         }
