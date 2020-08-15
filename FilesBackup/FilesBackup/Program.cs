@@ -5,7 +5,7 @@ namespace FilesBackup
 {
     class Program
     {
-        private static readonly string DateTime = @"\" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        private static readonly string CurrentTime = @"\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         private static readonly string PathToSettingsFile = Environment.CurrentDirectory + @"\appsettings.json";
         private static readonly ILogger Logger = Log.Logger;
 
@@ -24,7 +24,7 @@ namespace FilesBackup
             Logger.Information("Application started");
             var pathsExtractor = new PathsExtractor.PathsExtractor(PathToSettingsFile);
             var directoryPaths = pathsExtractor.ExtractPaths();
-            directoryPaths.TargetPath += DateTime;
+            directoryPaths.TargetPath += CurrentTime;
 
             Logger.Information("Copying started");
             new FileCopier(directoryPaths).Copy();
