@@ -24,7 +24,7 @@ namespace FilesBackup
             {
                 if (!Directory.Exists(sourcePath))
                 {
-                    _logger.Error("Folder on this path {@string} does not exist", sourcePath);
+                    _logger.Error("Source folder on this path {@string} does not exist", sourcePath);
                     continue;
                 }
 
