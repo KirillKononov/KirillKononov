@@ -1,0 +1,35 @@
+﻿@model FeedProcessing.Models.FeedData
+
+<head>
+    <meta http-equiv="refresh" content="@Model.UpdateTimeInSeconds"/>
+    <style>
+        img {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <br />
+    <div class="container row">
+        <div class="col-7">
+            <h2 class="text-info">Новости</h2>
+        </div>
+
+        <div class="col-4" align="right">
+            <button class="btn" id="format">Включить форматирование</button>
+        </div>
+
+        <div class="col-1">
+            <a class="btn" asp-action="Settings">Настройки</a>
+           
+        </div>
+    </div>
+    <br />
+    <div id="content"></div>
+    @section scripts{
+        <script src='@Url.Content("~/js/index.js")'></script>
+    }
+
+</body>
+

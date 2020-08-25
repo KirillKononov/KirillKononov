@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RssFeeder", "RssFeeder\RssFeeder.csproj", "{9E0A6D71-6222-4AB1-8940-2A9C420B2969}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeedProcessing", "FeedProcessing\FeedProcessing.csproj", "{90B38E28-9CD7-4314-B23C-C361932683BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E0A6D71-6222-4AB1-8940-2A9C420B2969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E0A6D71-6222-4AB1-8940-2A9C420B2969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E0A6D71-6222-4AB1-8940-2A9C420B2969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E0A6D71-6222-4AB1-8940-2A9C420B2969}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90B38E28-9CD7-4314-B23C-C361932683BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B38E28-9CD7-4314-B23C-C361932683BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B38E28-9CD7-4314-B23C-C361932683BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B38E28-9CD7-4314-B23C-C361932683BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28825FA0-601E-4080-8E49-46D35A0C909D}
+	EndGlobalSection
+EndGlobal
