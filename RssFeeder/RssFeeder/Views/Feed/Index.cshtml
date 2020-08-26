@@ -1,7 +1,7 @@
-﻿@model FeedProcessing.Models.FeedData
+﻿@model Tuple<FeedProcessing.Models.FeedData, List<FeedProcessing.Models.Feed>>
 
 <head>
-    <meta http-equiv="refresh" content="@Model.UpdateTimeInSeconds"/>
+    <meta http-equiv="refresh" content="@Model.Item1.UpdateTimeInSeconds" />
     <style>
         img {
             width: 50%;
@@ -12,24 +12,41 @@
 <body>
     <br />
     <div class="container row">
-        <div class="col-7">
+        <div class="col-2">
             <h2 class="text-info">Новости</h2>
         </div>
 
-        <div class="col-4" align="right">
+        <div class="col-3" align="right">
+            <a class="btn btn-info" asp-action="Post">Добавить новую ленту</a>
+        </div>
+
+        <div class="col-3" align="left">
+            <button class="btn btn-danger" id="deleteButton">Удалить текущую ленту</button>
+        </div>
+
+        <div class="col-3" align="right">
             <button class="btn" id="format">Включить форматирование</button>
         </div>
 
         <div class="col-1">
             <a class="btn" asp-action="Settings">Настройки</a>
-           
         </div>
+    </div>
+
+    <div class="container row">
+        <div class="col-1">
+                <select id="newsFeed">
+                    @foreach (var feed in Model.Item2)
+                    {
+                        <option value="@feed.Name">@feed.Name</option>
+                    }
+                </select>
+            </div>
     </div>
     <br />
     <div id="content"></div>
     @section scripts{
         <script src='@Url.Content("~/js/index.js")'></script>
     }
-
 </body>
 

@@ -5,6 +5,6 @@ namespace FeedProcessing.Interfaces
 {
     public interface IFeedItemsExtractorService
     {
-        List<FeedItem> Extract(string feedUrl);
+        List<Feed> Extract(string feedUrls);
     }
 }

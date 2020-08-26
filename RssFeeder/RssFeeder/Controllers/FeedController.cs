@@ -1,57 +1,82 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FeedProcessing.Interfaces;
 using FeedProcessing.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using RssFeeder.Models;
 
 namespace RssFeeder.Controllers
 {
     public class FeedController : Controller
     {
-        private readonly ILogger<FeedController> _logger;
-
-        private readonly string _pathToConfigurationFile = Environment.CurrentDirectory + @"\FeedData.xml";
+        private readonly string _pathToConfigurationFile = Environment.CurrentDirectory + @"\feeddata.json";
 
         private readonly IFeedItemsExtractorService _feedItemsExtractorService;
 
         private readonly IFeedDataSerializerService _feedDataSerializerService;
 
         public FeedController(IFeedItemsExtractorService feedItemsExtractorService,
-            IFeedDataSerializerService feedDataSerializerService,
-            ILogger<FeedController> logger)
+            IFeedDataSerializerService feedDataSerializerService)
         {
             _feedItemsExtractorService = feedItemsExtractorService;
             _feedDataSerializerService = feedDataSerializerService;
-            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View(GetFeedData());
+            var feedData = GetFeedData();
+            var tuple = new Tuple<FeedData, List<Feed>>(
+                new FeedData()
+                {
+                    FeedUrls = feedData.FeedUrls,
+                    UpdateTimeInSeconds = feedData.UpdateTimeInSeconds
+                },
+                _feedItemsExtractorService.Extract(GetFeedData().FeedUrls));
+            return View(tuple);
         }
 
         //GET - Feeds
         public JsonResult GetAll()
         {
-            var feeds = _feedItemsExtractorService.Extract(GetFeedData().FeedUrl);
+            var feeds = _feedItemsExtractorService.Extract(GetFeedData().FeedUrls);
 
             return Json(feeds);
         }
 
-        //GET - EDIT
+        //GET - Settings
         public IActionResult Settings()
         {
             return View(GetFeedData());
         }
 
-        //POST - EDIT
+        //PUT - Settings
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Settings(FeedData feedData)
         {
             _feedDataSerializerService.Serialize(feedData, _pathToConfigurationFile);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //GET - Post
+        public IActionResult Post()
+        {
+            return View();
+        }
+
+        //POST - Post
+        [HttpPost]
+        public IActionResult Post(FeedData feedData)
+        {
+            _feedDataSerializerService.SerializeForPost(feedData, _pathToConfigurationFile);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //DELETE
+        [HttpDelete]
+        public IActionResult Delete(string url)
+        {
+            _feedDataSerializerService.SerializeForDelete(url, _pathToConfigurationFile);
             return RedirectToAction(nameof(Index));
         }
 

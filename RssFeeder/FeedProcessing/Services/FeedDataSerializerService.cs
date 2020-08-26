@@ -1,7 +1,8 @@
-﻿using System.IO;
-using System.Xml.Serialization;
+﻿using System;
+using System.IO;
 using FeedProcessing.Interfaces;
 using FeedProcessing.Models;
+using Newtonsoft.Json;
 
 namespace FeedProcessing.Services
 {
@@ -9,19 +10,48 @@ namespace FeedProcessing.Services
     {
         public FeedData Deserialize(string pathToConfigurationFile)
         {
-            var serializer = new XmlSerializer(typeof(FeedData));
-            var stream = new FileStream(pathToConfigurationFile, FileMode.Open);
-            var feedData = (FeedData)serializer.Deserialize(stream);
-            stream.Close();
+
+            var fileData = File.ReadAllText(pathToConfigurationFile);
+            var feedData = JsonConvert.DeserializeObject<FeedData>(fileData);
             return feedData;
+            
+        }
+
+        public void SerializeForPost(FeedData feedData, string pathToConfigurationFile)
+        {
+            var previousFeedData = Deserialize(pathToConfigurationFile);
+
+            if (previousFeedData.FeedUrls.Contains(feedData.FeedUrls))
+                return;
+
+            if (previousFeedData.FeedUrls.Length == 0)
+                previousFeedData.FeedUrls = feedData.FeedUrls;
+            else
+                previousFeedData.FeedUrls += "," + feedData.FeedUrls;
+
+            Serialize(previousFeedData, pathToConfigurationFile);
+        }
+
+        public void SerializeForDelete(string feedUrl, string pathToConfigurationFile)
+        {
+            var feedData = Deserialize(pathToConfigurationFile);
+
+            if (!feedData.FeedUrls.Contains(feedUrl))
+                return;
+
+            feedData.FeedUrls = feedData.FeedUrls.Replace(feedUrl, "");
+            feedData.FeedUrls = feedData.FeedUrls.Trim(',');
+
+            if (feedData.FeedUrls.Contains(",,")) 
+                feedData.FeedUrls = feedData.FeedUrls.Replace(",,", ",");
+
+            Serialize(feedData, pathToConfigurationFile);
         }
 
         public void Serialize(FeedData feedData, string pathToConfigurationFile)
         {
-            var serializer = new XmlSerializer(typeof(FeedData));
-            var stream = new FileStream(pathToConfigurationFile, FileMode.Open); 
-            serializer.Serialize(stream, feedData); 
-            stream.Close();
+            var jsonString = JsonConvert.SerializeObject(feedData);
+            File.WriteAllText(pathToConfigurationFile, jsonString);
         }
     }
 }

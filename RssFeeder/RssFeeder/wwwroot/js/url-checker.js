@@ -22,4 +22,4 @@ function isValidUrl(string) {
         return true;
 }
 ;
-//# sourceMappingURL=urlChecker.js.map
+//# sourceMappingURL=url-checker.js.map

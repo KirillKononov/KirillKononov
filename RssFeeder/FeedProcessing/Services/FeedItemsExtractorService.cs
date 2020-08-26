@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel.Syndication;
 using System.Xml;
 using FeedProcessing.Interfaces;
@@ -8,35 +9,51 @@ namespace FeedProcessing.Services
 {
     public class FeedItemsExtractorService : IFeedItemsExtractorService
     {
-        public List<FeedItem> Extract(string feedUrl)
+        public List<Feed> Extract(string feedUrls)
         {
-            var unprocessedFeedItems = GetUnprocessedFeedItems(feedUrl);
-            var processedFeedItems = new List<FeedItem>();
+            var syndicationFeeds = GetSyndicationFeeds(feedUrls);
+            var processedFeed = new List<Feed>();
 
-            if (unprocessedFeedItems == null)
-                return processedFeedItems;
+            if (syndicationFeeds.Count == 0)
+                return processedFeed;
 
-            var counter = 1;
-            foreach (var item in unprocessedFeedItems.Items)
+            for (var i = 0; i < syndicationFeeds.Count; i++)
             {
-                processedFeedItems.Add(new FeedItem
+                var counter = 1;
+                var feed = new Feed()
                 {
-                    Id = counter,
-                    Uri = item.Links[0].Uri.AbsoluteUri,
-                    Title = item.Title.Text,
-                    PublicationDate = item.PublishDate.DateTime.ToString("dd.MM.yyyy HH:mm:ss"),
-                    Description = item.Summary.Text
-                });
-                counter++;
+                    Name = syndicationFeeds[i].Title.Text,
+                    Url = feedUrls.Split(',')[i],
+                    FeedItems = new List<FeedItem>()
+                };
+                foreach (var item in syndicationFeeds[i].Items)
+                {
+                    feed.FeedItems.Add(new FeedItem
+                    {
+                        Id = counter,
+                        Uri = item.Links[0].Uri.AbsoluteUri,
+                        Title = item.Title.Text,
+                        PublicationDate = item.PublishDate.DateTime.ToString("dd.MM.yyyy HH:mm:ss"),
+                        Description = item.Summary.Text
+                    });
+                    counter++;
+                }
+                processedFeed.Add(feed);
             }
-
-            return processedFeedItems;
+            
+            return processedFeed;
         }
 
-        private static SyndicationFeed GetUnprocessedFeedItems(string feedUrl)
+        private static List<SyndicationFeed> GetSyndicationFeeds(string feedUrls)
         {
-            var feedReader = XmlReader.Create(feedUrl);
-            return SyndicationFeed.Load(feedReader);
+            var splitFeedUrls = feedUrls.Split(',');
+            var syndicationFeeds = new List<SyndicationFeed>();
+            foreach (var item in splitFeedUrls)
+            {
+                var feedReader = XmlReader.Create(item);
+                syndicationFeeds.Add(SyndicationFeed.Load(feedReader));
+            }
+            return syndicationFeeds;
         }
     }
 }

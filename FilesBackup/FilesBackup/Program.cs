@@ -30,6 +30,9 @@ namespace FilesBackup
             new FileCopier(directoryPaths).Copy();
             Logger.Information("Copying finished");
             Logger.Information("Application completed");
+
+            Console.WriteLine("Press any button to finish");
+            Console.ReadLine();
         }
     }
 }

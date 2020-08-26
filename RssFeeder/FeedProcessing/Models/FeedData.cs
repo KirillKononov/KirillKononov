@@ -3,10 +3,10 @@ using System.Xml.Serialization;
 
 namespace FeedProcessing.Models
 {
-    [Serializable, XmlRoot("FeedData")]
+    [Serializable]
     public class FeedData
     {
-        public string FeedUrl { get; set; }
+        public string FeedUrls { get; set; }
 
         public int UpdateTimeInSeconds { get; set; }
     }
