@@ -1,6 +1,6 @@
 # Repository Description
 
-# Module 20 (WIP)
+# Module 20
   ASP.NET Core Web.API REST application:
   
   -Data access to DataBase (MSSQL) with Students, Professors, Lectures, Homework via Entity Framework;
